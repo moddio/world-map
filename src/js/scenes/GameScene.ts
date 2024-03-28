@@ -1,5 +1,3 @@
-//import GameInputs from "../inputs/GameInputs";
-//import Player from "../gameObjects/Player";
 
 export default class GameScene extends Phaser.Scene {
 	tilemap: Phaser.Tilemaps.Tilemap;
@@ -21,8 +19,6 @@ export default class GameScene extends Phaser.Scene {
     const { widthInPixels, heightInPixels } = tilemap;
 
     this.physics.world.setBounds(0, -64, widthInPixels, heightInPixels + 64).TILE_BIAS = 8;
-
-
     this.cameras.main.setBounds(0, 0, widthInPixels, heightInPixels);
   }
 
