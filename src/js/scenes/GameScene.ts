@@ -18,20 +18,27 @@ export default class GameScene extends Phaser.Scene {
 
     const { widthInPixels, heightInPixels } = tilemap;
 
-    this.physics.world.setBounds(0, -64, widthInPixels, heightInPixels + 64).TILE_BIAS = 8;
-    this.cameras.main.setBounds(0, 0, widthInPixels, heightInPixels);
+    this.cameras.main.centerOn(widthInPixels / 2, heightInPixels / 2);
   }
 
   public update() {
-	const tilemap = this.tilemap;
-	tilemap.forEachTile((tile) => {
-		tile.setAlpha(1);
-	});
-	const worldPoint = this.cameras.main.getWorldPoint(this.input.activePointer.x, this.input.activePointer.y);
-	const pointerTileX = tilemap.worldToTileX(worldPoint.x, true);
-	const pointerTileY = tilemap.worldToTileY(worldPoint.y, true);
+	  const tilemap = this.tilemap;
+	  tilemap.forEachTile((tile) => {
+	  	tile.setAlpha(1);
+	  });
+	  const worldPoint = this.cameras.main.getWorldPoint(this.input.activePointer.x, this.input.activePointer.y);
+	  const pointerTileX = tilemap.worldToTileX(worldPoint.x, true);
+	  const pointerTileY = tilemap.worldToTileY(worldPoint.y, true);
 
-	tilemap.getTileAt(pointerTileX, pointerTileY).setAlpha(0.75);
-	console.log('tile index:', tilemap.getTileAt(pointerTileX, pointerTileY).index);
+    if (tilemap.getTileAt(pointerTileX, pointerTileY)) {
+      if (this.input.manager.activePointer.leftButtonDown()) {
+        console.log('click on tile:', pointerTileX, pointerTileY);
+        //open game link
+      } else {
+        tilemap.getTileAt(pointerTileX, pointerTileY).setAlpha(0.75);
+        console.log('tile index:', tilemap.getTileAt(pointerTileX, pointerTileY).index, 'tile position in array:', pointerTileY * tilemap.width + pointerTileX);
+        //show html tooltip
+      }
+    }
   }
 }

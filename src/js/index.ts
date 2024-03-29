@@ -4,8 +4,8 @@ import GameScene from "./scenes/GameScene";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 256,
-  height: 256,
+  width: window.innerWidth,
+  height: window.innerHeight,
   zoom: 1,
   input: {
     keyboard: true,
