@@ -12,7 +12,7 @@ const MapComponent = () => {
     const config = {
       type: Phaser.AUTO,
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: window.innerHeight - 95,
       zoom: 1,
       input: {
         keyboard: true,

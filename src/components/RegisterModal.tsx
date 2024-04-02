@@ -7,6 +7,8 @@ import { createPortal } from "react-dom";
 
 // import { trackEventFromBrowser } from "@/lib/mixpanelBrowser";
 import { useApp } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
+import { XMarkIcon } from "@heroicons/react/20/solid";
 
 // const RegisterSingleComponent = dynamic(
 //   () => import('./RegisterSingleComponent'),
@@ -24,7 +26,9 @@ const RegisterComponent = React.lazy(() => import("./RegisterComponent"));
 
 export default function RegisterModal() {
   //@ts-ignore
-  const [ showRegister, setShowRegister ] = useState(false);
+  const [ showRegister, setShowRegister ] = useState(true);
+
+  const navigate = useNavigate()
 
   const [showSingleComponent, setShowSingleComponent] = useState(true);
 
@@ -35,6 +39,7 @@ export default function RegisterModal() {
 
   const handleClose = () => {
     setShowRegister(false);
+    navigate('/');
   };
 
   useEffect(() => {
@@ -56,8 +61,8 @@ export default function RegisterModal() {
     rendered &&
     createPortal(
       <Dialog
-        onClose={()=>handleClose}
-        open={true}
+        onClose={handleClose}
+        open={showRegister}
         className='tailwind-layout'>
         <div className='fixed z-[200000]'>
           <div className='fixed inset-0 overflow-y-auto'>
@@ -77,6 +82,13 @@ export default function RegisterModal() {
                     )}
                     {page == 1 ? "Sign Up" : "Verify Account"}
                   </Dialog.Title>
+
+                  <button type="button" onClick={handleClose}>
+                    <XMarkIcon
+                      className="h-5 w-5 text-gray-500 hover:text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </button>
 
                   {!showSingleComponent && (
                     <div className='flex flex-row'>

@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 
 import { useApp } from '../contexts/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login =  React.lazy(() => import("./Login"));
 export default function Auth() {
   //@ts-ignore
+  const navigate = useNavigate();
   const [ showAuth, setShowAuth ]= useState(true);
 console.log(13, showAuth)
   const [rendered, setIsRendered] = useState(false);
@@ -19,6 +21,7 @@ console.log(13, showAuth)
 
   const handleClose = () => {
     setShowAuth(false);
+    navigate('/');
   };
 
   // console.count('Auth');
