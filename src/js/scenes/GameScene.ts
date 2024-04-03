@@ -27,112 +27,112 @@ export default class GameScene extends Phaser.Scene {
         position: {},
         index: 0,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/401/100",
       },
       {
         mapName: "Building B",
         position: {},
         index: 1,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/402/100",
       },
       {
         mapName: "Building C",
         position: {},
         index: 2,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/403/100",
       },
       {
         mapName: "Building D",
         position: {},
         index: 3,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/404/100",
       },
       {
         mapName: "Building E",
         position: {},
         index: 4,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/405/100",
       },
       {
         mapName: "Building F",
         position: {},
         index: 5,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/407/100",
       },
       {
         mapName: "Building G",
         position: {},
         index: 6,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/406/100",
       },
       {
         mapName: "Building H",
         position: {},
         index: 789,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building I",
         position: {},
         index: 333,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building J",
         position: {},
         index: 428,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building K",
         position: {},
         index: 817,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building L",
         position: {},
         index: 560,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building M",
         position: {},
         index: 407,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building N",
         position: {},
         index: 1135,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building O",
         position: {},
         index: 598,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
       {
         mapName: "Building P",
         position: {},
         index: 716,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "https://via.placeholder.com/32",
+        image: "https://picsum.photos/400/100",
       },
     ];
     window.addEventListener(
@@ -249,8 +249,12 @@ export default class GameScene extends Phaser.Scene {
           (tileInfo) => tileInfo.index === hoveredTileIndex
         );
         hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
-        console.log(238, hoveredTileInfo);
-        this.openModal(hoveredTileInfo);
+        //@ts-ignore
+        hoveredTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+        // console.log(238, hoveredTileInfo);
+        const event = new CustomEvent("tileClick", { detail: hoveredTileInfo });
+        window.dispatchEvent(event);
+        // this.openModal(hoveredTileInfo);
         console.log("click on tile:", pointerTileX, pointerTileY);
         // Open game link
       } else {
@@ -261,7 +265,7 @@ export default class GameScene extends Phaser.Scene {
           (tileInfo) => tileInfo.index === hoveredTileIndex
         );
         hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
-        console.log(238, hoveredTileInfo);
+        // console.log(238, hoveredTileInfo);
         //@ts-ignore
         // console.log(101, hoveredTileIndex, hoveredTileInfo);
         //@ts-ignore

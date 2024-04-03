@@ -28,6 +28,7 @@ export function useUser() {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+  console.log(31, result)
 
   useEffect(() => {
     if (!isLoading && result && result.data) {

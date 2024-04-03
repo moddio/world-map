@@ -18,7 +18,7 @@ import {
 import { EnvelopeIcon, LockOpenIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 // import { deleteCookie } from "cookies-next";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { useSWRConfig } from "swr";
 
 // import { trackEventFromBrowser } from '@/lib/mixpanelBrowser';
@@ -26,7 +26,7 @@ import { useSWRConfig } from "swr";
 import { isBrowser } from "./core/generic/is-browser";
 import Button from "./core/ui/Button";
 //@ts-ignore
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { siteUrl } from "../config";
 
 export default function Login({ handleClose, referer }) {
@@ -36,28 +36,28 @@ export default function Login({ handleClose, referer }) {
   const [password, setPassword] = useState("");
   const [formLogin, setFormLogin] = useState(true);
   const [error, setError] = useState("");
-  const { t } = useTranslation("login");
+  const navigate = useNavigate();
 
   // const isCreatePage = history.pathname.includes("/create");
 
   const authProviders = [
     {
-      name: 'Google',
+      name: "Google",
       slug: "google",
       icon: faGoogle,
     },
     {
-      name: 'Discord',
+      name: "Discord",
       slug: "discord",
       icon: faDiscord,
     },
     {
-      name: 'Twitter',
+      name: "Twitter",
       slug: "twitter",
       icon: faTwitter,
     },
     {
-      name: 'Facebook',
+      name: "Facebook",
       slug: "facebook",
       icon: faFacebook,
     },
@@ -74,7 +74,7 @@ export default function Login({ handleClose, referer }) {
   //   ? `?referer=${encodeURIComponent("/create")}`
   //   : "";
 
-//   const { setShowAuth, setShowRegister } = useApp();
+  //   const { setShowAuth, setShowRegister } = useApp();
 
   const [authStore, setAuthStore] = useState(undefined);
 
@@ -89,7 +89,7 @@ export default function Login({ handleClose, referer }) {
       }
 
       // delete cookie on page reload or navigation
-    //   deleteCookie("authReVerificationInitiated");
+      //   deleteCookie("authReVerificationInitiated");
     }
   }, []);
 
@@ -123,10 +123,15 @@ export default function Login({ handleClose, referer }) {
       if (result.status === "error") {
         throw new Error(result.message || "Error");
       }
-
+      console.log(126, result.data);
       const user = result.data;
-
-      mutate("/api/v1/user/", user);
+      if (result && result.data) {
+        // navigate("/");
+        window.location.reload()
+      }
+      localStorage.setItem("user", JSON.stringify(user));
+      console.log(127, `${siteUrl}/api/v1/user/`);
+      mutate(`${siteUrl}/api/v1/user/`, user);
 
       // if in play page, reload page
       //   if (router.pathname.includes('/play') && !window.preventPlayAuthReload) {
@@ -151,7 +156,7 @@ export default function Login({ handleClose, referer }) {
           {
             // check if localstorage has item.name
             authStore ? (
-            //@ts-ignore
+              //@ts-ignore
               <Button
                 className={"w-full"}
                 key={authProviders[authStore].name}
@@ -183,7 +188,7 @@ export default function Login({ handleClose, referer }) {
                 {authProviders[authStore].name}
               </Button>
             ) : (
-            //@ts-ignore
+              //@ts-ignore
               <Button
                 className={"w-full"}
                 key={authProviders[0].name}
@@ -225,7 +230,7 @@ export default function Login({ handleClose, referer }) {
             if (index == authStore) return;
             if (index == 0 && !authStore) return;
             return (
-                //@ts-ignore
+              //@ts-ignore
               <Button
                 key={provider.name}
                 onClick={() => {
@@ -278,7 +283,7 @@ export default function Login({ handleClose, referer }) {
               <div className='relative'>
                 <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
                   <EnvelopeIcon
-                  //@ts-ignore
+                    //@ts-ignore
                     soli
                     className='h-5 w-5 text-gray-700'
                     aria-hidden='true'
@@ -286,7 +291,7 @@ export default function Login({ handleClose, referer }) {
                 </div>
                 <input
                   type='text'
-                  placeholder={'Username'}
+                  placeholder={"Username"}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className='block w-full py-2 rounded-sm border-transparent bg-gray-100 pl-10 text-gray-900 placeholder-gray-700 focus:border-primary-500 focus:ring-primary-500 sm:text-sm'
@@ -303,7 +308,7 @@ export default function Login({ handleClose, referer }) {
                   </div>
                   <input
                     type='password'
-                    placeholder={'Password'}
+                    placeholder={"Password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className='block w-full py-2 rounded-sm border-transparent bg-gray-100 pl-10 text-gray-900 placeholder-gray-700 focus:border-primary-500 focus:ring-primary-500 sm:text-sm'
@@ -319,7 +324,7 @@ export default function Login({ handleClose, referer }) {
           </form>
           <div>
             <a href='/forgot-password'>
-              <h2 className='text-white -mt-2 text-right mb-4'>
+              <h2 className='text-white text-sm -mt-2 text-right mb-4'>
                 Forgot your password?
               </h2>
             </a>
@@ -329,8 +334,8 @@ export default function Login({ handleClose, referer }) {
           <button
             type='button'
             onClick={() => {
-            //   setShowRegister(true);
-            //   setShowAuth(false);
+              //   setShowRegister(true);
+              //   setShowAuth(false);
             }}
             className='text-sm font-medium text-white hover:underline focus:underline focus:outline-none flex flex-row'>
             <div>Not registered yet?</div>

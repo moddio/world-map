@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { useTranslation } from "react-i18next";
 // import { generateUsername } from "unique-username-generator";
 
 // import { trackEventFromBrowser } from '@/lib/mixpanelBrowser';
@@ -40,15 +39,16 @@ export default function RegisterSingleComponent({}) {
   function checkUsername() {
     // Configure Axios instance with CORS headers
     const instance = axios.create({
-      withCredentials: true,
+      // withCredentials: true,
       headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:5000', // Update with your frontend URL
-        'Content-Type': 'application/json',
+        // "Access-Control-Allow-Origin": "*",
+        // "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
       },
     });
-  
+
     // Make the API request
-    instance.get(`${siteUrl}/api/v1/check-username/?username=${username}`)
+    instance
+      .get(`${siteUrl}/api/v1/check-username/?username=${username}`)
       .then((res) => {
         if (res.data.status === "success") {
           setState({
@@ -71,37 +71,36 @@ export default function RegisterSingleComponent({}) {
       })
       .catch((error) => {
         // Handle error
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       });
   }
 
-  const { t } = useTranslation("login");
 
   const [showEditUsername, setShowEditUsername] = useState(false);
 
   useEffect(() => {
-    setUsername('test');
+    setUsername("test");
     setShowEditUsername(true);
   }, []);
 
   const authProviders = [
     {
-      name: 'Google',
+      name: "Google",
       slug: "google",
       icon: faGoogle,
     },
     {
-      name: 'Discord',
+      name: "Discord",
       slug: "discord",
       icon: faDiscord,
     },
     {
-      name: 'Twitter',
+      name: "Twitter",
       slug: "twitter",
       icon: faTwitter,
     },
     {
-      name: 'Facebook',
+      name: "Facebook",
       slug: "facebook",
       icon: faFacebook,
     },
@@ -202,7 +201,7 @@ export default function RegisterSingleComponent({}) {
     document.cookie = `updates=${updates}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
 
     // go to the link
-    window.open(`${siteUrl}/link`, "auth", "width=500,height=600");
+    window.open(`https://modd.io/${link}`, "auth", "width=500,height=600");
 
     window.addEventListener("message", (event) => {
       console.log("event.data", event);
@@ -269,7 +268,7 @@ export default function RegisterSingleComponent({}) {
             <ArrowPathIcon
               className='absolute w-7 h-7 text-white right-0 top-1 mr-8 cursor-pointer'
               onClick={() => {
-                setUsername('test');
+                setUsername("test");
               }}
             />
           )}

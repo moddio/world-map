@@ -5,6 +5,7 @@ import { formatDistanceStrict } from 'date-fns';
 import { useUser } from './hooks';
 
 export const fetcher = (url) => {
+  console.log(8, url)
   return axios.get(url).then((res) => res.data);
 };
 
