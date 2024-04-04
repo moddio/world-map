@@ -328,7 +328,8 @@ export default class GameScene extends Phaser.Scene {
           const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
           const tileScreenPos = tilemap.tileToWorldXY(hoveredTile.x, hoveredTile.y);
           this.tooltip.setText(tooltipText);
-          this.tooltip.setPosition(tileScreenPos.x, tileScreenPos.y);
+          this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 72);
+          console.log(tileScreenPos);
           this.tooltip.setAlpha(1); // Show tooltip
         } else {
           this.tooltip.setAlpha(0); // Hide tooltip if no tile information found
