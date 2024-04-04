@@ -307,7 +307,7 @@ export default class GameScene extends Phaser.Scene {
         hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
 
         if (hoveredTileInfo) {
-          const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nPosition: (${JSON.stringify(hoveredTileInfo.position)})`;
+          const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
           const tileScreenPos = tilemap.tileToWorldXY(hoveredTile.x, hoveredTile.y);
           this.tooltip.setText(tooltipText);
           this.tooltip.setPosition(tileScreenPos.x, tileScreenPos.y);
