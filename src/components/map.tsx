@@ -104,6 +104,11 @@ const MapComponent = () => {
       positionInfo.className = "text-lg font-bold text-center";
       positionInfo.textContent = `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})`;
 
+      // Add owner information
+      const ownerInfo = document.createElement("p");
+      ownerInfo.className = "text-lg font-bold text-center";
+      ownerInfo.textContent = `Owner: ${clickedTileInfo.ownerName}`;
+
       const playButton = document.createElement("a");
       playButton.href = clickedTileInfo.redirectUrl;
       playButton.className =
@@ -122,6 +127,7 @@ const MapComponent = () => {
       popupContent.appendChild(buildingImage);
       popupContent.appendChild(closeIcon); // append close icon
       popupContent.appendChild(title);
+      popupContent.appendChild(ownerInfo);
       popupContent.appendChild(positionInfo);
       popupContent.appendChild(playButton);
       popupContent.appendChild(overlay);

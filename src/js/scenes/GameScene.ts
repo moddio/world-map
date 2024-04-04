@@ -9,6 +9,7 @@ export default class GameScene extends Phaser.Scene {
   buildings: Phaser.Tilemaps.Tile[];
   tileInfoArray: {
     mapName: string;
+    ownerName: string;
     position: {};
     index: number;
     redirectUrl: string;
@@ -24,6 +25,7 @@ export default class GameScene extends Phaser.Scene {
     this.tileInfoArray = [
       {
         mapName: "Building A",
+        ownerName: "m0dE",
         position: {},
         index: 0,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -31,6 +33,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building B",
+        ownerName: "m0dE",
         position: {},
         index: 1,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -38,6 +41,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building C",
+        ownerName: "m0dE",
         position: {},
         index: 2,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -45,6 +49,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building D",
+        ownerName: "m0dE",
         position: {},
         index: 3,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -52,6 +57,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building E",
+        ownerName: "m0dE",
         position: {},
         index: 4,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -59,6 +65,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building F",
+        ownerName: "m0dE",
         position: {},
         index: 5,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -66,6 +73,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building G",
+        ownerName: "m0dE",
         position: {},
         index: 6,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -73,6 +81,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building H",
+        ownerName: "m0dE",
         position: {},
         index: 789,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -80,6 +89,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building I",
+        ownerName: "m0dE",
         position: {},
         index: 333,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -87,6 +97,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building J",
+        ownerName: "m0dE",
         position: {},
         index: 428,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -94,6 +105,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building K",
+        ownerName: "m0dE",
         position: {},
         index: 817,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -101,6 +113,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building L",
+        ownerName: "m0dE",
         position: {},
         index: 560,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -108,6 +121,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building M",
+        ownerName: "m0dE",
         position: {},
         index: 407,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -115,6 +129,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building N",
+        ownerName: "m0dE",
         position: {},
         index: 1135,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -122,6 +137,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building O",
+        ownerName: "m0dE",
         position: {},
         index: 598,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -129,6 +145,7 @@ export default class GameScene extends Phaser.Scene {
       },
       {
         mapName: "Building P",
+        ownerName: "m0dE",
         position: {},
         index: 716,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -177,6 +194,7 @@ export default class GameScene extends Phaser.Scene {
       <div class="modal-content bg-white rounded-lg p-8">
         <span class="close absolute top-0 right-0 m-4 text-gray-600 cursor-pointer">&times;</span>
         <h2 class="text-2xl font-bold">${tileInfo.mapName}</h2>
+        <p class="text-lg">Owner: ${tileInfo.ownerName}</p>
         <p class="text-lg">Position: (${tileInfo.position.x}, ${tileInfo.position.y})</p>
         <a href="${tileInfo.redirectUrl}" class="block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Play</a>
         <img src="${tileInfo.image}" alt="Building Image" class="mt-4 mx-auto">
@@ -225,7 +243,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Create the tooltip
     this.tooltip = this.add.text(0, 0, "", {
-      font: "12px Arial",
+      font: "16px Arial",
       color: "#fff", // Black text color
       backgroundColor: "rgba(0,0,0,0.8)", // White background color
       padding: {
@@ -307,7 +325,7 @@ export default class GameScene extends Phaser.Scene {
         hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
 
         if (hoveredTileInfo) {
-          const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
+          const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
           const tileScreenPos = tilemap.tileToWorldXY(hoveredTile.x, hoveredTile.y);
           this.tooltip.setText(tooltipText);
           this.tooltip.setPosition(tileScreenPos.x, tileScreenPos.y);
