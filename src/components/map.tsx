@@ -82,6 +82,7 @@ const MapComponent = () => {
       // Create the popup content
       const popupContent = document.createElement("div");
       popupContent.className = "modal-content bg-white rounded-lg p-8 relative"; // added relative class for positioning the close icon
+      popupContent.id = "modal";
 
       const closeIcon = document.createElement("span");
       closeIcon.className =
@@ -253,7 +254,7 @@ const MapComponent = () => {
   };
   
 
-  console.log(174, hoveredTileInfo)
+  // console.log(174, hoveredTileInfo)
 
   useEffect(() => {
    

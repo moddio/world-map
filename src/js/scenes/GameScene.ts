@@ -191,7 +191,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Create modal content
     modal.innerHTML = `
-      <div class="modal-content bg-white rounded-lg p-8">
+      <div id="modal" class="modal-content bg-white rounded-lg p-8">
         <span class="close absolute top-0 right-0 m-4 text-gray-600 cursor-pointer">&times;</span>
         <h2 class="text-2xl font-bold">${tileInfo.mapName}</h2>
         <p class="text-lg">Owner: ${tileInfo.ownerName}</p>
@@ -310,6 +310,8 @@ export default class GameScene extends Phaser.Scene {
         window.dispatchEvent(event);
         // this.openModal(hoveredTileInfo);
         console.log("click on tile:", pointerTileX, pointerTileY);
+        // Hide tooltip on click
+        this.tooltip.setAlpha(0);
         // Open game link
       } else {
         //@ts-ignore
@@ -329,8 +331,9 @@ export default class GameScene extends Phaser.Scene {
           const tileScreenPos = tilemap.tileToWorldXY(hoveredTile.x, hoveredTile.y);
           this.tooltip.setText(tooltipText);
           this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 72);
-          console.log(tileScreenPos);
-          this.tooltip.setAlpha(1); // Show tooltip
+          if (!document.getElementById("modal")) {
+            this.tooltip.setAlpha(1);
+          }
         } else {
           this.tooltip.setAlpha(0); // Hide tooltip if no tile information found
         }
