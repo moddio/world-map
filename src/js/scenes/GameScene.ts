@@ -296,23 +296,25 @@ export default class GameScene extends Phaser.Scene {
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
       if (this.input.manager.activePointer.leftButtonDown()) {
-        //@ts-ignore
-        const hoveredTileIndex = hoveredTile.id;
-        const clickedTileInfo = this.tileInfoArray.find(
+        if (!document.getElementById("modal")) {
           //@ts-ignore
-          (tileInfo) => tileInfo.index === hoveredTileIndex
-        );
-        clickedTileInfo.position = { x: pointerTileX, y: pointerTileY };
-        //@ts-ignore
-        clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-        // console.log(238, hoveredTileInfo);
-        const event = new CustomEvent("tileClick", { detail: clickedTileInfo });
-        window.dispatchEvent(event);
-        // this.openModal(hoveredTileInfo);
-        console.log("click on tile:", pointerTileX, pointerTileY);
-        // Hide tooltip on click
-        this.tooltip.setAlpha(0);
-        // Open game link
+          const hoveredTileIndex = hoveredTile.id;
+          const clickedTileInfo = this.tileInfoArray.find(
+            //@ts-ignore
+            (tileInfo) => tileInfo.index === hoveredTileIndex
+          );
+          clickedTileInfo.position = { x: pointerTileX, y: pointerTileY };
+          //@ts-ignore
+          clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+          // console.log(238, hoveredTileInfo);
+          const event = new CustomEvent("tileClick", { detail: clickedTileInfo });
+          window.dispatchEvent(event);
+          // this.openModal(hoveredTileInfo);
+          console.log("click on tile:", pointerTileX, pointerTileY);
+          // Hide tooltip on click
+          this.tooltip.setAlpha(0);
+          // Open game link
+        }
       } else {
         //@ts-ignore
         const hoveredTileIndex = hoveredTile.id;
