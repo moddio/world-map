@@ -111,7 +111,7 @@ export default class GameScene extends Phaser.Scene {
         position: {},
         index: 407,
         redirectUrl: "https://modd.io/play/LAD/",
-        image: "hhttps://fastly.picsum.photos/id/719/200/200.jpg?hmac=WkMnZveCKylVzw33Ui-BNFbah8IQWImYq68wVKznlEo",
+        image: "https://fastly.picsum.photos/id/719/200/200.jpg?hmac=WkMnZveCKylVzw33Ui-BNFbah8IQWImYq68wVKznlEo",
       },
       {
         mapName: "Building N",
