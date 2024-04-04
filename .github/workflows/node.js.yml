@@ -28,8 +28,7 @@ jobs:
       - run: npm run build
         env:
           CI: ""
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          deploy_key: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          folder: build # The folder the action should deploy.
