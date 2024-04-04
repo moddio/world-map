@@ -14,7 +14,7 @@ const Layout = () => {
   return (
     <Router>
       <div className="bg-white" style={{ backgroundColor: "#f0f8f0" }}> 
-        <Navbar />
+       {/* <Navbar /> */}
         <MapComponent/>
         <Routes>
           {/* <Route path='/' element={<Home />} />*/}
