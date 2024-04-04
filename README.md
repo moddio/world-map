@@ -1,16 +1,14 @@
-### Run the development server
+# Getting Started with Create React App
 
-```
-npm start
-```
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Preview locally at http://localhost:8080/.
+First install required packages by running below command
 
-### Create a production build
+### `npm i`
 
-```
-npm run build
-```
+In the project directory, you can run:
 
-This bundles your files to the distribution (`/dist`) folder. The webpack config is set up to output Phaser and your game code into separate .js files.
+### `npm start`
 
+Runs the app in the development mode.\
+Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
