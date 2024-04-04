@@ -49,10 +49,10 @@ const MapModal = ({ isOpen, onClose }) => {
   };
 
   const handleBuyNow = (mapName) => {
-    // if (!userDetails) {
-    //   navigate("/login");
-    //   return;
-    // }
+    if (!userDetails) {
+      navigate("/login");
+      return;
+    }
 
     setPurchaseSuccessMessage(`Map "${mapName}" purchased successfully!`);
 

@@ -9,7 +9,7 @@ import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 const MapComponent = () => {
   const gameRef = useRef(null);
-  // const userDetails = JSON.parse(localStorage.getItem("user"));
+  const userDetails = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   const [clickedTileInfo, setClickedTileInfo] = useState(null);
@@ -149,10 +149,10 @@ const MapComponent = () => {
 
   const handleTileClick = (event) => {
     // console.log(138, userDetails);
-    // if (!userDetails) {
-    //   navigate("/login");
-    //   return;
-    // }
+    if (!userDetails) {
+      navigate("/login");
+      return;
+    }
     if (popperInstance) {
       popperInstance.destroy();
     }
