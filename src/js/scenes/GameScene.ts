@@ -218,7 +218,7 @@ export default class GameScene extends Phaser.Scene {
 
     const { widthInPixels, heightInPixels } = tilemap;
     const camera = this.cameras.main;
-    const defaultZoom = camera.zoom;
+    camera.setBackgroundColor("#1883fd");
 
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
