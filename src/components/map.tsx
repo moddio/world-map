@@ -22,7 +22,7 @@ const MapComponent = () => {
     const config = {
       type: Phaser.AUTO,
       width: window.innerWidth,
-      height: window.innerHeight - 92,
+      height: window.innerHeight,
       zoom: 1,
       input: {
         keyboard: true,
