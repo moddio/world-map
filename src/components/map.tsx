@@ -149,10 +149,10 @@ const MapComponent = () => {
 
   const handleTileClick = (event) => {
     // console.log(138, userDetails);
-    if (!userDetails) {
+  /*  if (!userDetails) {
       navigate("/login");
       return;
-    }
+    }*/
     if (popperInstance) {
       popperInstance.destroy();
     }
