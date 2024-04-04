@@ -74,6 +74,8 @@ export default function Login({ handleClose, referer }) {
   //   ? `?referer=${encodeURIComponent("/create")}`
   //   : "";
 
+  referer = ''
+
   //   const { setShowAuth, setShowRegister } = useApp();
 
   const [authStore, setAuthStore] = useState(undefined);
@@ -207,6 +209,7 @@ export default function Login({ handleClose, referer }) {
                     console.log("event.data", event);
 
                     if (event.data.code === 200) {
+                      localStorage.setItem('user', event.data)
                       // reload page
                       document.location.reload();
                     } else if (event.data.code === 400) {

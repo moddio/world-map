@@ -142,7 +142,8 @@ export default class GameScene extends Phaser.Scene {
 
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+    link.href =
+      "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
     document.head.appendChild(link);
   }
 
@@ -158,11 +159,19 @@ export default class GameScene extends Phaser.Scene {
   }
   openModal(tileInfo) {
     console.log(154, tileInfo);
-  
+
     // Create modal element
     const modal = document.createElement("span");
-    modal.classList.add("fixed", "inset-0", "flex", "items-center", "justify-center", "bg-black", "bg-opacity-50");
-  
+    modal.classList.add(
+      "fixed",
+      "inset-0",
+      "flex",
+      "items-center",
+      "justify-center",
+      "bg-black",
+      "bg-opacity-50"
+    );
+
     // Create modal content
     modal.innerHTML = `
       <div class="modal-content bg-white rounded-lg p-8">
@@ -173,17 +182,16 @@ export default class GameScene extends Phaser.Scene {
         <img src="${tileInfo.image}" alt="Building Image" class="mt-4 mx-auto">
       </div>
     `;
-  
+
     // Append modal to the body
     document.body.appendChild(modal);
-  
+
     // Close modal when close button is clicked
     const closeButton = modal.querySelector(".close");
     closeButton.addEventListener("click", () => {
       modal.remove();
     });
   }
-  
 
   public preload() {
     this.load.tilemapTiledJSON("tilemap", tilemapjson);
@@ -217,31 +225,37 @@ export default class GameScene extends Phaser.Scene {
 
     // Create the tooltip
     this.tooltip = this.add.text(0, 0, "", {
-      font: "16px Arial",
-      color: "#ffffff",
-      backgroundColor: "#000000",
+      font: "12px Arial",
+      color: "#fff", // Black text color
+      backgroundColor: "rgba(0,0,0,0.8)", // White background color
+      padding: {
+        x: 10,
+        y: 5
+      },
+      // cornerRadius: 10 // Rounded corners
     });
+    
     this.tooltip.setAlpha(0);
 
-    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+    this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
-		  const minZoom = (0.5 * 16) / tilemap.tileWidth;
-		  let targetZoom;
-		  if (deltaY < 0) targetZoom = camera.zoom * 1.2;
-		  else targetZoom = camera.zoom / 1.2;
-		  if (targetZoom < minZoom) targetZoom = minZoom;
-		  else if (targetZoom > maxZoom) targetZoom = maxZoom;
-		  camera.setZoom(targetZoom);
-		});
+      const minZoom = (0.5 * 16) / tilemap.tileWidth;
+      let targetZoom;
+      if (deltaY < 0) targetZoom = camera.zoom * 1.2;
+      else targetZoom = camera.zoom / 1.2;
+      if (targetZoom < minZoom) targetZoom = minZoom;
+      else if (targetZoom > maxZoom) targetZoom = maxZoom;
+      camera.setZoom(targetZoom);
+    });
 
-    this.input.on('pointermove', (p) => {
-			if (p.isDown) {
-				const scrollX = (p.x - p.prevPosition.x) / camera.zoom;
-				const scrollY = (p.y - p.prevPosition.y) / camera.zoom;
-				camera.scrollX -= scrollX;
-				camera.scrollY -= scrollY;
-			}
-		});
+    this.input.on("pointermove", (p) => {
+      if (p.isDown) {
+        const scrollX = (p.x - p.prevPosition.x) / camera.zoom;
+        const scrollY = (p.y - p.prevPosition.y) / camera.zoom;
+        camera.scrollX -= scrollX;
+        camera.scrollY -= scrollY;
+      }
+    });
   }
 
   public update() {
@@ -266,15 +280,15 @@ export default class GameScene extends Phaser.Scene {
       if (this.input.manager.activePointer.leftButtonDown()) {
         //@ts-ignore
         const hoveredTileIndex = hoveredTile.id;
-        const hoveredTileInfo = this.tileInfoArray.find(
+        const clickedTileInfo = this.tileInfoArray.find(
           //@ts-ignore
           (tileInfo) => tileInfo.index === hoveredTileIndex
         );
-        hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
+        clickedTileInfo.position = { x: pointerTileX, y: pointerTileY };
         //@ts-ignore
-        hoveredTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+        clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
         // console.log(238, hoveredTileInfo);
-        const event = new CustomEvent("tileClick", { detail: hoveredTileInfo });
+        const event = new CustomEvent("tileClick", { detail: clickedTileInfo });
         window.dispatchEvent(event);
         // this.openModal(hoveredTileInfo);
         console.log("click on tile:", pointerTileX, pointerTileY);
@@ -287,12 +301,10 @@ export default class GameScene extends Phaser.Scene {
           (tileInfo) => tileInfo.index === hoveredTileIndex
         );
         hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
-        // console.log(238, hoveredTileInfo);
-        //@ts-ignore
-        // console.log(101, hoveredTileIndex, hoveredTileInfo);
-        //@ts-ignore
-        // localStorage.setItem("tileInfo", hoveredTileInfo);
-        hoveredTileInfo.position = {x: pointerTileX, y: pointerTileY}
+        const event = new CustomEvent("tileHover", { detail: hoveredTileInfo });
+        window.dispatchEvent(event);
+
+        hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
 
         if (hoveredTileInfo) {
           const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nPosition: (${JSON.stringify(hoveredTileInfo.position)})`;
@@ -306,6 +318,8 @@ export default class GameScene extends Phaser.Scene {
         hoveredTile.setAlpha(0.75);
       }
     } else {
+      const event = new Event("noTileHover");
+      window.dispatchEvent(event);
       this.tooltip.setAlpha(0); // Hide tooltip if not hovering over a tile
     }
   }
