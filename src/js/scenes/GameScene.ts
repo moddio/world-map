@@ -10,9 +10,11 @@ export default class GameScene extends Phaser.Scene {
   tileInfoArray: {
     mousePointer: {};
     mapName: string;
+    ownerName: string;
+    dateCreated: string;
+    description: string;
     position: {};
     type: string;
-    description: string;
     index: number;
     redirectUrl: string;
     image: string;
@@ -28,7 +30,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Dungeon',
         mapName: "Ancient Catacombs",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 789,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -38,7 +42,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Dungeon',
         mapName: "Mystic Caverns",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 333,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -48,7 +54,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Dungeon',
         mapName: "Shadowy Labyrinth",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 428,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -58,7 +66,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Dungeon',
         mapName: "Forgotten Crypts",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 817,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -68,7 +78,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Ruins',
         mapName: "Lost City of Eldoria",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 560,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -78,7 +90,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Ruins',
         mapName: "Ancient Temple Ruins",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 407,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -88,7 +102,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Forest',
         mapName: "Enchanted Woodlands",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 1135,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -98,7 +114,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Forest',
         mapName: "Whispering Grove",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 598,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -108,7 +126,9 @@ export default class GameScene extends Phaser.Scene {
       {
         type: 'Mountain',
         mapName: "Dragon's Peak",
+        ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
         mousePointer: {},
         index: 716,
         redirectUrl: "https://modd.io/play/LAD/",
@@ -156,10 +176,13 @@ export default class GameScene extends Phaser.Scene {
 
     // Create modal content
     modal.innerHTML = `
-      <div class="modal-content bg-white rounded-lg p-8">
+      <div id="modal" class="modal-content bg-white rounded-lg p-8">
         <span class="close absolute top-0 right-0 m-4 text-gray-600 cursor-pointer">&times;</span>
         <h2 class="text-2xl font-bold">${tileInfo.mapName}</h2>
+        <p class="text-lg">Owner: ${tileInfo.ownerName}</p>
         <p class="text-lg">Position: (${tileInfo.position.x}, ${tileInfo.position.y})</p>
+        <p class="text-lg">Date Created: ${tileInfo.dateCreated}</p>
+        <p class="text-lg">${tileInfo.description}</p>
         <a href="${tileInfo.redirectUrl}" class="block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Play</a>
         <img src="${tileInfo.image}" alt="Building Image" class="mt-4 mx-auto">
       </div>
@@ -224,8 +247,16 @@ export default class GameScene extends Phaser.Scene {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
       const minZoom = (0.5 * 16) / tilemap.tileWidth;
       let targetZoom;
-      if (deltaY < 0) targetZoom = camera.zoom * 1.2;
-      else targetZoom = camera.zoom / 1.2;
+
+      if (deltaY < 0) {
+        targetZoom = camera.zoom * 1.2;
+        if (targetZoom < maxZoom) {
+          let xDist = pointer.worldX - camera.midPoint.x;
+          let yDist = pointer.worldY - camera.midPoint.y;
+          camera.scrollX += xDist/6;
+          camera.scrollY += yDist/6;
+        }
+      } else targetZoom = camera.zoom / 1.2;
       if (targetZoom < minZoom) targetZoom = minZoom;
       else if (targetZoom > maxZoom) targetZoom = maxZoom;
       camera.setZoom(targetZoom);
@@ -261,18 +292,22 @@ export default class GameScene extends Phaser.Scene {
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
       if (this.input.manager.activePointer.leftButtonDown()) {
-        //@ts-ignore
-        const hoveredTileIndex = hoveredTile.id;
-        const clickedTileInfo = this.tileInfoArray.find(
+        if (!document.getElementById("modal")) {
           //@ts-ignore
-          (tileInfo) => tileInfo.index === hoveredTileIndex
-        );
-        clickedTileInfo.position = { x: pointerTileX, y: pointerTileY };
-        clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-        const event = new CustomEvent("tileClick", { detail: clickedTileInfo });
-        window.dispatchEvent(event);
-        // this.openModal(hoveredTileInfo);
-        // Open game link
+          const hoveredTileIndex = hoveredTile.id;
+          const clickedTileInfo = this.tileInfoArray.find(
+            //@ts-ignore
+            (tileInfo) => tileInfo.index === hoveredTileIndex
+          );
+          // (tileInfo) => tileInfo.index === hoveredTileIndex
+          clickedTileInfo.position = { x: pointerTileX, y: pointerTileY };
+          clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+          const event = new CustomEvent("tileClick", { detail: clickedTileInfo });
+          window.dispatchEvent(event);
+          // this.openModal(hoveredTileInfo);
+          this.tooltip.setAlpha(0); 
+          // Open game link
+        }
       } else {
         //@ts-ignore
         const hoveredTileIndex = hoveredTile.id;
@@ -286,22 +321,25 @@ export default class GameScene extends Phaser.Scene {
         const event = new CustomEvent("tileHover", { detail: hoveredTileInfo });
         window.dispatchEvent(event);
 
-        hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
-
         if (hoveredTileInfo) {
-          const tooltipText = `Map Name: ${
-            hoveredTileInfo.mapName
-          }\nPosition: (${JSON.stringify(hoveredTileInfo.position)})`;
-          const tileScreenPos = tilemap.tileToWorldXY(
-            hoveredTile.x,
-            hoveredTile.y
-          );
-          this.tooltip.setText(tooltipText);
-          this.tooltip.setPosition(tileScreenPos.x, tileScreenPos.y);
-          this.tooltip.setAlpha(1); 
+          if (document.getElementById("modalPopup").style.display == "none") {
+            const shiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+            const shiftPressed = shiftKey.isDown;
+            let tooltipText;
+            const tileScreenPos = tilemap.tileToWorldXY(hoveredTile.x, hoveredTile.y);
+            if (shiftPressed) {
+              tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}\nDate Created: ${hoveredTileInfo.dateCreated}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
+              this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 90);
+            } else {
+              tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}`;
+              this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 54);
+            }
+            this.tooltip.setText(tooltipText);
+            this.tooltip.setAlpha(1); 
+          }
         } else {
           const event = new CustomEvent("noTileHover", { detail: null });
-        window.dispatchEvent(event);
+          window.dispatchEvent(event);
           this.tooltip.setAlpha(0); 
         }
         hoveredTile.setAlpha(1);

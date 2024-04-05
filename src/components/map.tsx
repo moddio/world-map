@@ -76,19 +76,21 @@ const MapComponent = () => {
         if (mapImage instanceof HTMLImageElement) {
           mapImage.src = clickedTileInfo.image;
         }
-        document.querySelector("#mapName").innerHTML = clickedTileInfo.mapName;
-        document.querySelector("#mapType").innerHTML = clickedTileInfo.type;;
+        document.querySelector("#mapName").innerHTML = "<u>" + clickedTileInfo.mapName + "</u>";
+        document.querySelector("#mapType").innerHTML = `Type - ${clickedTileInfo.type}`;
+        document.querySelector("#mapOwner").innerHTML = `Created by: <a href='https://modd.io/user/${clickedTileInfo.ownerName}' target='_blank' rel='noopener noreferrer'> ${clickedTileInfo.ownerName}
+        </a>`;
+        document.querySelector("#dateCreated").innerHTML = `Created on: ${clickedTileInfo.dateCreated}`;
         document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
         document.querySelector("#description").innerHTML = clickedTileInfo.description;
-        setTimeout(() => {modalPopup.style.display = "flex";}, 200);
+        modalPopup.style.display = "flex";
+        modalPopup.classList.add("fadeInAnimation");
         
       }
       // Cleanup function
       return () => {
-        // if (popperInstance) {
-        //   popperInstance.destroy();
-        // }
         modalPopup.style.display = "none";
+        modalPopup.classList.remove("fadeInAnimation");
       };
     } else {      
       modalPopup.style.display = "none";
@@ -210,6 +212,12 @@ const MapComponent = () => {
                 className='text-2xl text-center font-bold row-span-1'
                 id='mapName'></h2>
               <span
+                className='text-lg font-bold block row-span-1'
+                id='mapOwner'></span>
+              <span
+                className='text-lg font-bold block row-span-1'
+                id='dateCreated'></span>
+              <span
                 className='popup-position text-lg font-bold block row-span-1'
                 id='mapPosition'></span>
               <span
@@ -220,7 +228,7 @@ const MapComponent = () => {
               </div>
               <div className='m-3'>                
                 <button
-                  onClick={() => window.open("https://modd.io/play/LAD/")}                 
+                  onClick={() => window.open(clickedTileInfo.redirectUrl)}                 
                   className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
                   <span className='mr-2'>Play</span>
                   <PlayIcon className="w-5 h-5 text-[#fff] cursor-pointer" />
