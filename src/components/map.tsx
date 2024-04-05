@@ -110,6 +110,16 @@ const MapComponent = () => {
       ownerInfo.className = "text-lg font-bold text-center";
       ownerInfo.textContent = `Owner: ${clickedTileInfo.ownerName}`;
 
+      // Add owner information
+      const dateCreated = document.createElement("p");
+      dateCreated.className = "text-lg font-bold text-center";
+      dateCreated.textContent = `Date Created: ${clickedTileInfo.dateCreated}`;
+
+      // Add owner information
+      const descriptionInfo = document.createElement("p");
+      descriptionInfo.className = "text-sm text-center";
+      descriptionInfo.textContent = `${clickedTileInfo.description}`;
+
       const playButton = document.createElement("a");
       playButton.href = clickedTileInfo.redirectUrl;
       playButton.className =
@@ -121,7 +131,7 @@ const MapComponent = () => {
       buildingImage.src = clickedTileInfo.image;
       buildingImage.alt = "Building Image";
       buildingImage.className = "mt-2 mx-auto";
-      buildingImage.style.width = "200px";
+      buildingImage.style.width = "250px";
       buildingImage.style.height = "150px";
 
       // Append elements to popup content
@@ -129,6 +139,8 @@ const MapComponent = () => {
       popupContent.appendChild(closeIcon); // append close icon
       popupContent.appendChild(title);
       popupContent.appendChild(ownerInfo);
+      popupContent.appendChild(descriptionInfo);
+      popupContent.appendChild(dateCreated);
       popupContent.appendChild(positionInfo);
       popupContent.appendChild(playButton);
       popupContent.appendChild(overlay);
@@ -139,7 +151,7 @@ const MapComponent = () => {
       // Append container to body
       document.body.appendChild(popperContainer);
 
-      popupContent.style.width = "250px";
+      popupContent.style.width = "350px";
 
       // Cleanup function
       return () => {

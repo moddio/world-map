@@ -10,6 +10,8 @@ export default class GameScene extends Phaser.Scene {
   tileInfoArray: {
     mapName: string;
     ownerName: string;
+    dateCreated: string;
+    description: string;
     position: {};
     index: number;
     redirectUrl: string;
@@ -27,6 +29,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building A",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 0,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/524/200/200.jpg?hmac=t6LNfKKZ41wUVh8ktcFHag3CGQDzovGpZquMO5cbH-o",
@@ -35,6 +39,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building B",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 1,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "hhttps://fastly.picsum.photos/id/719/200/200.jpg?hmac=WkMnZveCKylVzw33Ui-BNFbah8IQWImYq68wVKznlEo",
@@ -43,6 +49,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building C",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 2,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/142/200/200.jpg?hmac=L8yY8tFPavTj32ZpuPiqsLsfWgDvW1jvoJ0ETDOUMGg",
@@ -51,6 +59,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building D",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 3,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/257/200/200.jpg?hmac=k0qf_n518If39xOB7qmdqgZZNQ38WdbfQXdF30TSPCw",
@@ -59,6 +69,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building E",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 4,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://picsum.photos/405/100",
@@ -67,6 +79,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building F",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 5,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://picsum.photos/407/100",
@@ -75,6 +89,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building G",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 6,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://picsum.photos/406/100",
@@ -83,6 +99,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building H",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 789,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/185/200/200.jpg?hmac=YNeKNCPhFVkjxUu5nB7ZP8UJVw_zYu3TPLI11_edSWc",
@@ -91,6 +109,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building I",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 333,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/257/200/200.jpg?hmac=k0qf_n518If39xOB7qmdqgZZNQ38WdbfQXdF30TSPCw",
@@ -99,6 +119,8 @@ export default class GameScene extends Phaser.Scene {
         mapName: "Building J",
         ownerName: "m0dE",
         position: {},
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         index: 428,
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/142/200/200.jpg?hmac=L8yY8tFPavTj32ZpuPiqsLsfWgDvW1jvoJ0ETDOUMGg",
@@ -108,6 +130,8 @@ export default class GameScene extends Phaser.Scene {
         ownerName: "m0dE",
         position: {},
         index: 817,
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/447/200/200.jpg?hmac=CwQWs2SxtAz87GyTTmC1s4okk4869xQiZAfx7rPW0FM",
       },
@@ -116,6 +140,8 @@ export default class GameScene extends Phaser.Scene {
         ownerName: "m0dE",
         position: {},
         index: 560,
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/524/200/200.jpg?hmac=t6LNfKKZ41wUVh8ktcFHag3CGQDzovGpZquMO5cbH-o",
       },
@@ -124,6 +150,8 @@ export default class GameScene extends Phaser.Scene {
         ownerName: "m0dE",
         position: {},
         index: 407,
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/719/200/200.jpg?hmac=WkMnZveCKylVzw33Ui-BNFbah8IQWImYq68wVKznlEo",
       },
@@ -132,6 +160,8 @@ export default class GameScene extends Phaser.Scene {
         ownerName: "m0dE",
         position: {},
         index: 1135,
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://picsum.photos/400/100",
       },
@@ -140,6 +170,8 @@ export default class GameScene extends Phaser.Scene {
         ownerName: "m0dE",
         position: {},
         index: 598,
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/264/200/200.jpg?hmac=O4sRY3iZeFvmPRuanICCCZi-CDz0HdRHMsHttvNCgmw",
       },
@@ -148,6 +180,8 @@ export default class GameScene extends Phaser.Scene {
         ownerName: "m0dE",
         position: {},
         index: 716,
+        dateCreated: '1/1/1970',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         redirectUrl: "https://modd.io/play/LAD/",
         image: "https://fastly.picsum.photos/id/590/200/200.jpg?hmac=Z5g54UWkuML96A-q7x7wX6LDuVGFdHQrEYEsU2CIM1U",
       },
@@ -196,6 +230,8 @@ export default class GameScene extends Phaser.Scene {
         <h2 class="text-2xl font-bold">${tileInfo.mapName}</h2>
         <p class="text-lg">Owner: ${tileInfo.ownerName}</p>
         <p class="text-lg">Position: (${tileInfo.position.x}, ${tileInfo.position.y})</p>
+        <p class="text-lg">Date Created: ${tileInfo.dateCreated}</p>
+        <p class="text-lg">${tileInfo.description}</p>
         <a href="${tileInfo.redirectUrl}" class="block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Play</a>
         <img src="${tileInfo.image}" alt="Building Image" class="mt-4 mx-auto">
       </div>
