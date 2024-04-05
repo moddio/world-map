@@ -259,8 +259,16 @@ export default class GameScene extends Phaser.Scene {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
       const minZoom = (0.5 * 16) / tilemap.tileWidth;
       let targetZoom;
-      if (deltaY < 0) targetZoom = camera.zoom * 1.2;
-      else targetZoom = camera.zoom / 1.2;
+
+      if (deltaY < 0) {
+        targetZoom = camera.zoom * 1.2;
+        if (targetZoom < maxZoom) {
+          let xDist = pointer.worldX - camera.midPoint.x;
+          let yDist = pointer.worldY - camera.midPoint.y;
+          camera.scrollX += xDist/6;
+          camera.scrollY += yDist/6;
+        }
+      } else targetZoom = camera.zoom / 1.2;
       if (targetZoom < minZoom) targetZoom = minZoom;
       else if (targetZoom > maxZoom) targetZoom = maxZoom;
       camera.setZoom(targetZoom);
