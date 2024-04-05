@@ -299,7 +299,7 @@ export default class GameScene extends Phaser.Scene {
             //@ts-ignore
             (tileInfo) => tileInfo.index === hoveredTileIndex
           );
-          (tileInfo) => tileInfo.index === hoveredTileIndex
+          // (tileInfo) => tileInfo.index === hoveredTileIndex
           clickedTileInfo.position = { x: pointerTileX, y: pointerTileY };
           clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
           const event = new CustomEvent("tileClick", { detail: clickedTileInfo });
