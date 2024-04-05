@@ -83,14 +83,13 @@ const MapComponent = () => {
         document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
         document.querySelector("#description").innerHTML = clickedTileInfo.description;
         setTimeout(() => {modalPopup.style.display = "flex";}, 200);
+        modalPopup.classList.add("fadeInAnimation");
         
       }
       // Cleanup function
       return () => {
-        // if (popperInstance) {
-        //   popperInstance.destroy();
-        // }
         modalPopup.style.display = "none";
+        modalPopup.classList.remove("fadeInAnimation");
       };
     } else {      
       modalPopup.style.display = "none";
