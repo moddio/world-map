@@ -194,13 +194,13 @@ const MapComponent = () => {
           className='fixed flex items-center justify-center h-full w-full bg-black bg-opacity-70'
           style={{ transition: "all 1s ease 0s", display: "none" }}>
           <div
-            className='bg-white rounded-lg w-[1080px] h-[576px] relative grid grid-cols-2 grid-rows-1 gap-0 flex align-middle'
-            style={{ margin: "0 auto" }}>
+            className='bg-white rounded-xl w-[1080px] h-[576px] relative grid grid-cols-2 grid-rows-1 gap-0 flex align-middle'
+            style={{ margin: "0 auto", boxShadow: "0px 20px 50px 0px black" }}>
             <div className='left-section col-span-1 flex items-center justify-center'>
               <img
                 src=''
                 alt='Building Image'
-                className='popup-image h-full w-full'
+                className=' rounded-l-xl popup-image h-full w-full'
                 id='mapImage'
               />
             </div>
