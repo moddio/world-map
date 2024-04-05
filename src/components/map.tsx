@@ -83,7 +83,7 @@ const MapComponent = () => {
         document.querySelector("#dateCreated").innerHTML = `Created on: ${clickedTileInfo.dateCreated}`;
         document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
         document.querySelector("#description").innerHTML = clickedTileInfo.description;
-        setTimeout(() => {modalPopup.style.display = "flex";}, 200);
+        modalPopup.style.display = "flex";
         modalPopup.classList.add("fadeInAnimation");
         
       }
