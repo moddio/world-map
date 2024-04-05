@@ -39,3 +39,18 @@
     transform: rotate(360deg);
   }
 }
+/* Track */
+::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */  
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar handle */
+  border-radius: 5px; /* Rounded corners of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar handle on hover */
+}

@@ -4,19 +4,16 @@ import LoaderScene from "../js/scenes/LoaderScene";
 import GameScene from "../js/scenes/GameScene";
 import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
-import { ShoppingBagIcon } from "@heroicons/react/24/solid";
-import { Tooltip as ReactTooltip } from 'react-tooltip'
+import { PlayIcon, ShoppingBagIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const MapComponent = () => {
   const gameRef = useRef(null);
-  const userDetails = JSON.parse(localStorage.getItem("user"));
+  // const userDetails = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   const [clickedTileInfo, setClickedTileInfo] = useState(null);
-  const [hoveredTileInfo, setHoveredTileInfo] = useState(null);
   const [popperInstance, setPopperInstance] = useState(null);
-  const [lastPopperContainer, setLastPopperContainer] = useState(null);
-
 
   useEffect(() => {
     const config = {
@@ -28,10 +25,16 @@ const MapComponent = () => {
         keyboard: true,
         gamepad: true,
       },
+      scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoRound: true,
+        resolution: window.devicePixelRatio,
+      },
       render: {
         pixelArt: true,
         antialias: false,
         antialiasGL: false,
+        autoResize: true
       },
       physics: {
         default: "arcade",
@@ -41,202 +44,118 @@ const MapComponent = () => {
             y: 500,
           },
         },
-      },
-      scene: [LoaderScene, GameScene],
-      backgroundColor: "#59f773",
+      },     
+       scene: [LoaderScene, GameScene],
+       backgroundColor: "#59f773",
     };
 
     // Create new Phaser game instance
     //@ts-ignore
     gameRef.current = new Phaser.Game(config);
 
-    
     // Function to disable context menu
     const disableContextMenu = (event) => {
       event.preventDefault();
     };
     window.addEventListener("contextmenu", disableContextMenu);
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        document.getElementById("modalPopup").style.display = "none"; // Call your function to close the modalPopup
+      }
+    });
     return () => {
       window.removeEventListener("contextmenu", disableContextMenu);
     };
-
-
   }, []);
 
   useEffect(() => {
-    if (clickedTileInfo) {
-      if (popperInstance) {
-        popperInstance.destroy();
-      }
-      // Create the popup container
-      const popperContainer = document.createElement("div");
-      popperContainer.className =
-        "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50";
-
-      // Create the transparent overlay
-      const overlay = document.createElement("div");
-      overlay.className = "absolute inset-0 pointer-events-none"; // Disable pointer events
-      overlay.style.backgroundColor = "transparent"; // Transparent background
-      // Append overlay to the container
-
-      // Create the popup content
-      const popupContent = document.createElement("div");
-      popupContent.className = "modal-content bg-white rounded-lg p-8 relative"; // added relative class for positioning the close icon
-
-      const closeIcon = document.createElement("span");
-      closeIcon.className =
-        "absolute top-2 text-2xl right-2 cursor-pointer text-gray-500 hover:text-gray-700";
-      closeIcon.textContent = "x";
-      closeIcon.addEventListener("click", () => {
-        if (popperInstance) {
-          popperInstance.destroy();
+    const modalPopup = document.getElementById("modalPopup");
+    if (clickedTileInfo) {      
+      if (modalPopup) {
+        const mapImage = document.querySelector("#mapImage");
+        if (mapImage instanceof HTMLImageElement) {
+          mapImage.src = clickedTileInfo.image;
         }
-        document.body.removeChild(popperContainer); // remove popper container from the DOM
-      });
-
-      // Add title
-      const title = document.createElement("h2");
-      title.className = "text-2xl text-center font-bold ";
-      title.textContent = clickedTileInfo.mapName;
-
-      // Add position information
-      const positionInfo = document.createElement("span");
-      positionInfo.className = "text-lg font-bold text-center";
-      positionInfo.textContent = `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})`;
-
-      const playButton = document.createElement("a");
-      playButton.href = clickedTileInfo.redirectUrl;
-      playButton.className =
-        " px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2 mx-auto";
-      playButton.textContent = "Play";
-
-      // Add building image
-      const buildingImage = document.createElement("img");
-      buildingImage.src = clickedTileInfo.image;
-      buildingImage.alt = "Building Image";
-      buildingImage.className = "mt-2 mx-auto";
-      buildingImage.style.width = "200px";
-      buildingImage.style.height = "150px";
-
-      // Append elements to popup content
-      popupContent.appendChild(buildingImage);
-      popupContent.appendChild(closeIcon); // append close icon
-      popupContent.appendChild(title);
-      popupContent.appendChild(positionInfo);
-      popupContent.appendChild(playButton);
-      popupContent.appendChild(overlay);
-
-      // Append popup content to container
-      popperContainer.appendChild(popupContent);
-
-      // Append container to body
-      document.body.appendChild(popperContainer);
-
-      popupContent.style.width = "250px";
-
+        document.querySelector("#mapName").innerHTML = clickedTileInfo.mapName;
+        document.querySelector("#mapType").innerHTML = clickedTileInfo.type;;
+        document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
+        document.querySelector("#description").innerHTML = clickedTileInfo.description;
+        setTimeout(() => {modalPopup.style.display = "flex";}, 200);
+        
+      }
       // Cleanup function
       return () => {
-        if (popperInstance) {
-          popperInstance.destroy();
-        }
+        // if (popperInstance) {
+        //   popperInstance.destroy();
+        // }
+        modalPopup.style.display = "none";
       };
-    } else {
-      if (popperInstance) {
-        popperInstance.destroy();
-      }
+    } else {      
+      modalPopup.style.display = "none";
     }
   }, [clickedTileInfo]);
 
   const handleTileClick = (event) => {
     // console.log(138, userDetails);
-  /*  if (!userDetails) {
+    /*  if (!userDetails) {
       navigate("/login");
       return;
     }*/
     if (popperInstance) {
       popperInstance.destroy();
     }
-    console.log(event.detail);
+    // console.log(event.detail);
     setClickedTileInfo(event.detail);
   };
 
   const handleTileHover = (event) => {
     const hoveredTile = event.detail;
-  
+
     // Create popper only if there is hovered tile information
     if (popperInstance) {
       popperInstance.destroy();
     }
-  
+    if (!hoveredTile) {
+      return;
+    }
+
     // Create popper container
     const popperContainer = document.createElement("div");
     popperContainer.className =
       "fixed inset-0 flex items-center justify-center";
-  
-    // Create transparent overlay
-    const overlay = document.createElement("div");
-    overlay.className = "fixed inset-0 opacity-0 pointer-events-none"; // Transparent background
-    overlay.style.transition = "opacity 0.3s ease"; // Smooth transition
-    overlay.addEventListener("click", () => {
-      if (popperInstance) {
-        popperInstance.destroy();
-      }
-    });
-  
-    // Create popper content
-    const popperContent = document.createElement("div");
-    popperContent.className = "modal-content bg-white rounded-lg p-8";
-    popperContent.style.width = "250px"; // Set width to 250px
-  
-    // Add tile name
-    const title = document.createElement("h2");
-    title.className = "text-2xl text-center font-bold mb-4";
-    title.textContent = hoveredTile.mapName;
-  
-    // Add position information
-    const positionInfo = document.createElement("span");
-    positionInfo.className = "text-lg font-bold text-center";
-    positionInfo.textContent = `Position: (${hoveredTile.position.x}, ${hoveredTile.position.y})`;
-  
-    // Append elements to popper content
-    popperContent.appendChild(title);
-    popperContent.appendChild(positionInfo);
-  
-    // Append popper content to container
-    popperContainer.appendChild(popperContent);
-    popperContainer.appendChild(overlay);
-  
-    // Append container to body
-    // document.body.appendChild(popperContainer);
-    setLastPopperContainer(popperContainer)
+
     if (!hoveredTile) {
-      document.body.removeChild(popperContainer); 
+      document.body.removeChild(popperContainer);
       if (popperInstance) {
         popperInstance.destroy();
       }
       return;
     }
+
+    const handleNoTileHover = (e) => {
+      // console.log(220, e);
+    };
+
+    window.removeEventListener("noTileHover", handleNoTileHover);
+
     // Set the popper instance state
     setPopperInstance(
-      createPopper(hoveredTile.target, popperContainer, {
-        placement: "top",
+      createPopper(event.currentTarget, popperContainer, {
+        // placement: "top",
         modifiers: [
           {
-            name: 'eventListeners',
+            name: "offset",
             options: {
-              scroll: false,
-              resize: false,
+              offset: [
+                hoveredTile.mousePointer.x + 500,
+                hoveredTile.mousePointer.y,
+              ],
             },
           },
         ],
       })
     );
-  
-    // Fade in the overlay
-    setTimeout(() => {
-      overlay.style.opacity = "0.5";
-    }, 0);
-  
+
     // Cleanup function
     return () => {
       if (popperInstance) {
@@ -245,25 +164,72 @@ const MapComponent = () => {
       document.body.removeChild(popperContainer);
     };
   };
-  
-
-  console.log(174, hoveredTileInfo)
 
   useEffect(() => {
-   
-  
+    const handleNoTileHover = (e) => {
+      // console.log(220, e);
+    };
+
     window.addEventListener("tileClick", handleTileClick);
     window.addEventListener("tileHover", handleTileHover);
-  
+    window.addEventListener("noTileHover", handleNoTileHover);
+
     return () => {
       window.removeEventListener("tileClick", handleTileClick);
       window.removeEventListener("tileHover", handleTileHover);
+      window.removeEventListener("noTileHover", handleNoTileHover);
     };
-  }, [popperInstance]);
+  }, []);
+
+  const handleClose = () => {
+    document.getElementById("modalPopup").style.display = "none";
+    setClickedTileInfo(null);
+  }
   return (
-    <div>
+    <div>      
       {/* Phaser Game */}
-      <div ref={gameRef}></div>       
+      <div ref={gameRef}>
+        <div
+          id='modalPopup'
+          className='fixed flex items-center justify-center h-full w-full bg-black bg-opacity-70'
+          style={{ transition: "all 1s ease 0s", display: "none" }}>
+          <div
+            className='bg-white rounded-lg w-[1080px] h-[576px] relative grid grid-cols-2 grid-rows-1 gap-0 flex align-middle'
+            style={{ margin: "0 auto" }}>
+            <div className='left-section col-span-1 flex items-center justify-center'>
+              <img
+                src=''
+                alt='Building Image'
+                className='popup-image h-full w-full'
+                id='mapImage'
+              />
+            </div>
+            <div className='right-section p-3 flex flex-col justify-center items-center relative'>
+            <XCircleIcon onClick={handleClose} className="absolute top-2 right-2 w-10 h-10 text-[#000] cursor-pointer" />             
+              <h2
+                className='text-2xl text-center font-bold row-span-1'
+                id='mapName'></h2>
+              <span
+                className='popup-position text-lg font-bold block row-span-1'
+                id='mapPosition'></span>
+              <span
+                className='text-lg font-bold block row-span-1'
+                id='mapType'></span>
+              <div className='popup-description overflow-auto h-72 mt-3 text-justify pr-2'>
+                <span className='text-md text-gray-700' id='description'></span>
+              </div>
+              <div className='m-3'>                
+                <button
+                  onClick={() => window.open("https://modd.io/play/LAD/")}                 
+                  className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
+                  <span className='mr-2'>Play</span>
+                  <PlayIcon className="w-5 h-5 text-[#fff] cursor-pointer" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
