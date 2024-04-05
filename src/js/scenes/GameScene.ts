@@ -370,13 +370,19 @@ export default class GameScene extends Phaser.Scene {
         const event = new CustomEvent("tileHover", { detail: hoveredTileInfo });
         window.dispatchEvent(event);
 
-        hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
-
         if (hoveredTileInfo) {
-          const tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
+          const shiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+          const shiftPressed = shiftKey.isDown;
+          let tooltipText;
           const tileScreenPos = tilemap.tileToWorldXY(hoveredTile.x, hoveredTile.y);
+          if (shiftPressed) {
+            tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}\nDate Created: ${hoveredTileInfo.dateCreated}\nPosition: (${String(hoveredTile.x)}, ${String(hoveredTile.y)})`;
+            this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 90);
+          } else {
+            tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}`;
+            this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 54);
+          }
           this.tooltip.setText(tooltipText);
-          this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 72);
           if (!document.getElementById("modal")) {
             this.tooltip.setAlpha(1);
           }
