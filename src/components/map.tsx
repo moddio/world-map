@@ -78,7 +78,8 @@ const MapComponent = () => {
         }
         document.querySelector("#mapName").innerHTML = "<u>" + clickedTileInfo.mapName + "</u>";
         document.querySelector("#mapType").innerHTML = `Type - ${clickedTileInfo.type}`;
-        document.querySelector("#mapOwner").innerHTML = `Created by: ${clickedTileInfo.ownerName}`;
+        document.querySelector("#mapOwner").innerHTML = `Created by: <a href='https://modd.io/user/${clickedTileInfo.ownerName}' target='_blank' rel='noopener noreferrer'> ${clickedTileInfo.ownerName}
+        </a>`;
         document.querySelector("#dateCreated").innerHTML = `Created on: ${clickedTileInfo.dateCreated}`;
         document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
         document.querySelector("#description").innerHTML = clickedTileInfo.description;
