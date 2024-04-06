@@ -317,7 +317,12 @@ export default class GameScene extends Phaser.Scene {
         );
         hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
         hoveredTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-
+        
+        if (document.getElementById("modalPopup").style.display == "none") {
+          document.body.style.cursor = "pointer";
+        } else {
+          document.body.style.cursor = "default";
+        }
         const event = new CustomEvent("tileHover", { detail: hoveredTileInfo });
         window.dispatchEvent(event);
 
@@ -346,6 +351,7 @@ export default class GameScene extends Phaser.Scene {
       }
     } else {
       // const event = new Event("noTileHover");
+      document.body.style.cursor = "default";
       // window.dispatchEvent(event);
       this.tooltip.setAlpha(0); // Hide tooltip if not hovering over a tile
     }
