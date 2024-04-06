@@ -70,31 +70,42 @@ const MapComponent = () => {
 
   useEffect(() => {
     const modalPopup = document.getElementById("modalPopup");
-    if (clickedTileInfo) {      
-      if (modalPopup) {
-        const mapImage = document.querySelector("#mapImage");
-        if (mapImage instanceof HTMLImageElement) {
-          mapImage.src = clickedTileInfo.image;
+    const handleCloseModal = (event) => {
+        if (event.target === modalPopup) {
+            modalPopup.style.display = "none";
+            modalPopup.classList.remove("fadeInAnimation");
+            document.removeEventListener("click", handleCloseModal);
         }
-        document.querySelector("#mapName").innerHTML = "<u>" + clickedTileInfo.mapName + "</u>";
-        document.querySelector("#mapType").innerHTML = `Type - ${clickedTileInfo.type}`;
-        document.querySelector("#mapOwner").innerHTML = `Created by: <a href='https://modd.io/user/${clickedTileInfo.ownerName}' target='_blank' rel='noopener noreferrer'> ${clickedTileInfo.ownerName}
-        </a>`;
-        document.querySelector("#dateCreated").innerHTML = `Created on: ${clickedTileInfo.dateCreated}`;
-        document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
-        document.querySelector("#description").innerHTML = clickedTileInfo.description;
-        modalPopup.style.display = "flex";
-        modalPopup.classList.add("fadeInAnimation");
-        
-      }
-      // Cleanup function
-      return () => {
+    };
+
+    if (clickedTileInfo) {      
+        if (modalPopup) {
+            const mapImage = document.querySelector("#mapImage");
+            if (mapImage instanceof HTMLImageElement) {
+                mapImage.src = clickedTileInfo.image;
+            }
+            document.querySelector("#mapName").innerHTML = "<u>" + clickedTileInfo.mapName + "</u>";
+            document.querySelector("#mapType").innerHTML = `Type - ${clickedTileInfo.type}`;
+            document.querySelector("#mapOwner").innerHTML = `Created by: <a href='https://modd.io/user/${clickedTileInfo.ownerName}' target='_blank' rel='noopener noreferrer'> ${clickedTileInfo.ownerName}
+            </a>`;
+            document.querySelector("#dateCreated").innerHTML = `Created on: ${clickedTileInfo.dateCreated}`;
+            document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
+            document.querySelector("#description").innerHTML = clickedTileInfo.description;
+            modalPopup.style.display = "flex";
+            modalPopup.classList.add("fadeInAnimation");
+            document.addEventListener("click", handleCloseModal);
+        }
+    } else {      
+        modalPopup.style.display = "none";
+        document.removeEventListener("click", handleCloseModal);
+    }
+
+    // Cleanup function
+    return () => {
         modalPopup.style.display = "none";
         modalPopup.classList.remove("fadeInAnimation");
-      };
-    } else {      
-      modalPopup.style.display = "none";
-    }
+        document.removeEventListener("click", handleCloseModal);
+    };
   }, [clickedTileInfo]);
 
   const handleTileClick = (event) => {
