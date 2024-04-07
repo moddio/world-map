@@ -337,7 +337,7 @@ export default class GameScene extends Phaser.Scene {
               this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 90);
             } else {
               tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}`;
-              this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 54);
+              this.tooltip.setPosition(tileScreenPos.x - this.tooltip.width / 2 + 10, tileScreenPos.y - 60);
             }
             this.tooltip.setText(tooltipText);
             this.tooltip.setAlpha(1); 
