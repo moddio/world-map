@@ -6,6 +6,7 @@ import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
 import { PlayIcon, ShoppingBagIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { NoSymbolIcon } from "@heroicons/react/20/solid";
 
 const MapComponent = () => {
   const gameRef = useRef(null);
@@ -198,6 +199,10 @@ const MapComponent = () => {
     document.getElementById("modalPopup").style.display = "none";
     setClickedTileInfo(null);
   }
+
+  let gameExists = true;
+  let gameIsPublished = true;
+
   return (
     <div>      
       {/* Phaser Game */}
@@ -238,13 +243,31 @@ const MapComponent = () => {
                 <span className='text-md text-gray-700' id='description'></span>
               </div>
               <div className='m-3'>                
-                <button
-                  onClick={() => window.open(clickedTileInfo.redirectUrl)}                 
-                  className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
-                  <span className='mr-2'>Play</span>
-                  <PlayIcon className="w-5 h-5 text-[#fff] cursor-pointer" />
-                </button>
-              </div>
+                {gameExists && gameIsPublished && (
+                  <button
+                    onClick={() => window.open(clickedTileInfo.redirectUrl)}                 
+                    className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
+                    <span className='mr-2'>Play</span>
+                    <PlayIcon className="w-5 h-5 text-[#fff] cursor-pointer" />
+                  </button>
+                )}
+                {!gameExists && (
+                  <button
+                    onClick={() => alert('Error: Game not found!')}                 
+                    className='inline-flex items-center bg-gray-600 hover:cursor-not-allowed hover:bg-gray-700 text-white font-bold border-2 border-gray-600 hover:border-gray-700 p-2 rounded-md shadow-md' style={{transition: '0.3s'}}>
+                    <span className='mr-2'>Play</span>
+                    <NoSymbolIcon className="w-5 h-5 text-[#fff]" />
+                  </button>              
+                )}
+                {gameExists && !gameIsPublished && (
+                  <button
+                    onClick={() => alert('Error: Game is unpublished!')}                 
+                    className='inline-flex items-center bg-gray-600 hover:cursor-not-allowed hover:bg-gray-700 text-[#fff] font-bold border-2 border-gray-600 hover:border-gray-700 p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
+                    <span className='mr-2'>Play</span>
+                    <NoSymbolIcon className="w-5 h-5 text-[#fff]" />
+                  </button>
+                )}
+            </div>
             </div>
           </div>
         </div>
