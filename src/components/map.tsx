@@ -51,8 +51,11 @@ const MapComponent = () => {
     };
 
     // Create new Phaser game instance
-    //@ts-ignore
-    gameRef.current = new Phaser.Game(config);
+    if (!document.getElementById('phaserGame')) {
+      //@ts-ignore
+      gameRef.current = new Phaser.Game(config);
+      gameRef.current.canvas.id = 'phaserGame';
+    }
 
     // Function to disable context menu
     const disableContextMenu = (event) => {
