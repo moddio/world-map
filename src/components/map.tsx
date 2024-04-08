@@ -4,8 +4,29 @@ import LoaderScene from "../js/scenes/LoaderScene";
 import GameScene from "../js/scenes/GameScene";
 import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
-import { PlayIcon, ShoppingBagIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import {
+  PlayIcon,
+  ShoppingBagIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/solid";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import axios from "axios";
+import { siteUrl, worldMapId } from "../config";
+
+interface GameDetails {
+  owner: {
+    _id: string;
+    username: string;
+  };
+  description: string;
+  mapPosition: {
+    x: string;
+    y: string;
+  };
+  cover: string;
+  createdAt: string;
+  title: string;
+}
 
 const MapComponent = () => {
   const gameRef = useRef(null);
@@ -14,6 +35,7 @@ const MapComponent = () => {
 
   const [clickedTileInfo, setClickedTileInfo] = useState(null);
   const [popperInstance, setPopperInstance] = useState(null);
+  const [mapData, setMapData] = useState<GameDetails | null>();
 
   useEffect(() => {
     const config = {
@@ -34,7 +56,7 @@ const MapComponent = () => {
         pixelArt: true,
         antialias: false,
         antialiasGL: false,
-        autoResize: true
+        autoResize: true,
       },
       physics: {
         default: "arcade",
@@ -44,9 +66,9 @@ const MapComponent = () => {
             y: 500,
           },
         },
-      },     
-       scene: [LoaderScene, GameScene],
-       backgroundColor: "#59f773",
+      },
+      scene: [LoaderScene, GameScene],
+      backgroundColor: "#59f773",
     };
 
     // Create new Phaser game instance
@@ -58,8 +80,8 @@ const MapComponent = () => {
       event.preventDefault();
     };
     window.addEventListener("contextmenu", disableContextMenu);
-    window.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
+    window.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
         document.getElementById("modalPopup").style.display = "none"; // Call your function to close the modalPopup
       }
     });
@@ -68,41 +90,58 @@ const MapComponent = () => {
     };
   }, []);
 
+  const fetchMaps = async (mapDetails) => {
+    const res = await axios.get(
+      `${siteUrl}/api/game/${worldMapId}/game-details/`
+    );
+    if (res && res.data && res.data.data) {
+      setMapData(res.data.data);
+    }
+  };
+
   useEffect(() => {
     const modalPopup = document.getElementById("modalPopup");
-    if (clickedTileInfo) {      
+    if (mapData) {
       if (modalPopup) {
         const mapImage = document.querySelector("#mapImage");
         if (mapImage instanceof HTMLImageElement) {
-          mapImage.src = clickedTileInfo.image;
+          mapImage.src = `${mapData.cover}`;
         }
-        document.querySelector("#mapName").innerHTML = "<u>" + clickedTileInfo.mapName + "</u>";
-        document.querySelector("#mapType").innerHTML = `Type - ${clickedTileInfo.type}`;
-        document.querySelector("#mapOwner").innerHTML = `Created by: <a href='https://modd.io/user/${clickedTileInfo.ownerName}' target='_blank' rel='noopener noreferrer'> ${clickedTileInfo.ownerName}
-        </a>`;
-        document.querySelector("#dateCreated").innerHTML = `Created on: ${clickedTileInfo.dateCreated}`;
-        document.querySelector("#mapPosition").innerHTML = clickedTileInfo.position ? `Position: (${clickedTileInfo.position.x}, ${clickedTileInfo.position.y})` : '';
-        document.querySelector("#description").innerHTML = clickedTileInfo.description;
+        document.querySelector("#mapName").innerHTML =
+          "<u>" + mapData.title + "</u>";
+        // document.querySelector("#mapType").innerHTML = `Type - ${clickedTileInfo.type}`;
+        document.querySelector(
+          "#mapOwner"
+        ).innerHTML = `Created by: <a href='${siteUrl}/user/${mapData?.owner?.username}' target='_blank' rel='noopener noreferrer'> ${mapData?.owner?.username}</a>`;
+        document.querySelector(
+          "#dateCreated"
+        ).innerHTML = `Created on: ${new Date(
+          mapData?.createdAt
+        ).toLocaleDateString()}`;
+        document.querySelector("#mapPosition").innerHTML = mapData?.mapPosition
+          ? `Position: (${mapData?.mapPosition?.x}, ${mapData?.mapPosition?.y})`
+          : "";
+        document.querySelector("#description").innerHTML = mapData?.description;
         modalPopup.style.display = "flex";
         modalPopup.classList.add("fadeInAnimation");
-        
       }
       // Cleanup function
       return () => {
         modalPopup.style.display = "none";
         modalPopup.classList.remove("fadeInAnimation");
       };
-    } else {      
+    } else {
       modalPopup.style.display = "none";
     }
-  }, [clickedTileInfo]);
+  }, [clickedTileInfo, mapData]);
 
-  const handleTileClick = (event) => {
+  const handleTileClick = async (event) => {
     // console.log(138, userDetails);
     /*  if (!userDetails) {
       navigate("/login");
       return;
     }*/
+    await fetchMaps(event.detail);
     if (popperInstance) {
       popperInstance.destroy();
     }
@@ -186,9 +225,10 @@ const MapComponent = () => {
   const handleClose = () => {
     document.getElementById("modalPopup").style.display = "none";
     setClickedTileInfo(null);
-  }
+    setMapData(null);
+  };
   return (
-    <div>      
+    <div>
       {/* Phaser Game */}
       <div ref={gameRef}>
         <div
@@ -207,7 +247,10 @@ const MapComponent = () => {
               />
             </div>
             <div className='right-section p-3 flex flex-col justify-center items-center relative'>
-            <XCircleIcon onClick={handleClose} className="absolute top-2 right-2 w-10 h-10 text-[#000] cursor-pointer" />             
+              <XCircleIcon
+                onClick={handleClose}
+                className='absolute top-2 right-2 w-10 h-10 text-[#000] cursor-pointer'
+              />
               <h2
                 className='text-2xl text-center font-bold row-span-1'
                 id='mapName'></h2>
@@ -226,12 +269,13 @@ const MapComponent = () => {
               <div className='popup-description overflow-auto h-72 mt-3 text-justify pr-2'>
                 <span className='text-md text-gray-700' id='description'></span>
               </div>
-              <div className='m-3'>                
+              <div className='m-3'>
                 <button
-                  onClick={() => window.open(clickedTileInfo.redirectUrl)}                 
-                  className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
+                  onClick={() => window.open(clickedTileInfo.redirectUrl)}
+                  className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md'
+                  style={{ transition: "0.3s" }}>
                   <span className='mr-2'>Play</span>
-                  <PlayIcon className="w-5 h-5 text-[#fff] cursor-pointer" />
+                  <PlayIcon className='w-5 h-5 text-[#fff] cursor-pointer' />
                 </button>
               </div>
             </div>

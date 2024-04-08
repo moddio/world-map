@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { formatDistanceStrict } from 'date-fns';
+// import { formatDistanceStrict } from 'date-fns';
 
 import { useUser } from './hooks';
 
@@ -22,11 +22,11 @@ export function getRandomToken(length) {
   return result;
 }
 
-export function getRelativeDate(date, addSuffix = true) {
-  return formatDistanceStrict(new Date(date), new Date(), {
-    addSuffix: addSuffix,
-  });
-}
+// export function getRelativeDate(date, addSuffix = true) {
+//   return formatDistanceStrict(new Date(date), new Date(), {
+//     addSuffix: addSuffix,
+//   });
+// }
 
 // export const coinHelper = {
 //   formatInt: (x) => Math.floor(x),
