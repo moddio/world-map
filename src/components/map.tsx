@@ -92,7 +92,7 @@ const MapComponent = () => {
 
   const fetchMaps = async (mapDetails) => {
     const res = await axios.get(
-      `${siteUrl}/api/game/${worldMapId}/game-details/`
+      `${siteUrl}/api/game/${mapDetails.id}/game-details/`
     );
     if (res && res.data && res.data.data) {
       setMapData(res.data.data);
