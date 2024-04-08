@@ -134,6 +134,13 @@ const MapComponent = () => {
       return () => {
         modalPopup.style.display = "none";
         modalPopup.classList.remove("fadeInAnimation");
+        if (window.getSelection) {
+          // Clear the selection
+          window.getSelection()!.removeAllRanges();
+        } else if ((document as any).selection) {
+            // For older versions of IE
+            (document as any).selection.empty();
+        }
       };
     } else {
       modalPopup.style.display = "none";
