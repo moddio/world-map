@@ -26,6 +26,7 @@ interface GameDetails {
   cover: string;
   createdAt: string;
   title: string;
+  gameSlug: string;
 }
 
 const MapComponent = () => {
@@ -271,7 +272,7 @@ const MapComponent = () => {
               </div>
               <div className='m-3'>
                 <button
-                  onClick={() => window.open(clickedTileInfo.redirectUrl)}
+                  onClick={() => window.open(`${siteUrl}/play/${mapData.gameSlug}`)}
                   className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md'
                   style={{ transition: "0.3s" }}>
                   <span className='mr-2'>Play</span>
