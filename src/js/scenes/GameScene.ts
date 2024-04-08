@@ -177,6 +177,12 @@ export default class GameScene extends Phaser.Scene {
           }
         );
 
+        if (document.getElementById("modalPopup").style.display == "none") {
+          document.body.style.cursor = "pointer";
+        } else {
+          document.body.style.cursor = "default";
+        }
+
         // hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
 
         if (hoveredTileInfo) {
@@ -204,13 +210,13 @@ export default class GameScene extends Phaser.Scene {
               )})`;
               this.tooltip.setPosition(
                 tileScreenPos.x - this.tooltip.width / 2 + 10,
-                tileScreenPos.y - 90
+                tileScreenPos.y - 75
               );
             } else {
               tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}`;
               this.tooltip.setPosition(
                 tileScreenPos.x - this.tooltip.width / 2 + 10,
-                tileScreenPos.y - 54
+                tileScreenPos.y - 60
               );
             }
             this.tooltip.setText(tooltipText);
@@ -225,6 +231,7 @@ export default class GameScene extends Phaser.Scene {
       }
     } else {
       // const event = new Event("noTileHover");
+      document.body.style.cursor = "default";
       // window.dispatchEvent(event);
       this.tooltip.setAlpha(0); // Hide tooltip if not hovering over a tile
     }

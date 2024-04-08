@@ -10,6 +10,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { NoSymbolIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { siteUrl, worldMapId } from "../config";
 
@@ -73,8 +74,11 @@ const MapComponent = () => {
     };
 
     // Create new Phaser game instance
-    //@ts-ignore
-    gameRef.current = new Phaser.Game(config);
+    if (!document.getElementById('phaserGame')) {
+      //@ts-ignore
+      gameRef.current = new Phaser.Game(config);
+      gameRef.current.canvas.id = 'phaserGame';
+    }
 
     // Function to disable context menu
     const disableContextMenu = (event) => {
@@ -130,6 +134,13 @@ const MapComponent = () => {
       return () => {
         modalPopup.style.display = "none";
         modalPopup.classList.remove("fadeInAnimation");
+        if (window.getSelection) {
+          // Clear the selection
+          window.getSelection()!.removeAllRanges();
+        } else if ((document as any).selection) {
+            // For older versions of IE
+            (document as any).selection.empty();
+        }
       };
     } else {
       modalPopup.style.display = "none";
@@ -228,6 +239,10 @@ const MapComponent = () => {
     setClickedTileInfo(null);
     setMapData(null);
   };
+
+  let gameExists = true;
+  let gameIsPublished = true;
+  
   return (
     <div>
       {/* Phaser Game */}
@@ -270,15 +285,32 @@ const MapComponent = () => {
               <div className='popup-description overflow-auto h-72 mt-3 text-justify pr-2'>
                 <span className='text-md text-gray-700' id='description'></span>
               </div>
-              <div className='m-3'>
-                <button
-                  onClick={() => window.open(`${siteUrl}/play/${mapData.gameSlug}`)}
-                  className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md'
-                  style={{ transition: "0.3s" }}>
-                  <span className='mr-2'>Play</span>
-                  <PlayIcon className='w-5 h-5 text-[#fff] cursor-pointer' />
-                </button>
-              </div>
+              <div className='m-3'>                
+                {gameExists && gameIsPublished && (
+                  <button
+                    onClick={() => window.open(`${siteUrl}/play/${mapData.gameSlug}`)}                 
+                    className='inline-flex items-center bg-[#1e721a] hover:bg-[#045112] text-[#fff] font-bold border-2 border-[#1e721a] hover:border-[#045112] p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
+                    <span className='mr-2'>Play</span>
+                    <PlayIcon className="w-5 h-5 text-[#fff] cursor-pointer" />
+                  </button>
+                )}
+                {!gameExists && (
+                  <button
+                    onClick={() => alert('Error: Game not found!')}                 
+                    className='inline-flex items-center bg-gray-600 hover:cursor-not-allowed hover:bg-gray-700 text-white font-bold border-2 border-gray-600 hover:border-gray-700 p-2 rounded-md shadow-md' style={{transition: '0.3s'}}>
+                    <span className='mr-2'>Play</span>
+                    <NoSymbolIcon className="w-5 h-5 text-[#fff]" />
+                  </button>              
+                )}
+                {gameExists && !gameIsPublished && (
+                  <button
+                    onClick={() => alert('Error: Game is unpublished!')}                 
+                    className='inline-flex items-center bg-gray-600 hover:cursor-not-allowed hover:bg-gray-700 text-[#fff] font-bold border-2 border-gray-600 hover:border-gray-700 p-2 rounded-md shadow-md' style={{transition:'0.3s'}}>
+                    <span className='mr-2'>Play</span>
+                    <NoSymbolIcon className="w-5 h-5 text-[#fff]" />
+                  </button>
+                )}
+            </div>
             </div>
           </div>
         </div>
