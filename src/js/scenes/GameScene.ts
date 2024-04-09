@@ -164,10 +164,10 @@ export default class GameScene extends Phaser.Scene {
               detail: clickedTileInfo,
             });
             window.dispatchEvent(event);
-            this.tooltip.setAlpha(0);
           }
         }
       } else {
+        this.tooltip.setAlpha(0);
         const hoveredTileInfo: any = this.tileInfoArray.find(
           (tileInfo: any) => {
             return (
