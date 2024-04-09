@@ -8,9 +8,9 @@ import {
   PlayIcon,
   ShoppingBagIcon,
   XCircleIcon,
+  NoSymbolIcon,
 } from "@heroicons/react/24/solid";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { NoSymbolIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { siteUrl, worldMapId } from "../config";
 
