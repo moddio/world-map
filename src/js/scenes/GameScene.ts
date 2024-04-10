@@ -85,21 +85,6 @@ export default class GameScene extends Phaser.Scene {
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
 
-    // Create the tooltip
-    this.tooltip = this.add.text(0, 0, "", {
-      fontFamily: `'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif`,
-      fontSize: "12px",
-      color: "#fff", // Black text color
-      backgroundColor: "rgba(0,0,0,0.8)", // White background color
-      padding: {
-        x: 10,
-        y: 10,
-      },
-      // cornerRadius: 10 // Rounded corners
-    });
-
-    this.tooltip.setAlpha(0);
-
     this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
       const minZoom = (0.5 * 16) / tilemap.tileWidth;
@@ -148,28 +133,24 @@ export default class GameScene extends Phaser.Scene {
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
       if (this.input.manager.activePointer.leftButtonDown()) {
-        if (this.input.manager.activePointer.leftButtonDown()) {
-          if (!document.getElementById("modal")) {
-            const clickedTileInfo: any = this.tileInfoArray.find(
-              (tileInfo: any) => {
-                return (
-                  tileInfo.position.x === pointerTileX.toString() &&
-                  tileInfo.position.y === pointerTileY.toString()
-                );
-              }
-            );
-            if (clickedTileInfo && !clickedTileInfo.clicked) {
-              clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-              const event = new CustomEvent("tileClick", {
-                detail: clickedTileInfo,
-              });
-              window.dispatchEvent(event);
-              clickedTileInfo.clicked = true; // Mark the tile as clicked
-              this.tooltip.setAlpha(0);
+          const clickedTileInfo: any = this.tileInfoArray.find(
+            (tileInfo: any) => {
+              return (
+                tileInfo.position.x === pointerTileX.toString() &&
+                tileInfo.position.y === pointerTileY.toString()
+              );
             }
+          );
+          if (clickedTileInfo && !clickedTileInfo.clicked) {
+            clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+            const event = new CustomEvent("tileClick", {
+              detail: clickedTileInfo,
+            });
+            const hoverEvent = new CustomEvent("tileHover", { detail: null });
+            window.dispatchEvent(hoverEvent);
+            window.dispatchEvent(event);
+            clickedTileInfo.clicked = true; 
           }
-        }
-        
       } else {
         const hoveredTileInfo: any = this.tileInfoArray.find(
           (tileInfo: any) => {
@@ -180,63 +161,33 @@ export default class GameScene extends Phaser.Scene {
           }
         );
 
-        if (document.getElementById("modalPopup").style.display == "none") {
-          document.body.style.cursor = "pointer";
-        } else {
-          document.body.style.cursor = "default";
-        }
-
-        // hoveredTileInfo.position = { x: pointerTileX, y: pointerTileY };
-
         if (hoveredTileInfo) {
-          hoveredTileInfo.mousePointer = { x: worldPoint?.x, y: worldPoint?.y };
+          // hoveredTileInfo.mousePointer = { x: worldPoint?.x, y: worldPoint?.y };
+          hoveredTileInfo.mousePointer = { x: this.input.activePointer.x,
+            y: this.input.activePointer.y };
+            document.body.style.cursor = "pointer";
 
           const event = new CustomEvent("tileHover", {
-            detail: hoveredTileInfo,
+            detail: hoveredTileInfo
           });
           window.dispatchEvent(event);
-          if (document.getElementById("modalPopup").style.display == "none") {
-            const shiftKey = this.input.keyboard.addKey(
-              Phaser.Input.Keyboard.KeyCodes.SHIFT
-            );
-            const shiftPressed = shiftKey.isDown;
-            let tooltipText;
-            const tileScreenPos = tilemap.tileToWorldXY(
-              hoveredTile.x,
-              hoveredTile.y
-            );
-            if (shiftPressed) {
-              tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${
-                hoveredTileInfo.ownerName
-              }\nPosition: (${String(hoveredTileInfo.position.x)}, ${String(
-                hoveredTileInfo.position.y
-              )})`;
-              this.tooltip.setPosition(
-                tileScreenPos.x - this.tooltip.width / 2 + 10,
-                tileScreenPos.y - 75
-              );
-            } else {
-              tooltipText = `Map Name: ${hoveredTileInfo.mapName}\nOwner: ${hoveredTileInfo.ownerName}`;
-              this.tooltip.setPosition(
-                tileScreenPos.x - this.tooltip.width / 2 + 10,
-                tileScreenPos.y - 60
-              );
-            }
-            this.tooltip.setText(tooltipText);
-            this.tooltip.setAlpha(1);
-          }
+          // if (document.getElementById("modalPopup").style.display == "none") {
+            // const shiftKey = this.input.keyboard.addKey(
+            //   Phaser.Input.Keyboard.KeyCodes.SHIFT
+            // );
+
         } else {
-          const event = new CustomEvent("noTileHover", { detail: null });
+          const event = new CustomEvent("tileHover", { detail: null });
           window.dispatchEvent(event);
-          this.tooltip.setAlpha(0);
         }
-        hoveredTile.setAlpha(1);
       }
     } else {
       // const event = new Event("noTileHover");
       document.body.style.cursor = "default";
+      const event = new CustomEvent("tileHover", { detail: null });
+      window.dispatchEvent(event);
+
       // window.dispatchEvent(event);
-      this.tooltip.setAlpha(0); // Hide tooltip if not hovering over a tile
     }
   }
 }
