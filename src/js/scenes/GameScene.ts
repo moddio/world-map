@@ -149,7 +149,7 @@ export default class GameScene extends Phaser.Scene {
           const hoverEvent = new CustomEvent("tileHover", { detail: null });
           window.dispatchEvent(event);
           window.dispatchEvent(hoverEvent);
-        //  clickedTileInfo.clicked = true;   
+          clickedTileInfo.clicked = true;   
         } 
       } else {
         const isModalClosed = document.getElementById("modalPopup") === null;
