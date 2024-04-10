@@ -7,6 +7,7 @@ import axios from "axios";
 import { siteUrl } from "../config";
 import { Dialog } from "@headlessui/react";
 import Tooltip from "./core/ui/Tooltip";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 interface GameDetails {
   owner: {
@@ -114,13 +115,12 @@ const MapComponent = () => {
     }
   }, [clickedTileInfo, mapData]);
   const handleTileClick = async (event) => {
-    
-    const isModalOpen = document.getElementById("modalPopup") !== null;
+    //const isModalOpen = document.getElementById("modalPopup") !== null;
 
-    if (!isModalOpen) {
+   // if (!isModalOpen) {
       await fetchMaps(event.detail);
       setClickedTileInfo(event.detail);
-    }
+   // }
   };
 
   const handleTileHover = (event) => {
@@ -152,7 +152,6 @@ const MapComponent = () => {
   }, []);
 
   const handleClose = (e) => {
-
     // document.getElementById("modalPopup").style.display = "none";
     setClickedTileInfo(null);
     setMapData(null);
@@ -169,64 +168,88 @@ const MapComponent = () => {
               id='modalPopup'
               open={isOpen}
               onClose={handleClose}
-              className='fixed z-50 inset-0 overflow-y-auto flex items-center justify-center'>
-              <Dialog.Overlay className='fixed inset-0 bg-gray-900 opacity-85' />
+              className='fixed z-50 inset-3 overflow-y-auto flex items-center justify-end'>
+               <Dialog.Overlay className='fixed inset-0' /> 
 
-              <div className='inline-block align-middle bg-black opacity-85 rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
-                <img
-                  src={mapData.cover}
+              <div className='inline-block align-middle bg-[#0e274f] rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
+                <div className='flex justify-between pl-3 mt-2'>
+                  <span className='text-white text-lg font-bold'>
+                    Map Details
+                  </span>
+                  <span
+                    onClick={handleClose}
+                    className='text-white cursor'>
+                    <XMarkIcon className='w-5 mr-2' />
+                  </span>
+                  {/* </div> */}
+                </div>
+                <div className="p-2 "><img
+                  src={mapData && mapData.cover}
                   alt=''
-                  className='mx-full w-full justify-center items-center h-auto'
-                />
-                <div className='px-4 sm:p-2  overflow-auto'>
+                  className='w-full justify-center items-center h-auto rounded-sm' style={{border: '2px solid #4f8635'}}
+                /></div>
+                <div className='px-4 sm:p-2 overflow-auto'>
                   <div className='sm:flex justify-center sm:items-start'>
-                    <div className='text-center w-full'>
+                    <div className=' w-full'>
                       <h3
-                        className='sm:text-center font-medium text-white'
+                        className=' font-medium text-white'
                         id='modal-headline'>
-                        {mapData.title}
+                        {mapData && mapData.title}
                       </h3>
-                      <div>
-                        <div className='font-bold text-gray-300'>
-                          <div className=' text-sm'>
-                            Created by:{" "}
+                      <div className=" ">
+                        <div className='flex justify-between mb-3 text-gray-300'>
+                          <div className='text-md '>
+                            owned by:{" "}
                             <a
                               href={`${siteUrl}/user/${mapData.owner.username}`}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='text-blue-500 focus:outline-none'>
-                              <u>{mapData.owner.username}</u>
+                              className='text-blue-500 font-bold focus:outline-none'>
+                              <u>
+                                {mapData &&
+                                  mapData.owner &&
+                                  mapData.owner.username}
+                              </u>
                             </a>
                           </div>
-                          <div className=' text-sm'>
+                          {/* <div className=' text-sm'>
                             Created on:{" "}
                             {new Date(mapData.createdAt).toLocaleDateString()}
+                          </div> */}
+                          <div className='text-md '>
+                            position: 
+                            {mapData && mapData.mapPosition ? (
+                              <span className="font-bold ml-1">
+                                ({mapData.mapPosition.x}, {mapData.mapPosition.y})
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                            
                           </div>
-                          <div className=' text-sm'>
-                            Position: (
-                            {mapData.mapPosition
-                              ? `${mapData.mapPosition.x}, ${mapData.mapPosition.y}`
-                              : ""}
-                            )
-                          </div>
-                        </div>
-                        <hr className='border border-gray-900' />
-                        <div
-                          className='text-justify mb-1 h-56 overflow-auto text-gray-300'
-                          style={{ paddingRight: "10px" }}>
-                          <div className='text-sm'>{mapData.description}</div>
                         </div>
                         {/* <hr className='border border-gray-900' /> */}
-                        <div className='flex justify-between mt-5'>
+                        <b className="text-white text-lg">Description</b> <br />
+                        <div
+                          className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
+                          style={{ paddingRight: "10px", borderLeft: '2px solid white' }}>
+                          <div className='text-sm'>
+                            {mapData && mapData.description}
+                          </div>
+                        </div>
+                        {/* <hr className='border border-gray-900' /> */}
+                        <div className='flex justify-center mt-5'>
                           <button
                             type='button'
                             onClick={() =>
-                              window.open(`${siteUrl}/play/${mapData.gameSlug}`)
+                              window.open(
+                                `${siteUrl}/play/${mapData && mapData.gameSlug}`
+                              )
                             }
-                            className='inline-flex justify-center rounded-md shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3'>
-                            Play
+                            className=' rounded-md shadow-sm px-4 py-2 bg-[#1d491c] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'  style={{border: '2px solid #4f8635'}}>
+                            Visit {mapData && mapData.title}
                           </button>
-                          <button
+                          {/* <button
                             onClick={(e:any) => {
                               e.modalClose = true;
                               handleClose(e);
@@ -234,7 +257,7 @@ const MapComponent = () => {
                             type='button'
                             className='inline-flex justify-center bg-red-700 rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
                             Close
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>

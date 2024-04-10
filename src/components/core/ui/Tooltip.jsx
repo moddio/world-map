@@ -7,11 +7,17 @@ const Tooltip = ({  x, y, content }) => {
   };
 
   // Render the key-value pairs on new lines
-  const renderedText = Object.entries(content).map(([key, value]) => (
-    <div key={key}>
-      <span className="font-bold">{camelToSentence(key)}:</span> {value}
+  const renderedText = Object.entries(content).map(([key, value]) => {
+    if(key === 'mapName') {
+    return <div key={key}>
+      <span className="font-bold text-xl">{value}</span> 
     </div>
-  ));
+    } else {
+      return <div key={key}>
+        <span className="font-bold">{camelToSentence(key)}:</span> {value}
+    </div>
+    }
+});
 
   return (
     <div

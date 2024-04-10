@@ -132,7 +132,7 @@ export default class GameScene extends Phaser.Scene {
 
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
-      if (this.input.manager.activePointer.leftButtonDown()) {
+      if (this.input.manager.activePointer.leftButtonDown()) {       
         const clickedTileInfo: any = this.tileInfoArray.find(
           (tileInfo: any) => {
             return (
@@ -149,8 +149,8 @@ export default class GameScene extends Phaser.Scene {
           const hoverEvent = new CustomEvent("tileHover", { detail: null });
           window.dispatchEvent(event);
           window.dispatchEvent(hoverEvent);
-          clickedTileInfo.clicked = true;
-        }
+        //  clickedTileInfo.clicked = true;   
+        } 
       } else {
         const isModalClosed = document.getElementById("modalPopup") === null;
 
