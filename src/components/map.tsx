@@ -100,12 +100,9 @@ const MapComponent = () => {
   };
 
   useEffect(() => {
-    const modalPopup = document.getElementById("modalPopup");
     if (mapData) {
-      
       // Cleanup function
       return () => {
-       
         if (window.getSelection) {
           // Clear the selection
           window.getSelection()!.removeAllRanges();
@@ -118,7 +115,6 @@ const MapComponent = () => {
   }, [clickedTileInfo, mapData]);
 
   const handleTileClick = async (event) => {
-
     await fetchMaps(event.detail);
     if (popperInstance) {
       popperInstance.destroy();
@@ -151,109 +147,108 @@ const MapComponent = () => {
   };
 
   useEffect(() => {
-
     window.addEventListener("tileClick", handleTileClick);
     window.addEventListener("tileHover", handleTileHover);
   }, []);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    if(!document.getElementById('phaser')) {
     // document.getElementById("modalPopup").style.display = "none";
     setClickedTileInfo(null);
     setMapData(null);
     clickedTileInfo.clicked = false;
+    }
   };
   return (
     <div>
       {/* Phaser Game */}
-      <div ref={gameRef}>
-        {/* Tailwind CSS Modal */}
-        {mapData && (
-          <>         
-            <Dialog
-              id='modalPopup'
-              open={isOpen}
-              onClose={handleClose}
-              className='fixed z-50 inset-0 overflow-y-auto flex items-center justify-center'>
-              <Dialog.Overlay className='fixed inset-0 bg-gray-900 opacity-85' />
-              
-              <div className='inline-block align-middle bg-black opacity-85 rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>              
+      <div id='phaser' ref={gameRef}></div>
+      {/* Tailwind CSS Modal */}
+      {mapData && (
+        <>
+          <Dialog
+            id='modalPopup'
+            open={isOpen}
+            onClose={handleClose}
+            className='fixed z-50 inset-0 overflow-y-auto flex items-center justify-center'>
+            <Dialog.Overlay className='fixed inset-0 bg-gray-900 opacity-85' />
+
+            <div className='inline-block align-middle bg-black opacity-85 rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
               <img
-                  src={mapData.cover}
-                  alt=''
-                  className='mx-full w-full justify-center items-center h-auto'
-                />
-                <div className='px-4 sm:p-2  overflow-auto'>
-                  <div className='sm:flex justify-center sm:items-start'>
-                    <div className='text-center w-full'>
-                      <h3
-                        className='sm:text-center font-medium text-white'
-                        id='modal-headline'>
-                        {mapData.title}
-                      </h3>
-                      <div>
-                        <div className='font-bold text-gray-300'>
-                          <div className=' text-sm'>
-                            Created by:{" "}
-                            <a
-                              href={`${siteUrl}/user/${mapData.owner.username}`}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='text-blue-500 focus:outline-none'>
-                              <u>{mapData.owner.username}</u>
-                            </a>
-                          </div>
-                          <div className=' text-sm'>
-                            Created on:{" "}
-                            {new Date(mapData.createdAt).toLocaleDateString()}
-                          </div>
-                          <div className=' text-sm'>
-                            Position: (
-                            {mapData.mapPosition
-                              ? `${mapData.mapPosition.x}, ${mapData.mapPosition.y}`
-                              : ""}
-                            )
-                          </div>
+                src={mapData.cover}
+                alt=''
+                className='mx-full w-full justify-center items-center h-auto'
+              />
+              <div className='px-4 sm:p-2  overflow-auto'>
+                <div className='sm:flex justify-center sm:items-start'>
+                  <div className='text-center w-full'>
+                    <h3
+                      className='sm:text-center font-medium text-white'
+                      id='modal-headline'>
+                      {mapData.title}
+                    </h3>
+                    <div>
+                      <div className='font-bold text-gray-300'>
+                        <div className=' text-sm'>
+                          Created by:{" "}
+                          <a
+                            href={`${siteUrl}/user/${mapData.owner.username}`}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-blue-500 focus:outline-none'>
+                            <u>{mapData.owner.username}</u>
+                          </a>
                         </div>
-                        <hr className='border border-gray-900' />
-                        <div className='text-justify mb-1 h-56 overflow-auto  text-gray-300'>
-                          <div className='text-sm'>
-                            {mapData.description}
-                          </div>
+                        <div className=' text-sm'>
+                          Created on:{" "}
+                          {new Date(mapData.createdAt).toLocaleDateString()}
                         </div>
-                        {/* <hr className='border border-gray-900' /> */}
-                        <div className='flex justify-between mt-5'>
-                          <button
-                            type='button'
-                            onClick={() =>
-                              window.open(`${siteUrl}/play/${mapData.gameSlug}`)
-                            }
-                            className='inline-flex justify-center rounded-md shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3'>
-                            Play
-                          </button>
-                          <button
-                            onClick={handleClose}
-                            type='button'
-                            className='inline-flex justify-center bg-red-700 rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                            Close
-                          </button>
+                        <div className=' text-sm'>
+                          Position: (
+                          {mapData.mapPosition
+                            ? `${mapData.mapPosition.x}, ${mapData.mapPosition.y}`
+                            : ""}
+                          )
                         </div>
+                      </div>
+                      <hr className='border border-gray-900' />
+                      <div className='text-justify mb-1 h-56 overflow-auto text-gray-300' style={{ paddingRight: '10px' }}>
+                        <div className='text-sm'>{mapData.description}</div>
+                      </div>
+                      {/* <hr className='border border-gray-900' /> */}
+                      <div className='flex justify-between mt-5'>
+                        <button
+                          type='button'
+                          onClick={() =>
+                            window.open(`${siteUrl}/play/${mapData.gameSlug}`)
+                          }
+                          className='inline-flex justify-center rounded-md shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3'>
+                          Play
+                        </button>
+                        <button
+                          onClick={(e) => handleClose(e)}
+                          type='button'
+                          className='inline-flex justify-center bg-red-700 rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                          Close
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </Dialog>
-          </>
-        )}
-        {tooltipVisible && (
-          <Tooltip
-            x={tooltipPosition.x}
-            y={tooltipPosition.y}
-            content={tooltipContent}
-          />
-        )}
-      </div>
+            </div>
+          </Dialog>
+        </>
+      )}
+      {tooltipVisible && (
+        <Tooltip
+          x={tooltipPosition.x}
+          y={tooltipPosition.y}
+          content={tooltipContent}
+        />
+      )}
     </div>
+    // </div>
   );
 };
 
