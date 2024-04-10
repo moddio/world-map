@@ -117,10 +117,10 @@ const MapComponent = () => {
   const handleTileClick = async (event) => {
     //const isModalOpen = document.getElementById("modalPopup") !== null;
 
-   // if (!isModalOpen) {
-      await fetchMaps(event.detail);
-      setClickedTileInfo(event.detail);
-   // }
+    // if (!isModalOpen) {
+    await fetchMaps(event.detail);
+    setClickedTileInfo(event.detail);
+    // }
   };
 
   const handleTileHover = (event) => {
@@ -169,25 +169,30 @@ const MapComponent = () => {
               open={isOpen}
               onClose={handleClose}
               className='fixed z-50 inset-3 overflow-y-auto flex items-center justify-end'>
-               <Dialog.Overlay className='fixed inset-0' /> 
+              <Dialog.Overlay className='fixed inset-0' />
 
               <div className='inline-block align-middle bg-[#0e274f] rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
                 <div className='flex justify-between pl-3 mt-2'>
                   <span className='text-white text-lg font-bold'>
                     Map Details
                   </span>
-                  <span
-                    onClick={handleClose}
-                    className='text-white cursor'>
+                  <span onClick={handleClose} className='text-white cursor'>
                     <XMarkIcon className='w-5 mr-2' />
                   </span>
                   {/* </div> */}
                 </div>
-                <div className="p-2 "><img
-                  src={mapData && mapData.cover}
-                  alt=''
-                  className='w-full justify-center items-center h-auto rounded-sm' style={{border: '2px solid #4f8635'}}
-                /></div>
+                {mapData && mapData.cover ? (
+                  <div className='p-2 '>
+                    <img
+                      src={mapData.cover}
+                      alt=''
+                      className='w-full justify-center items-center h-auto rounded-sm'
+                      style={{ border: "2px solid #4f8635" }}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className='px-4 sm:p-2 overflow-auto'>
                   <div className='sm:flex justify-center sm:items-start'>
                     <div className=' w-full'>
@@ -196,7 +201,7 @@ const MapComponent = () => {
                         id='modal-headline'>
                         {mapData && mapData.title}
                       </h3>
-                      <div className=" ">
+                      <div className=' '>
                         <div className='flex justify-between mb-3 text-gray-300'>
                           <div className='text-md '>
                             owned by:{" "}
@@ -217,22 +222,25 @@ const MapComponent = () => {
                             {new Date(mapData.createdAt).toLocaleDateString()}
                           </div> */}
                           <div className='text-md '>
-                            position: 
+                            position:
                             {mapData && mapData.mapPosition ? (
-                              <span className="font-bold ml-1">
-                                ({mapData.mapPosition.x}, {mapData.mapPosition.y})
+                              <span className='font-bold ml-1'>
+                                ({mapData.mapPosition.x},{" "}
+                                {mapData.mapPosition.y})
                               </span>
                             ) : (
                               ""
                             )}
-                            
                           </div>
                         </div>
                         {/* <hr className='border border-gray-900' /> */}
-                        <b className="text-white text-lg">Description</b> <br />
+                        <b className='text-white text-lg'>Description</b> <br />
                         <div
                           className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
-                          style={{ paddingRight: "10px", borderLeft: '2px solid white' }}>
+                          style={{
+                            paddingRight: "10px",
+                            borderLeft: "2px solid white",
+                          }}>
                           <div className='text-sm'>
                             {mapData && mapData.description}
                           </div>
@@ -246,7 +254,8 @@ const MapComponent = () => {
                                 `${siteUrl}/play/${mapData && mapData.gameSlug}`
                               )
                             }
-                            className=' rounded-md shadow-sm px-4 py-2 bg-[#1d491c] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'  style={{border: '2px solid #4f8635'}}>
+                            className=' rounded-md shadow-sm px-4 py-2 bg-[#1d491c] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
+                            style={{ border: "2px solid #4f8635" }}>
                             Visit {mapData && mapData.title}
                           </button>
                           {/* <button
