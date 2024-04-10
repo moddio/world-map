@@ -1,6 +1,5 @@
 import axios from "axios";
 import { tilemapjson } from "../../assets/tilemaps/tilemap";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import { siteUrl, worldMapId } from "../../config";
 
 export default class GameScene extends Phaser.Scene {
@@ -149,24 +148,28 @@ export default class GameScene extends Phaser.Scene {
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
       if (this.input.manager.activePointer.leftButtonDown()) {
-        if (!document.getElementById("modal")) {
-          const clickedTileInfo: any = this.tileInfoArray.find(
-            (tileInfo: any) => {
-              return (
-                tileInfo.position.x === pointerTileX.toString() &&
-                tileInfo.position.y === pointerTileY.toString()
-              );
+        if (this.input.manager.activePointer.leftButtonDown()) {
+          if (!document.getElementById("modal")) {
+            const clickedTileInfo: any = this.tileInfoArray.find(
+              (tileInfo: any) => {
+                return (
+                  tileInfo.position.x === pointerTileX.toString() &&
+                  tileInfo.position.y === pointerTileY.toString()
+                );
+              }
+            );
+            if (clickedTileInfo && !clickedTileInfo.clicked) {
+              clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+              const event = new CustomEvent("tileClick", {
+                detail: clickedTileInfo,
+              });
+              window.dispatchEvent(event);
+              clickedTileInfo.clicked = true; // Mark the tile as clicked
+              this.tooltip.setAlpha(0);
             }
-          );
-          if (clickedTileInfo) {
-            clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-            const event = new CustomEvent("tileClick", {
-              detail: clickedTileInfo,
-            });
-            window.dispatchEvent(event);
-            this.tooltip.setAlpha(0);
           }
         }
+        
       } else {
         const hoveredTileInfo: any = this.tileInfoArray.find(
           (tileInfo: any) => {
