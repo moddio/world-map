@@ -113,12 +113,14 @@ const MapComponent = () => {
       };
     }
   }, [clickedTileInfo, mapData]);
-
   const handleTileClick = async (event) => {
-      await fetchMaps(event.detail);
-      // console.log(event.detail);
-      setClickedTileInfo(event.detail);
     
+    const isModalOpen = document.getElementById("modalPopup") !== null;
+
+    if (!isModalOpen) {
+      await fetchMaps(event.detail);
+      setClickedTileInfo(event.detail);
+    }
   };
 
   const handleTileHover = (event) => {
@@ -149,7 +151,8 @@ const MapComponent = () => {
     window.addEventListener("tileHover", handleTileHover);
   }, []);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+
     // document.getElementById("modalPopup").style.display = "none";
     setClickedTileInfo(null);
     setMapData(null);
@@ -224,7 +227,10 @@ const MapComponent = () => {
                             Play
                           </button>
                           <button
-                            onClick={(e) => handleClose()}
+                            onClick={(e:any) => {
+                              e.modalClose = true;
+                              handleClose(e);
+                            }}
                             type='button'
                             className='inline-flex justify-center bg-red-700 rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
                             Close

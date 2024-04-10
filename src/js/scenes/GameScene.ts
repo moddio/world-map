@@ -133,25 +133,27 @@ export default class GameScene extends Phaser.Scene {
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
       if (this.input.manager.activePointer.leftButtonDown()) {
-          const clickedTileInfo: any = this.tileInfoArray.find(
-            (tileInfo: any) => {
-              return (
-                tileInfo.position.x === pointerTileX.toString() &&
-                tileInfo.position.y === pointerTileY.toString()
-              );
-            }
-          );
-          if (clickedTileInfo && !clickedTileInfo.clicked) {
-            clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-            const event = new CustomEvent("tileClick", {
-              detail: clickedTileInfo,
-            });
-            const hoverEvent = new CustomEvent("tileHover", { detail: null });
-            window.dispatchEvent(hoverEvent);
-            window.dispatchEvent(event);
-            clickedTileInfo.clicked = true; 
+        const clickedTileInfo: any = this.tileInfoArray.find(
+          (tileInfo: any) => {
+            return (
+              tileInfo.position.x === pointerTileX.toString() &&
+              tileInfo.position.y === pointerTileY.toString()
+            );
           }
+        );
+        if (clickedTileInfo && !clickedTileInfo.clicked) {
+          clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
+          const event = new CustomEvent("tileClick", {
+            detail: clickedTileInfo,
+          });
+          const hoverEvent = new CustomEvent("tileHover", { detail: null });
+          window.dispatchEvent(event);
+          window.dispatchEvent(hoverEvent);
+          clickedTileInfo.clicked = true;
+        }
       } else {
+        const isModalClosed = document.getElementById("modalPopup") === null;
+
         const hoveredTileInfo: any = this.tileInfoArray.find(
           (tileInfo: any) => {
             return (
@@ -162,32 +164,30 @@ export default class GameScene extends Phaser.Scene {
         );
 
         if (hoveredTileInfo) {
-          // hoveredTileInfo.mousePointer = { x: worldPoint?.x, y: worldPoint?.y };
-          hoveredTileInfo.mousePointer = { x: this.input.activePointer.x,
-            y: this.input.activePointer.y };
-            document.body.style.cursor = "pointer";
-
-          const event = new CustomEvent("tileHover", {
-            detail: hoveredTileInfo
-          });
-          window.dispatchEvent(event);
+          hoveredTileInfo.mousePointer = {
+            x: this.input.activePointer.x,
+            y: this.input.activePointer.y,
+          };
+          document.body.style.cursor = "pointer";
+          if (isModalClosed) {
+            const event = new CustomEvent("tileHover", {
+              detail: hoveredTileInfo,
+            });
+            window.dispatchEvent(event);
+          }
           // if (document.getElementById("modalPopup").style.display == "none") {
-            // const shiftKey = this.input.keyboard.addKey(
-            //   Phaser.Input.Keyboard.KeyCodes.SHIFT
-            // );
-
+          // const shiftKey = this.input.keyboard.addKey(
+          //   Phaser.Input.Keyboard.KeyCodes.SHIFT
+          // );
         } else {
           const event = new CustomEvent("tileHover", { detail: null });
           window.dispatchEvent(event);
         }
       }
     } else {
-      // const event = new Event("noTileHover");
       document.body.style.cursor = "default";
       const event = new CustomEvent("tileHover", { detail: null });
       window.dispatchEvent(event);
-
-      // window.dispatchEvent(event);
     }
   }
 }
