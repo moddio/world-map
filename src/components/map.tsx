@@ -97,6 +97,7 @@ const MapComponent = () => {
         `${siteUrl}/api/game/${mapDetails.clickedTileInfo.id}/game-details/`
       );
       if (res && res.data && res.data.data) {
+        // TODO: set highlight on click. Temp disabled as giving issue on prod
         // mapDetails.hoveredTile.tintFill = true;
         // mapDetails.hoveredTile.tint = 0x209944;
         setIsOpen(true);
