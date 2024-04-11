@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // import dynamic from "next/dynamic";
-import { Dialog } from "@headlessui/react";
-import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { Dialog } from '@headlessui/react';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 // import posthog from "posthog-js";
-import { createPortal } from "react-dom";
+import { createPortal } from 'react-dom';
 
 // import { trackEventFromBrowser } from "@/lib/mixpanelBrowser";
-import { useApp } from "../contexts/AppContext";
-import { useNavigate } from "react-router-dom";
-import { XMarkIcon } from "@heroicons/react/20/solid";
+// import { useApp } from "../contexts/AppContext";
+import { useNavigate } from 'react-router-dom';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 
 // const RegisterSingleComponent = dynamic(
 //   () => import('./RegisterSingleComponent'),
@@ -20,18 +20,18 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 //   ssr: false,
 // });
 const RegisterSingleComponent = React.lazy(
-  () => import("./RegisterSingleComponent")
+  () => import('./RegisterSingleComponent')
 );
-const RegisterComponent = React.lazy(() => import("./RegisterComponent"));
+const RegisterComponent = React.lazy(() => import('./RegisterComponent'));
 
 export default function RegisterModal() {
   //@ts-ignore
-  const [ showRegister, setShowRegister ] = useState(true);
+  const [showRegister, setShowRegister] = useState(true);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [showSingleComponent, setShowSingleComponent] = useState(true);
-
+  // const [showSingleComponent, setShowSingleComponent] = useState(true);
+  const showSingleComponent = true;
   const [page, setPage] = useState(1);
   const [isUsernameValid, setIsUsernameValid] = useState(false);
 
@@ -57,13 +57,14 @@ export default function RegisterModal() {
   // console.count('RegisterModal');
 
   return (
-    typeof document !== "undefined" &&
+    typeof document !== 'undefined' &&
     rendered &&
     createPortal(
       <Dialog
         onClose={handleClose}
         open={showRegister}
-        className='tailwind-layout'>
+        className='tailwind-layout'
+      >
         <div className='fixed z-[200000]'>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -71,8 +72,9 @@ export default function RegisterModal() {
                 <div className='flex items-center justify-between'>
                   <Dialog.Title
                     as='h3'
-                    className='text-3xl flex flex-row font-medium bold leading-6 text-white'>
-                    {page == 2 && (
+                    className='text-3xl flex flex-row font-medium bold leading-6 text-white'
+                  >
+                    {page === 2 && (
                       <ChevronLeftIcon
                         className='h-6 w-6 mr-2 cursor-pointer'
                         onClick={() => {
@@ -80,13 +82,13 @@ export default function RegisterModal() {
                         }}
                       />
                     )}
-                    {page == 1 ? "Sign Up" : "Verify Account"}
+                    {page === 1 ? 'Sign Up' : 'Verify Account'}
                   </Dialog.Title>
 
-                  <button type="button" onClick={handleClose}>
+                  <button type='button' onClick={handleClose}>
                     <XMarkIcon
-                      className="h-5 w-5 text-gray-500 hover:text-gray-400"
-                      aria-hidden="true"
+                      className='h-5 w-5 text-gray-500 hover:text-gray-400'
+                      aria-hidden='true'
                     />
                   </button>
 
@@ -94,11 +96,12 @@ export default function RegisterModal() {
                     <div className='flex flex-row'>
                       <button
                         className={`pl-2 pr-2 ${
-                          page == 1
-                            ? "bg-blue-600 text-white"
-                            : "bg-white text-black"
+                          page === 1
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white text-black'
                         } rounded-full `}
-                        onClick={() => setPage(1)}>
+                        onClick={() => setPage(1)}
+                      >
                         <b>1</b>
                       </button>
                       <div className='text-blue-600 flex justify-center items-center'>
@@ -106,9 +109,9 @@ export default function RegisterModal() {
                       </div>
                       <button
                         className={`pl-2 pr-2 ${
-                          page == 2
-                            ? "bg-blue-600 text-white"
-                            : "bg-white text-black"
+                          page === 2
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white text-black'
                         } rounded-full`}
                         // onClick={() => isUsernameValid && setPage(2)}
                       >

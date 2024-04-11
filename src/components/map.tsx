@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import Phaser from "phaser";
-import LoaderScene from "../js/scenes/LoaderScene";
-import GameScene from "../js/scenes/GameScene";
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Phaser from 'phaser';
+import LoaderScene from '../js/scenes/LoaderScene';
+import GameScene from '../js/scenes/GameScene';
 
-import axios from "axios";
-import { siteUrl } from "../config";
-import { Dialog } from "@headlessui/react";
-import Tooltip from "./core/ui/Tooltip";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import axios from 'axios';
+import { siteUrl } from '../config';
+import { Dialog } from '@headlessui/react';
+import Tooltip from './core/ui/Tooltip';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
+// Interface for game details received from the API
 interface GameDetails {
   owner: {
     _id: string;
@@ -26,17 +27,15 @@ interface GameDetails {
 }
 
 const MapComponent = () => {
-  const gameRef = useRef(null);
-  // const userDetails = JSON.parse(localStorage.getItem("user"));
-  // const navigate = useNavigate();
+  const gameRef = useRef(null); // Reference to the Phaser game instance
 
-  const [clickedTileInfo, setClickedTileInfo] = useState(null);
-  const [popperInstance, setPopperInstance] = useState(null);
-  const [mapData, setMapData] = useState<GameDetails | null>();
-  const [isOpen, setIsOpen] = useState(false);
-  const [tooltipContent, setTooltipContent] = useState({});
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [clickedTileInfo, setClickedTileInfo] = useState(null); // State to store information about the clicked tile
+  // const [popperInstance, setPopperInstance] = useState(null); // State for managing Popper.js instances (unused in this snippet)
+  const [mapData, setMapData] = useState<GameDetails | null>(); // State to store fetched map data
+  const [isOpen, setIsOpen] = useState(false); // State to control the visibility of the modal
+  const [tooltipContent, setTooltipContent] = useState({}); // State to store content for the tooltip
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 }); // State to store the position of the tooltip
+  const [tooltipVisible, setTooltipVisible] = useState(false); // State to control the visibility of the tooltip
 
   useEffect(() => {
     const config = {
@@ -60,7 +59,7 @@ const MapComponent = () => {
         autoResize: true,
       },
       physics: {
-        default: "arcade",
+        default: 'arcade',
         arcade: {
           debug: false,
           gravity: {
@@ -69,37 +68,43 @@ const MapComponent = () => {
         },
       },
       scene: [LoaderScene, GameScene],
-      backgroundColor: "#59f773",
+      backgroundColor: '#59f773',
     };
 
-    // Create new Phaser game instance
-    if (!document.getElementById("phaserGame")) {
+    // Create new Phaser game instance if it doesn't already exist
+    if (!document.getElementById('phaserGame')) {
       //@ts-ignore
       gameRef.current = new Phaser.Game(config);
-      gameRef.current.canvas.id = "phaserGame";
+      gameRef.current.canvas.id = 'phaserGame';
     }
 
-    // Function to disable context menu
+    // Function to disable context menu to prevent right-click options on the game
     const disableContextMenu = (event) => {
       event.preventDefault();
     };
-    window.addEventListener("contextmenu", disableContextMenu);
+    window.addEventListener('contextmenu', disableContextMenu);
 
+    // Cleanup function to remove event listener
     return () => {
-      window.removeEventListener("contextmenu", disableContextMenu);
+      window.removeEventListener('contextmenu', disableContextMenu);
     };
   }, []);
 
-  const fetchMaps = async (mapDetails) => {
-    const res = await axios.get(
-      `${siteUrl}/api/game/${mapDetails.id}/game-details/`
-    );
-    if (res && res.data && res.data.data) {
-      setIsOpen(true);
-      setMapData(res.data.data);
-    }
-  };
+  // Fetches map details from the server
+  const fetchMaps = useCallback(
+    async (mapDetails) => {
+      const res = await axios.get(
+        `${siteUrl}/api/game/${mapDetails.id}/game-details/`
+      );
+      if (res && res.data && res.data.data) {
+        setIsOpen(true);
+        setMapData(res.data.data);
+      }
+    },
+    [setIsOpen, setMapData]
+  );
 
+  // Effect to clear text selection when mapData changes or component unmounts
   useEffect(() => {
     if (mapData) {
       // Cleanup function
@@ -114,16 +119,18 @@ const MapComponent = () => {
       };
     }
   }, [clickedTileInfo, mapData]);
-  const handleTileClick = async (event) => {
-    //const isModalOpen = document.getElementById("modalPopup") !== null;
 
-    // if (!isModalOpen) {
-    await fetchMaps(event.detail);
-    setClickedTileInfo(event.detail);
-    // }
-  };
+  // Handles clicks on tiles by fetching map details
+  const handleTileClick = useCallback(
+    async (event) => {
+      await fetchMaps(event.detail);
+      setClickedTileInfo(event.detail);
+    },
+    [fetchMaps, setClickedTileInfo]
+  );
 
-  const handleTileHover = (event) => {
+  // Handles mouse hover over tiles to show tooltips
+  const handleTileHover = useCallback((event) => {
     const hoveredTile = event.detail;
     if (hoveredTile) {
       // Update Tooltip content and position
@@ -137,38 +144,35 @@ const MapComponent = () => {
     } else {
       setTooltipVisible(false);
     }
-
-    // Cleanup function
-    return () => {
-      if (popperInstance) {
-        popperInstance.destroy();
-      }
-    };
-  };
-
-  useEffect(() => {
-    window.addEventListener("tileClick", handleTileClick);
-    window.addEventListener("tileHover", handleTileHover);
   }, []);
 
+  useEffect(() => {
+    window.addEventListener('tileClick', handleTileClick);
+    window.addEventListener('tileHover', handleTileHover);
+
+    return () => {
+      window.removeEventListener('tileClick', handleTileClick);
+      window.removeEventListener('tileHover', handleTileHover);
+    };
+  }, [handleTileClick, handleTileHover]);
+
   const handleClose = (e) => {
-    // document.getElementById("modalPopup").style.display = "none";
     setClickedTileInfo(null);
     setMapData(null);
     clickedTileInfo.clicked = false;
   };
   return (
     <div>
-      {/* Phaser Game */}
-      <div ref={gameRef}>
-        {/* Tailwind CSS Modal */}
+      <div ref={gameRef} className='game-container'>
+        {/* Modal for displaying game details */}
         {mapData && (
           <>
             <Dialog
               id='modalPopup'
               open={isOpen}
               onClose={handleClose}
-              className='fixed z-50 inset-3 overflow-y-auto flex items-center justify-end'>
+              className='fixed z-50 inset-3 overflow-y-auto flex items-center justify-end'
+            >
               <Dialog.Overlay className='fixed inset-0' />
 
               <div className='inline-block align-middle bg-[#0e274f] rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
@@ -179,7 +183,6 @@ const MapComponent = () => {
                   <span onClick={handleClose} className='text-white cursor'>
                     <XMarkIcon className='w-5 mr-2' />
                   </span>
-                  {/* </div> */}
                 </div>
                 {mapData && mapData.cover ? (
                   <div className='p-2 '>
@@ -187,7 +190,7 @@ const MapComponent = () => {
                       src={mapData.cover}
                       alt=''
                       className='w-full justify-center items-center h-auto rounded-sm'
-                      style={{ border: "2px solid #4f8635" }}
+                      style={{ border: '2px solid #4f8635' }}
                     />
                   </div>
                 ) : (
@@ -198,18 +201,20 @@ const MapComponent = () => {
                     <div className=' w-full'>
                       <h3
                         className=' font-medium text-white'
-                        id='modal-headline'>
+                        id='modal-headline'
+                      >
                         {mapData && mapData.title}
                       </h3>
                       <div className=' '>
                         <div className='flex justify-between mb-3 text-gray-300'>
                           <div className='text-md '>
-                            owned by:{" "}
+                            owned by:{' '}
                             <a
                               href={`${siteUrl}/user/${mapData.owner.username}`}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='text-blue-500 font-bold focus:outline-none'>
+                              className='text-blue-500 font-bold focus:outline-none'
+                            >
                               <u>
                                 {mapData &&
                                   mapData.owner &&
@@ -217,35 +222,30 @@ const MapComponent = () => {
                               </u>
                             </a>
                           </div>
-                          {/* <div className=' text-sm'>
-                            Created on:{" "}
-                            {new Date(mapData.createdAt).toLocaleDateString()}
-                          </div> */}
                           <div className='text-md '>
                             position:
                             {mapData && mapData.mapPosition ? (
                               <span className='font-bold ml-1'>
-                                ({mapData.mapPosition.x},{" "}
+                                ({mapData.mapPosition.x},{' '}
                                 {mapData.mapPosition.y})
                               </span>
                             ) : (
-                              ""
+                              ''
                             )}
                           </div>
                         </div>
-                        {/* <hr className='border border-gray-900' /> */}
                         <b className='text-white text-lg'>Description</b> <br />
                         <div
                           className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
                           style={{
-                            paddingRight: "10px",
-                            borderLeft: "2px solid white",
-                          }}>
+                            paddingRight: '10px',
+                            borderLeft: '2px solid white',
+                          }}
+                        >
                           <div className='text-sm'>
                             {mapData && mapData.description}
                           </div>
                         </div>
-                        {/* <hr className='border border-gray-900' /> */}
                         <div className='flex justify-center mt-5'>
                           <button
                             type='button'
@@ -255,18 +255,10 @@ const MapComponent = () => {
                               )
                             }
                             className=' rounded-md shadow-sm px-4 py-2 bg-[#1d491c] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
-                            style={{ border: "2px solid #4f8635" }}>
+                            style={{ border: '2px solid #4f8635' }}
+                          >
                             Visit {mapData && mapData.title}
                           </button>
-                          {/* <button
-                            onClick={(e:any) => {
-                              e.modalClose = true;
-                              handleClose(e);
-                            }}
-                            type='button'
-                            className='inline-flex justify-center bg-red-700 rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                            Close
-                          </button> */}
                         </div>
                       </div>
                     </div>
@@ -276,6 +268,7 @@ const MapComponent = () => {
             </Dialog>
           </>
         )}
+        {/* Tooltip for displaying information about the hovered tile */}
         {tooltipVisible && (
           <Tooltip
             x={tooltipPosition.x}

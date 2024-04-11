@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   faApple,
   faDiscord,
   faFacebook,
   faGoogle,
   faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ArrowPathIcon } from "@heroicons/react/20/solid";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
+} from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ArrowPathIcon } from '@heroicons/react/20/solid';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import axios from 'axios';
 // import { generateUsername } from "unique-username-generator";
 
 // import { trackEventFromBrowser } from '@/lib/mixpanelBrowser';
-import { useApp } from "../contexts/AppContext";
-import Button from "./core/ui/Button";
-import Checkbox from "./core/ui/Checkbox";
-import { siteUrl } from "../config";
+// import { useApp } from "../contexts/AppContext";
+import Button from './core/ui/Button';
+import Checkbox from './core/ui/Checkbox';
+import { siteUrl } from '../config';
 // import { siteUrl } from './../config';
 
-export default function RegisterSingleComponent({}) {
-  const [username, setUsername] = useState("");
+export default function RegisterSingleComponent() {
+  const [username, setUsername] = useState('');
   const [state, setState] = useState({
     checked: false,
     isUsernameValid: false,
     error: false,
-    message: "",
+    message: '',
   });
 
   //@ts-ignore
@@ -34,9 +34,9 @@ export default function RegisterSingleComponent({}) {
   const [tos, setTos] = useState(false);
   const [updates, setUpdates] = useState(false);
 
-  const spanLinkClass = "text-blue-600 font-semibold cursor-pointer";
+  const spanLinkClass = 'text-blue-600 font-semibold cursor-pointer';
 
-  function checkUsername() {
+  const checkUsername = useCallback(() => {
     // Configure Axios instance with CORS headers
     const instance = axios.create({
       // withCredentials: true,
@@ -50,7 +50,7 @@ export default function RegisterSingleComponent({}) {
     instance
       .get(`${siteUrl}/api/v1/check-username/?username=${username}`)
       .then((res) => {
-        if (res.data.status === "success") {
+        if (res.data.status === 'success') {
           setState({
             ...state,
             error: false,
@@ -71,47 +71,45 @@ export default function RegisterSingleComponent({}) {
       })
       .catch((error) => {
         // Handle error
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       });
-  }
-
+  }, [username, state]);
 
   const [showEditUsername, setShowEditUsername] = useState(false);
 
   useEffect(() => {
-    setUsername("test");
+    setUsername('test');
     setShowEditUsername(true);
   }, []);
 
   const authProviders = [
     {
-      name: "Google",
-      slug: "google",
+      name: 'Google',
+      slug: 'google',
       icon: faGoogle,
     },
     {
-      name: "Discord",
-      slug: "discord",
+      name: 'Discord',
+      slug: 'discord',
       icon: faDiscord,
     },
     {
-      name: "Twitter",
-      slug: "twitter",
+      name: 'Twitter',
+      slug: 'twitter',
       icon: faTwitter,
     },
     {
-      name: "Facebook",
-      slug: "facebook",
+      name: 'Facebook',
+      slug: 'facebook',
       icon: faFacebook,
     },
     {
-      name: "Apple",
-      slug: "apple",
+      name: 'Apple',
+      slug: 'apple',
       icon: faApple,
     },
   ];
 
-  var referer = `?referer=${encodeURIComponent("/create")}`;
   useEffect(() => {
     if (state.checked) {
       setState({
@@ -120,7 +118,7 @@ export default function RegisterSingleComponent({}) {
         error: false,
         //@ts-ignore
         pos: 1,
-        message: "",
+        message: '',
       });
     }
 
@@ -132,7 +130,7 @@ export default function RegisterSingleComponent({}) {
     }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [username]);
+  }, [username, checkUsername, state.checked]);
 
   const register = (link) => {
     if (!state.checked) {
@@ -146,7 +144,7 @@ export default function RegisterSingleComponent({}) {
           error: true,
           isUsernameValid: false,
           pos: 1,
-          message: "Please choose a username",
+          message: 'Please choose a username',
         };
       });
       return;
@@ -167,7 +165,7 @@ export default function RegisterSingleComponent({}) {
           error: true,
           pos: 2,
           message:
-            "Agree to the Terms of Service and Privacy Policy to continue.",
+            'Agree to the Terms of Service and Privacy Policy to continue.',
         };
       });
       return;
@@ -184,7 +182,7 @@ export default function RegisterSingleComponent({}) {
           error: true,
           isUsernameValid: false,
           pos: 1,
-          message: "Username must be at least 3 characters long",
+          message: 'Username must be at least 3 characters long',
         };
       });
       return;
@@ -201,10 +199,10 @@ export default function RegisterSingleComponent({}) {
     document.cookie = `updates=${updates}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
 
     // go to the link
-    window.open(`https://modd.io/${link}`, "auth", "width=500,height=600");
+    window.open(`https://modd.io/${link}`, 'auth', 'width=500,height=600');
 
-    window.addEventListener("message", (event) => {
-      console.log("event.data", event);
+    window.addEventListener('message', (event) => {
+      console.log('event.data', event);
 
       if (event.data.code === 200) {
         // reload page
@@ -240,16 +238,17 @@ export default function RegisterSingleComponent({}) {
 
         <div
           className={`relative text-gray-900 mt-2 mb-2 ${
-            showEditUsername ? "block" : "hidden"
-          } `}>
+            showEditUsername ? 'block' : 'hidden'
+          } `}
+        >
           <input
             type='username'
-            placeholder={"choose a username"}
+            placeholder={'choose a username'}
             value={username}
             maxLength={12}
             // check if enter is pressed
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 checkUsername();
               }
             }}
@@ -258,9 +257,9 @@ export default function RegisterSingleComponent({}) {
              ${
                state.checked
                  ? state.isUsernameValid
-                   ? "bg-green-500"
-                   : "bg-red-500"
-                 : "bg-gray-100"
+                   ? 'bg-green-500'
+                   : 'bg-red-500'
+                 : 'bg-gray-100'
              }  pl-2 pr-10 text-black placeholder-gray-700
               focus:border-primary-500 focus:ring-primary-500 sm:text-sm`}
           />
@@ -268,7 +267,7 @@ export default function RegisterSingleComponent({}) {
             <ArrowPathIcon
               className='absolute w-7 h-7 text-white right-0 top-1 mr-8 cursor-pointer'
               onClick={() => {
-                setUsername("test");
+                setUsername('test');
               }}
             />
           )}
@@ -279,7 +278,7 @@ export default function RegisterSingleComponent({}) {
               <XMarkIcon
                 className='absolute w-7 h-7 text-white right-1 top-1'
                 onClick={() => {
-                  setUsername("");
+                  setUsername('');
                 }}
               />
             )
@@ -296,12 +295,13 @@ export default function RegisterSingleComponent({}) {
             className='text-white flex flex-row mt-1 cursor-pointer'
             onClick={() => {
               setTos(!tos);
-            }}>
+            }}
+          >
             {
               <Checkbox
                 color={
                   //@ts-ignore
-                  state.error && state.pos === 2 && !tos ? "#ff0000" : "#D1D5DB"
+                  state.error && state.pos === 2 && !tos ? '#ff0000' : '#D1D5DB'
                 }
                 checked={tos}
                 //@ts-ignore
@@ -312,8 +312,8 @@ export default function RegisterSingleComponent({}) {
               />
             }
             <p className='ml-2'>
-              I agree to the{" "}
-              <span className={spanLinkClass}>Terms of Service</span> and{" "}
+              I agree to the{' '}
+              <span className={spanLinkClass}>Terms of Service</span> and{' '}
               <span className={spanLinkClass}>Privacy Policy</span>
             </p>
           </p>
@@ -321,7 +321,8 @@ export default function RegisterSingleComponent({}) {
             className='text-white flex flex-row mt-2 cursor-pointer'
             onClick={() => {
               setUpdates(!updates);
-            }}>
+            }}
+          >
             {/*@ts-ignore*/}
             <Checkbox
               checked={updates}
@@ -339,12 +340,13 @@ export default function RegisterSingleComponent({}) {
       <div className='mt-4 w-full'>
         {/*@ts-ignore*/}
         <Button
-          className={"w-full sso-signup-button"}
+          className={'w-full sso-signup-button'}
           color='alternate'
           key={authProviders[0].name}
           onClick={() => {
             register(`/api/v1/auth/${authProviders[0].slug}`);
-          }}>
+          }}
+        >
           <FontAwesomeIcon
             icon={authProviders[0].icon}
             size='lg'
@@ -355,7 +357,7 @@ export default function RegisterSingleComponent({}) {
       </div>
       <div className='mt-2.5 grid grid-cols-2 gap-3'>
         {authProviders.map((provider, index) => {
-          if (index == 0) return;
+          if (index === 0) return <></>;
           return (
             /*@ts-ignore*/
             <Button
@@ -364,11 +366,12 @@ export default function RegisterSingleComponent({}) {
               onClick={() => {
                 register(
                   index === 4
-                    ? "/auth/apple/login"
+                    ? '/auth/apple/login'
                     : `/api/v1/auth/${provider.slug}`
                 );
               }}
-              className={"sso-signup-button"}>
+              className={'sso-signup-button'}
+            >
               <FontAwesomeIcon
                 icon={provider.icon}
                 size='lg'
@@ -385,7 +388,8 @@ export default function RegisterSingleComponent({}) {
           onClick={() => {
             // setShowRegister(false);
             // setShowAuth(true);
-          }}>
+          }}
+        >
           already have an account? <b>Log In</b>
         </p>
       </div>
