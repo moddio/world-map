@@ -97,9 +97,8 @@ const MapComponent = () => {
         `${siteUrl}/api/game/${mapDetails.clickedTileInfo.id}/game-details/`
       );
       if (res && res.data && res.data.data) {
-        setTileTintColor({ tint: 0xffffff, tintFill: false });
-        mapDetails.hoveredTile.tintFill = true;
-        mapDetails.hoveredTile.tint = 0x209944;
+        // mapDetails.hoveredTile.tintFill = true;
+        // mapDetails.hoveredTile.tint = 0x209944;
         setIsOpen(true);
         setMapData(res.data.data);
         if (document.getElementById('tooltip')) {
