@@ -94,11 +94,16 @@ const MapComponent = () => {
   const fetchMaps = useCallback(
     async (mapDetails) => {
       const res = await axios.get(
-        `${siteUrl}/api/game/${mapDetails.id}/game-details/`
+        `${siteUrl}/api/game/${mapDetails.clickedTileInfo.id}/game-details/`
       );
       if (res && res.data && res.data.data) {
+        mapDetails.hoveredTile.tintFill = true;
+        mapDetails.hoveredTile.tint = 0x209944;
         setIsOpen(true);
         setMapData(res.data.data);
+        if (document.getElementById('tooltip')) {
+          document.getElementById('tooltip').style.display = 'none';
+        }
       }
     },
     [setIsOpen, setMapData]
@@ -124,7 +129,7 @@ const MapComponent = () => {
   const handleTileClick = useCallback(
     async (event) => {
       await fetchMaps(event.detail);
-      setClickedTileInfo(event.detail);
+      setClickedTileInfo(event.detail.clickedTileInfo);
     },
     [fetchMaps, setClickedTileInfo]
   );
@@ -157,9 +162,29 @@ const MapComponent = () => {
   }, [handleTileClick, handleTileHover]);
 
   const handleClose = (e) => {
+    clearTileTintHandler();
+    clickedTileInfo.clicked = false;
     setClickedTileInfo(null);
     setMapData(null);
-    clickedTileInfo.clicked = false;
+  };
+
+  const clearTileTintHandler = () => {
+    console.log('clear tile tint handler');
+    setTileTintColor({ tint: 0xffffff, tintFill: false });
+  };
+
+  const setTileTintColor = (data) => {
+    if (gameRef.current && gameRef.current.scene.scenes.length > 0) {
+      const gameScene = gameRef.current.scene.scenes.find(
+        (scene) => scene.constructor.name === 'GameScene'
+      );
+      if (gameScene) {
+        gameScene.buildings.forEach((building) => {
+          building.tintFill = data.tintFill;
+          building.tint = data.tint;
+        });
+      }
+    }
   };
   return (
     <div>
@@ -171,11 +196,14 @@ const MapComponent = () => {
               id='modalPopup'
               open={isOpen}
               onClose={handleClose}
-              className='fixed z-50 inset-3 overflow-y-auto flex items-center justify-end'
+              className='fixed z-50 inset-3 max-md:inset-x-0 max-md:bottom-0 lg:overflow-y-auto flex lg:items-center justify-end lg:top-0 top-auto'
             >
-              <Dialog.Overlay className='fixed inset-0' />
+              <Dialog.Overlay
+                className='fixed inset-0'
+                onClick={clearTileTintHandler}
+              />
 
-              <div className='inline-block align-middle bg-[#0e274f] rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
+              <div className='inline-block align-middle bg-[#0e274f] lg:rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
                 <div className='flex justify-between pl-3 mt-2'>
                   <span className='text-white text-lg font-bold'>
                     Map Details
@@ -185,13 +213,25 @@ const MapComponent = () => {
                   </span>
                 </div>
                 {mapData && mapData.cover ? (
-                  <div className='p-2 '>
-                    <img
-                      src={mapData.cover}
-                      alt=''
-                      className='w-full justify-center items-center h-auto rounded-sm'
-                      style={{ border: '2px solid #4f8635' }}
-                    />
+                  <div className='lg:relative group'>
+                    <div className='p-2 '>
+                      <img
+                        src={mapData.cover}
+                        alt=''
+                        className='w-full justify-center items-center lg:h-[300px] h-[150px] rounded-sm'
+                        style={{ border: '2px solid #4f8635' }}
+                      />
+                    </div>
+                    <div className='absolute top-0 max-md:mt-8 max-md:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
+                      <div className='lg:hidden bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
+                        <div className='text-white'></div>
+                        <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
+                          <div className='text-sm'>
+                            {mapData && mapData.description}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <></>
@@ -199,12 +239,12 @@ const MapComponent = () => {
                 <div className='px-4 sm:p-2 overflow-auto'>
                   <div className='sm:flex justify-center sm:items-start'>
                     <div className=' w-full'>
-                      <h3
-                        className=' font-medium text-white'
+                      <span
+                        className='lg:text-xl max-md:text-lg font-medium text-white'
                         id='modal-headline'
                       >
                         {mapData && mapData.title}
-                      </h3>
+                      </span>
                       <div className=' '>
                         <div className='flex justify-between mb-3 text-gray-300'>
                           <div className='text-md '>
@@ -234,19 +274,22 @@ const MapComponent = () => {
                             )}
                           </div>
                         </div>
-                        <b className='text-white text-lg'>Description</b> <br />
-                        <div
-                          className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
-                          style={{
-                            paddingRight: '10px',
-                            borderLeft: '2px solid white',
-                          }}
-                        >
-                          <div className='text-sm'>
-                            {mapData && mapData.description}
+                        <div className='max-md:hidden '>
+                          <b className='text-white text-lg'>Description</b>{' '}
+                          <br />
+                          <div
+                            className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
+                            style={{
+                              paddingRight: '10px',
+                              borderLeft: '2px solid white',
+                            }}
+                          >
+                            <div className='text-sm'>
+                              {mapData && mapData.description}
+                            </div>
                           </div>
                         </div>
-                        <div className='flex justify-center mt-5'>
+                        <div className='flex justify-center lg:mt-5 max-md:mb-3'>
                           <button
                             type='button'
                             onClick={() =>
@@ -254,7 +297,7 @@ const MapComponent = () => {
                                 `${siteUrl}/play/${mapData && mapData.gameSlug}`
                               )
                             }
-                            className=' rounded-md shadow-sm px-4 py-2 bg-[#1d491c] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
+                            className=' rounded-md shadow-sm px-4 py-2 bg-[#459539] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
                             style={{ border: '2px solid #4f8635' }}
                           >
                             Visit {mapData && mapData.title}
