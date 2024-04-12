@@ -102,7 +102,6 @@ const MapComponent = () => {
         // mapDetails.hoveredTile.tint = 0x209944;
         setIsOpen(true);
         setMapData(res.data.data);
-        document.getElementById("modalPopup").style.pointerEvents = "none";
         if (document.getElementById("tooltip")) {
           document.getElementById("tooltip").style.display = "none";
         }
@@ -164,8 +163,10 @@ const MapComponent = () => {
   }, [handleTileClick, handleTileHover]);
 
   const handleClose = (e) => {
-    clearTileTintHandler();
-    clickedTileInfo.clicked = false;
+    // clearTileTintHandler();
+    if (clickedTileInfo && clickedTileInfo.clicked) {
+      clickedTileInfo.clicked = false;
+    }
     setClickedTileInfo(null);
     setMapData(null);
   };
