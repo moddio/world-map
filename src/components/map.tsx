@@ -199,10 +199,10 @@ const MapComponent = () => {
               onClose={handleClose}
               className='fixed z-50 inset-3 max-md:inset-x-0 max-md:bottom-0 lg:overflow-y-auto flex lg:items-center justify-end lg:top-0 top-auto'
             >
-              <Dialog.Overlay
+              {/* <Dialog.Overlay
                 className='fixed inset-0'
                 onClick={clearTileTintHandler}
-              />
+              /> */}
 
               <div className='inline-block align-middle bg-[#0e274f] lg:rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
                 <div className='flex justify-between pl-3 mt-2'>

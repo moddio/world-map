@@ -145,6 +145,12 @@ export default class GameScene extends Phaser.Scene {
             );
           }
         );
+        this.tileInfoArray.map((tileInfo: any) => {
+          if (clickedTileInfo !== tileInfo) {
+            tileInfo.clicked = false;
+          }
+          return tileInfo;
+        });
         if (clickedTileInfo && !clickedTileInfo.clicked) {
           clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
 
