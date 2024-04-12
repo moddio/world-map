@@ -225,7 +225,7 @@ const MapComponent = () => {
                       style={{ border: '2px solid #4f8635' }}
                     />
                   </div>
-                  <div className='absolute top-0 max-md:bottom-0 md:bottom-0 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
+                  <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
                     <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
                       <div className='text-white'></div>
                       <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
@@ -270,7 +270,7 @@ const MapComponent = () => {
                           )}
                         </div>
                       </div>
-                      <div className='max-lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
+                      <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
                         <b className='text-white text-lg'>Description</b> <br />
                         <div
                           className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
