@@ -197,9 +197,9 @@ const MapComponent = () => {
             id='modalPopup'
             open={isOpen}
             onClose={handleClose}
-            className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto max-sm:top-auto'
+            className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'
           >
-            <div className='inline-block align-middle bg-[#0e274f] lg:rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] max-md:w-72 max-sm:w-full lg:h-auto max-md:text-sm'>
+            <div className='inline-block align-middle bg-[#0e274f] lg:rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm'>
               <div className='flex justify-between pl-3 mt-2'>
                 <span
                   className='lg:text-xl max-md:text-lg max-sm:text:sm font-medium text-white'
@@ -225,7 +225,7 @@ const MapComponent = () => {
                       style={{ border: '2px solid #4f8635' }}
                     />
                   </div>
-                  <div className='absolute top-0 max-md:mt-8 max-md:top-5 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
+                  <div className='absolute top-0 max-md:bottom-0 md:bottom-0 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
                     <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
                       <div className='text-white'></div>
                       <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
@@ -270,7 +270,7 @@ const MapComponent = () => {
                           )}
                         </div>
                       </div>
-                      <div className='max-lg:block max-md:hidden max-sm:hidden max-xs:hidden'>
+                      <div className='max-lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
                         <b className='text-white text-lg'>Description</b> <br />
                         <div
                           className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
