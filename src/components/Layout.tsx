@@ -1,14 +1,15 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Route,
+  // Route,
   Routes /*useNavigate*/,
 } from 'react-router-dom';
 // import Navbar from "./Navbar";
 // import Login from './Login';
-import RegisterModal from './RegisterModal';
+// import RegisterModal from './RegisterModal';
 import MapComponent from './map';
-import Auth from './Auth';
+// import Auth from './Auth';
+// import Navbar from './Navbar';
 
 const Layout = () => {
   // const userDetails = JSON.parse(localStorage.getItem('user'));
@@ -18,11 +19,14 @@ const Layout = () => {
     <Router>
       <div className='bg-white' style={{ backgroundColor: '#f0f8f0' }}>
         {/* <Navbar /> */}
+        <h1 className='bg-[#1883FD] mb-0 text-white text-left'>
+          Doomr.io
+        </h1>
         <MapComponent />
         <Routes>
           {/* <Route path='/' element={<Home />} />*/}
-          <Route path='/login' element={<Auth />} />
-          <Route path='/signup' element={<RegisterModal />} />
+          {/* <Route path='/login' element={<Auth />} />
+          <Route path='/signup' element={<RegisterModal />} /> */}
         </Routes>
       </div>
     </Router>

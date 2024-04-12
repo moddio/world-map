@@ -9,20 +9,20 @@ import axios from "axios";
 import { siteUrl } from "../config";
 import MapModal from "./core/ui/MapModal";
 const Navbar = () => {
-  const userDetails = JSON.parse(localStorage.getItem("user"));
+  // const userDetails = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const { user } = useUser();
+  // const { user } = useUser();
 
   const [modalOpen, setModalOpen] = useState(false);
-  useEffect(() => {
-    if (userDetails) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userDetails) {
+  //     navigate("/");
+  //   }
+  // }, []);
   return (
-    <nav className='bg-[#b7f7bb] flex justify-between items-center focus:outline-none p-4 border-black border-l border-r border-b relative'>
-      <div className='text-white'></div>
-      <div>
+    <nav className='bg-[#1883fd] flex  items-center focus:outline-none p-4 relative'>
+      <h4 className='font-bold text-green-300'>Doomr.io</h4>
+      {/* <div>
         {userDetails ? (
           <Disclosure>
             {({ open }) => (
@@ -101,7 +101,7 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      <MapModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <MapModal isOpen={modalOpen} onClose={() => setModalOpen(false)} /> */}
     </nav>
   );
 };

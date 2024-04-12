@@ -9,7 +9,6 @@ import { Dialog } from "@headlessui/react";
 import Tooltip from "./core/ui/Tooltip";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
-// Interface for game details received from the API
 interface GameDetails {
   owner: {
     _id: string;
@@ -71,6 +70,7 @@ const MapComponent = () => {
       backgroundColor: "#59f773",
     };
 
+
     // Create new Phaser game instance if it doesn't already exist
     if (!document.getElementById("phaserGame")) {
       //@ts-ignore
@@ -93,17 +93,19 @@ const MapComponent = () => {
   // Fetches map details from the server
   const fetchMaps = useCallback(
     async (mapDetails) => {
-      const res = await axios.get(
-        `${siteUrl}/api/game/${mapDetails.clickedTileInfo.id}/game-details/`
-      );
-      if (res && res.data && res.data.data) {
-        // TODO: set highlight on click. Temp disabled as giving issue on prod
-        // mapDetails.hoveredTile.tintFill = true;
-        // mapDetails.hoveredTile.tint = 0x209944;
-        setIsOpen(true);
-        setMapData(res.data.data);
-        if (document.getElementById("tooltip")) {
-          document.getElementById("tooltip").style.display = "none";
+      if (mapDetails && mapDetails.clickedTileInfo) {
+        const res = await axios.get(
+          `${siteUrl}/api/game/${mapDetails.clickedTileInfo.id}/game-details/`
+        );
+        if (res && res.data && res.data.data) {
+          // TODO: set highlight on click. Temp disabled as giving issue on prod
+          // mapDetails.hoveredTile.tintFill = true;
+          // mapDetails.hoveredTile.tint = 0x209944;
+          setIsOpen(true);
+          setMapData(res.data.data);
+          if (document.getElementById("tooltip")) {
+            document.getElementById("tooltip").style.display = "none";
+          }
         }
       }
     },
@@ -129,6 +131,7 @@ const MapComponent = () => {
   // Handles clicks on tiles by fetching map details
   const handleTileClick = useCallback(
     async (event) => {
+      if(!event.detail.default)
       await fetchMaps(event.detail);
       setClickedTileInfo(event.detail.clickedTileInfo);
     },
@@ -171,33 +174,33 @@ const MapComponent = () => {
     setMapData(null);
   };
 
-  const clearTileTintHandler = () => {
-    console.log("clear tile tint handler");
-    setTileTintColor({ tint: 0xffffff, tintFill: false });
-  };
+  // const clearTileTintHandler = () => {
+  //   setTileTintColor({ tint: 0xffffff, tintFill: false });
+  // };
 
-  const setTileTintColor = (data) => {
-    if (gameRef.current && gameRef.current.scene.scenes.length > 0) {
-      const gameScene = gameRef.current.scene.scenes.find(
-        (scene) => scene.constructor.name === "GameScene"
-      );
-      if (gameScene) {
-        gameScene.buildings.forEach((building) => {
-          building.tintFill = data.tintFill;
-          building.tint = data.tint;
-        });
-      }
-    }
-  };
+  // const setTileTintColor = (data) => {
+  //   if (gameRef.current && gameRef.current.scene.scenes.length > 0) {
+  //     const gameScene = gameRef.current.scene.scenes.find(
+  //       (scene) => scene.constructor.name === "GameScene"
+  //     );
+  //     if (gameScene) {
+  //       gameScene.buildings.forEach((building) => {
+  //         building.tintFill = true;
+  //         building.tint = data.tint;
+  //       });
+  //     }
+  //   }
+  // };
   return (
     <div>
       {mapData && (
         <>
+        
           <Dialog
             id='modalPopup'
             open={isOpen}
             onClose={handleClose}
-            className='fixed inset-y-0 lg:right-3 right-0 max-md:inset-x-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto max-sm:top-auto'>
+            className='fixed inset-y-0 lg:right-3 right-0 max-md:inset-x-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto max-sm:top-auto'>
             <div className='inline-block align-middle bg-[#0e274f] lg:rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] lg:h-auto'>
               <div className='flex justify-between pl-3 mt-2'>
                 <span
@@ -219,12 +222,12 @@ const MapComponent = () => {
                           : `https://www.modd.io/${mapData.cover}`
                       }
                       alt=''
-                      className='w-full justify-center items-center lg:h-40 h-[150px] rounded-sm'
+                      className='w-full justify-center items-center aspect-[5/3] rounded-sm'
                       style={{ border: "2px solid #4f8635" }}
                     />
                   </div>
                   <div className='absolute top-0 max-md:mt-8 max-md:top-5 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
-                    <div className='lg:hidden bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
+                    <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
                       <div className='text-white'></div>
                       <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
                         <div className='text-sm'>
@@ -267,7 +270,7 @@ const MapComponent = () => {
                           )}
                         </div>
                       </div>
-                      <div className='max-md:hidden max-sm:hidden max-xs:hidden'>
+                      <div className='max-lg:block max-md:hidden max-sm:hidden max-xs:hidden'>
                         <b className='text-white text-lg'>Description</b> <br />
                         <div
                           className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
