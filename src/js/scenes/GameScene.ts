@@ -1,6 +1,6 @@
-import axios from "axios";
-import { tilemapjson } from "../../assets/tilemaps/tilemap";
-import { siteUrl, worldMapId } from "../../config";
+import axios from 'axios';
+import { tilemapjson } from '../../assets/tilemaps/tilemap';
+import { siteUrl, worldMapId } from '../../config';
 
 export default class GameScene extends Phaser.Scene {
   tilemap: Phaser.Tilemaps.Tilemap;
@@ -21,22 +21,21 @@ export default class GameScene extends Phaser.Scene {
   tooltip: Phaser.GameObjects.Text;
 
   constructor() {
-    super({ key: "game", active: false, visible: false });
+    super({ key: 'game', active: false, visible: false });
 
     // Sample data for tile information
     this.tileInfoArray = [];
     this.loadMapInfo();
 
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
     link.href =
-      "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+      'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css';
     document.head.appendChild(link);
   }
 
   async loadMapInfo() {
     try {
-
       const response = await axios.get(
         `${siteUrl}/api/game/${worldMapId}/all-world-maps/?isMapPositionAvailable=true`
       );
@@ -55,35 +54,35 @@ export default class GameScene extends Phaser.Scene {
             }))
           : [];
 
-      const defaultTilePosition = { x: "13", y: "13" };
+      const defaultTilePosition = { x: '16', y: '14' };
       const defaultTileInfo = this.tileInfoArray.find(
         (tileInfo: any) =>
           tileInfo.position.x === defaultTilePosition.x &&
           tileInfo.position.y === defaultTilePosition.y
       );
       if (defaultTileInfo) {
-        const defaultTileEvent = new CustomEvent("tileClick", {
+        const defaultTileEvent = new CustomEvent('tileClick', {
           detail: { clickedTileInfo: defaultTileInfo },
         });
         window.dispatchEvent(defaultTileEvent);
       }
     } catch (error) {
-      console.error("Error loading data from API:", error);
+      console.error('Error loading data from API:', error);
     }
   }
 
   public preload() {
-    this.load.tilemapTiledJSON("tilemap", tilemapjson);
+    this.load.tilemapTiledJSON('tilemap', tilemapjson);
   }
 
   public create() {
-    const tilemap = (this.tilemap = this.make.tilemap({ key: "tilemap" }));
-    const tileset = tilemap.addTilesetImage("tiles");
+    const tilemap = (this.tilemap = this.make.tilemap({ key: 'tilemap' }));
+    const tileset = tilemap.addTilesetImage('tiles');
     const buildings = (this.buildings = []);
 
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
-      if (layer.name === "buildings") {
+      if (layer.name === 'buildings') {
         tileLayer.forEachTile((tile, index) => {
           if (index >= 0) {
             buildings.push(tile);
@@ -94,12 +93,12 @@ export default class GameScene extends Phaser.Scene {
 
     const { widthInPixels, heightInPixels } = tilemap;
     const camera = this.cameras.main;
-    camera.setBackgroundColor("#1883fd");
+    camera.setBackgroundColor('#1883fd');
 
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
 
-    this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
       const minZoom = (0.5 * 16) / tilemap.tileWidth;
       let targetZoom;
@@ -118,7 +117,7 @@ export default class GameScene extends Phaser.Scene {
       camera.setZoom(targetZoom);
     });
 
-    this.input.on("pointermove", (p) => {
+    this.input.on('pointermove', (p) => {
       if (p.isDown) {
         const scrollX = (p.x - p.prevPosition.x) / camera.zoom;
         const scrollY = (p.y - p.prevPosition.y) / camera.zoom;
@@ -166,11 +165,10 @@ export default class GameScene extends Phaser.Scene {
         });
         if (clickedTileInfo && !clickedTileInfo.clicked) {
           clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-
-          const event = new CustomEvent("tileClick", {
+          const event = new CustomEvent('tileClick', {
             detail: { clickedTileInfo, hoveredTile },
           });
-          const hoverEvent = new CustomEvent("tileHover", { detail: null });
+          const hoverEvent = new CustomEvent('tileHover', { detail: null });
           window.dispatchEvent(event);
           window.dispatchEvent(hoverEvent);
           clickedTileInfo.clicked = true;
@@ -192,9 +190,9 @@ export default class GameScene extends Phaser.Scene {
             x: this.input.activePointer.x,
             y: this.input.activePointer.y,
           };
-          document.body.style.cursor = "pointer";
+          document.body.style.cursor = 'pointer';
           // if (isModalClosed) {
-          const event = new CustomEvent("tileHover", {
+          const event = new CustomEvent('tileHover', {
             detail: hoveredTileInfo,
           });
           window.dispatchEvent(event);
@@ -204,13 +202,13 @@ export default class GameScene extends Phaser.Scene {
           //   Phaser.Input.Keyboard.KeyCodes.SHIFT
           // );
         } else {
-          const event = new CustomEvent("tileHover", { detail: null });
+          const event = new CustomEvent('tileHover', { detail: null });
           window.dispatchEvent(event);
         }
       }
     } else {
-      document.body.style.cursor = "default";
-      const event = new CustomEvent("tileHover", { detail: null });
+      document.body.style.cursor = 'default';
+      const event = new CustomEvent('tileHover', { detail: null });
       window.dispatchEvent(event);
     }
   }
