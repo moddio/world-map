@@ -207,7 +207,7 @@ const MapComponent = () => {
                 >
                   {mapData && mapData.title}
                 </span>
-                <span onClick={handleClose} className='text-white cursor'>
+                <span onClick={handleClose} className='text-white cursor-pointer'>
                   <XMarkIcon className='w-5 mr-2' />
                 </span>
               </div>
