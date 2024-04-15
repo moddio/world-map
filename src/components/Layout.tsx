@@ -16,7 +16,7 @@ const Layout = () => {
 
   return (
     <Router>
-      <div className='bg-white' style={{ backgroundColor: '#f0f8f0' }}>
+      <div className='bg-white' style={{ backgroundColor: '#f0f8f0', userSelect: 'none' }}>
         {/* <Navbar /> */}
         <h1 className='fixed max-md:text-xl lg:text-5xl font-bold text-white text-left p-2 my-0'>
           Doomr.io

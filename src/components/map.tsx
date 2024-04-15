@@ -226,7 +226,7 @@ const MapComponent = () => {
                 >
                   {mapData && mapData.title}
                 </span>
-                <span onClick={handleClose} className='text-white cursor'>
+                <span onClick={handleClose} className='text-white cursor-pointer'>
                   <XMarkIcon className='w-5 mr-2' />
                 </span>
               </div>
@@ -312,7 +312,10 @@ const MapComponent = () => {
                             )
                           }
                           className=' rounded-md shadow-sm px-4 py-2 bg-[#459539] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
-                          style={{ border: '2px solid #4f8635' }}
+                          style={{
+                            border: '2px solid #4f8635',
+                            userSelect: 'none'
+                          }}
                         >
                           Enter World
                         </button>
