@@ -37,6 +37,19 @@ export default class GameScene extends Phaser.Scene {
 
   async loadMapInfo() {
     try {
+      const defaultTilePosition = { x: '16', y: '14' };
+      
+      const defaultTileInfo = this.tileInfoArray.find(
+        (tileInfo: any) =>
+          tileInfo.position.x === defaultTilePosition.x &&
+          tileInfo.position.y === defaultTilePosition.y
+      );
+      
+      // const defaultTileEvent = new CustomEvent('tileClick', {
+      //   detail: { clickedTileInfo: {}, default:true },
+      // });
+      // window.dispatchEvent(defaultTileEvent);
+
       const response = await axios.get(
         `${siteUrl}/api/game/${worldMapId}/all-world-maps/?isMapPositionAvailable=true`
       );
@@ -55,18 +68,13 @@ export default class GameScene extends Phaser.Scene {
             }))
           : [];
 
-      const defaultTilePosition = { x: '16', y: '14' };
-      const defaultTileInfo = this.tileInfoArray.find(
-        (tileInfo: any) =>
-          tileInfo.position.x === defaultTilePosition.x &&
-          tileInfo.position.y === defaultTilePosition.y
-      );
-      if (defaultTileInfo) {
-        const defaultTileEvent = new CustomEvent('tileClick', {
-          detail: { clickedTileInfo: defaultTileInfo },
-        });
-        window.dispatchEvent(defaultTileEvent);
-      }
+  
+      // if (defaultTileInfo) {
+      //   const defaultTileEvent = new CustomEvent('tileClick', {
+      //     detail: { clickedTileInfo: defaultTileInfo, default:true },
+      //   });
+      //   window.dispatchEvent(defaultTileEvent);
+      // }
     } catch (error) {
       console.error('Error loading data from API:', error);
     }
@@ -77,14 +85,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public create() {
-    const tilemap = (this.tilemap = this.make.tilemap({ key: 'tilemap' }));
-    const tileset = tilemap.addTilesetImage('tiles');
+    const tilemap = (this.tilemap = this.make.tilemap({ key: "tilemap" }));
+    const tileset = tilemap.addTilesetImage("tiles");
     const buildings = (this.buildings = []);
 	const clouds = (this.clouds = []);
 
+    const tile = this.tilemap.getTileAt(16, 14);
+    const defaultTileEvent = new CustomEvent("tileClick", {
+      detail: { clickedTileInfo: {}, default: true, hoveredTile: tile },
+    });
+    window.dispatchEvent(defaultTileEvent);
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
-      if (layer.name === 'buildings') {
+      if (layer.name === "buildings") {
         tileLayer.forEachTile((tile, index) => {
           if (index >= 0) {
             buildings.push(tile);
@@ -95,7 +108,7 @@ export default class GameScene extends Phaser.Scene {
 
     const { widthInPixels, heightInPixels } = tilemap;
     const camera = this.cameras.main;
-    camera.setBackgroundColor('#1883fd');
+    camera.setBackgroundColor("#1883fd");
 
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
@@ -130,12 +143,31 @@ export default class GameScene extends Phaser.Scene {
       camera.setZoom(targetZoom);
     });
 
-    this.input.on('pointermove', (p) => {
+    let isDragging = false;
+    let startX, startY;
+
+    this.input.on("pointerdown", (pointer) => {
+      isDragging = true;
+      startX = pointer.x;
+      startY = pointer.y;
+    });
+
+    this.input.on("pointerup", () => {
+      isDragging = false;
+    });
+
+    this.input.on("pointermove", (p) => {
       if (p.isDown) {
         const scrollX = (p.x - p.prevPosition.x) / camera.zoom;
         const scrollY = (p.y - p.prevPosition.y) / camera.zoom;
         camera.scrollX -= scrollX;
         camera.scrollY -= scrollY;
+
+        const modalPopup = document.getElementById("modalPopup");
+        if (modalPopup) {
+          const closeModal = new CustomEvent('closePopup')
+          window.dispatchEvent(closeModal)
+        }
       }
     });
   }

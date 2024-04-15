@@ -130,6 +130,25 @@ const MapComponent = () => {
   // Handles clicks on tiles by fetching map details
   const handleTileClick = useCallback(
     async (event) => {
+      if (event && event.detail && event.detail.default) {
+        setMapData({
+          owner: {
+            _id: "59219d1852bf2a167508cc4c",
+            username: "m0dE",
+          },
+          description: "Currently in Alpha.",
+          mapPosition: {
+            x: "16",
+            y: "14",
+          },
+          cover: "/assets/images/modd_standard2.png",
+          createdAt: "2024-01-22T16:58:03.913Z",
+          title: "m0dE's Base",
+          gameSlug: "C0wgR98Wg",
+        });
+        setIsOpen(true);
+        return;
+      }
       if (!event.detail.default) await fetchMaps(event.detail);
       setClickedTileInfo(event.detail.clickedTileInfo);
     },
