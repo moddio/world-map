@@ -6,6 +6,7 @@ export default class GameScene extends Phaser.Scene {
   tilemap: Phaser.Tilemaps.Tilemap;
   tileSize: number = 64;
   buildings: Phaser.Tilemaps.Tile[];
+  clouds: Phaser.GameObjects.Image[];
   tileInfoArray: {
     mousePointer: {};
     mapName: string;
@@ -79,6 +80,7 @@ export default class GameScene extends Phaser.Scene {
     const tilemap = (this.tilemap = this.make.tilemap({ key: 'tilemap' }));
     const tileset = tilemap.addTilesetImage('tiles');
     const buildings = (this.buildings = []);
+	const clouds = (this.clouds = []);
 
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
@@ -97,6 +99,17 @@ export default class GameScene extends Phaser.Scene {
 
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
+
+	//create clouds at random positions
+	for (let i = 0; i < 10; i++) {
+	  const x = Phaser.Math.Between(-widthInPixels, 2 * widthInPixels);
+	  const y = Phaser.Math.Between(0, heightInPixels);
+	  const cloud = this.add.image(x, y, 'cloud');
+	  cloud.setScale(0.5);
+	  cloud.setOrigin(0, 0);
+	  cloud.setAlpha(0.5);
+	  clouds.push(cloud);
+	}
 
     this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
@@ -211,5 +224,12 @@ export default class GameScene extends Phaser.Scene {
       const event = new CustomEvent('tileHover', { detail: null });
       window.dispatchEvent(event);
     }
+	//move clouds
+	this.clouds.forEach((cloud) => {
+		cloud.x += 0.1;
+		if (cloud.x > 2 * this.tilemap.widthInPixels) {
+		  cloud.x = -cloud.width -this.tilemap.widthInPixels;
+		}
+	});
   }
 }
