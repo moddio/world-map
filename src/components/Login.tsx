@@ -132,7 +132,7 @@ export default function Login({ handleClose, referer }) {
       }
       localStorage.setItem('user', JSON.stringify(user));
       console.log(127, `${siteUrl}/api/v1/user/`);
-      mutate(`${siteUrl}/api/v1/user/`, user);
+      // mutate(`${siteUrl}/api/v1/user/`, user);
 
       // if in play page, reload page
       //   if (router.pathname.includes('/play') && !window.preventPlayAuthReload) {

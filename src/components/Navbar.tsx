@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../lib/hooks";
-import { Disclosure } from "@headlessui/react";
-import { ShoppingBagIcon, UserCircleIcon } from "@heroicons/react/20/solid";
-import { CircleStackIcon } from "@heroicons/react/24/solid";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
-import { siteUrl } from "../config";
-import MapModal from "./core/ui/MapModal";
+// import React, { useEffect, useState } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { useUser } from "../lib/hooks";
+// import { Disclosure } from "@headlessui/react";
+// import { ShoppingBagIcon, UserCircleIcon } from "@heroicons/react/20/solid";
+// import { CircleStackIcon } from "@heroicons/react/24/solid";
+// import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+// import axios from "axios";
+// import { siteUrl } from "../config";
+// import MapModal from "./core/ui/MapModal";
 const Navbar = () => {
   // const userDetails = JSON.parse(localStorage.getItem("user"));
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const { user } = useUser();
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
   // useEffect(() => {
   //   if (userDetails) {
   //     navigate("/");
