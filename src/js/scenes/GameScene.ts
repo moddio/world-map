@@ -98,7 +98,8 @@ export default class GameScene extends Phaser.Scene {
     const camera = this.cameras.main;
     camera.setBackgroundColor('#1883fd');
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
-    camera.setZoom(1.5);
+    camera.setZoom(1.66);
+    camera.scrollX += widthInPixels / 4;
     camera.setBounds(Xmin, Ymin, Xmax-Xmin, Ymax-Ymin);
 
     //create clouds at random positions
