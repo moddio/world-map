@@ -94,11 +94,8 @@ export default class GameScene extends Phaser.Scene {
 
     //create clouds at random positions
     for (let i = 0; i < 10; i++) {
-      const x = Phaser.Math.Between(2 * -widthInPixels, 2 * widthInPixels);
-      const y = Phaser.Math.Between(
-        0.5 * -heightInPixels,
-        0.5 * heightInPixels
-      );
+      const x = Phaser.Math.Between(-widthInPixels, 2 * widthInPixels);
+      const y = Phaser.Math.Between(0, heightInPixels);
       const cloud = this.add.image(x, y, 'cloud');
       cloud.setScale(0.8);
       cloud.setOrigin(0, 0);
@@ -215,7 +212,7 @@ export default class GameScene extends Phaser.Scene {
     }
     //move clouds
     this.clouds.forEach((cloud) => {
-      cloud.x += 0.3;
+      cloud.x += 0.1;
       if (cloud.x > 2 * this.tilemap.widthInPixels) {
         cloud.x = -cloud.width - this.tilemap.widthInPixels;
       }

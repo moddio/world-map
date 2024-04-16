@@ -1,5 +1,5 @@
 const tiles = require('../../assets/images/tiles.png');
-const shadowClouds = require('../../assets/images/new_clouds_na.png');
+const shadowClouds = require('../../assets/images/new_cloud_01.png');
 export default class LoaderScene extends Phaser.Scene {
   public preload() {
     this.load.image('tiles', tiles);
