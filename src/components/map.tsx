@@ -7,7 +7,8 @@ import axios from 'axios';
 import { siteUrl } from '../config';
 import { Dialog } from '@headlessui/react';
 import Tooltip from './core/ui/Tooltip';
-import { XMarkIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 
 interface GameDetails {
   owner: {
@@ -87,6 +88,26 @@ const MapComponent = () => {
     return () => {
       window.removeEventListener('contextmenu', disableContextMenu);
     };
+  }, []);
+
+  useEffect(() => {
+    const anchorTag = document.createElement('a');
+    anchorTag.href =
+      'https://docs.google.com/document/d/e/2PACX-1vSAPegZPVVZaW5raU8gIQ46CnAU-hseidLMn7SRSI7glTQXfHQ0Ng6rN33uUyWO5_FuLqn_GTn0vBsi/pub';
+    anchorTag.classList.add(
+      'fixed',
+      'bottom-0',
+      'left-0',
+      'bg-black',
+      'text-white',
+      'no-underline',
+      'hover:no-underline',
+      'p-1'
+    );
+    anchorTag.target = '_blank';
+    anchorTag.rel = 'noreferrer';
+    anchorTag.textContent = 'Credits';
+    document.body.appendChild(anchorTag);
   }, []);
 
   // Fetches map details from the server
@@ -190,63 +211,34 @@ const MapComponent = () => {
     setClickedTileInfo(null);
     setMapData(null);
   };
-
-  // const clearTileTintHandler = () => {
-  //   setTileTintColor({ tint: 0xffffff, tintFill: false });
-  // };
-
-  // const setTileTintColor = (data) => {
-  //   if (gameRef.current && gameRef.current.scene.scenes.length > 0) {
-  //     const gameScene = gameRef.current.scene.scenes.find(
-  //       (scene) => scene.constructor.name === "GameScene"
-  //     );
-  //     if (gameScene) {
-  //       gameScene.buildings.forEach((building) => {
-  //         building.tintFill = true;
-  //         building.tint = data.tint;
-  //       });
-  //     }
-  //   }
-  // };
   return (
     <div>
       {mapData && (
         <>
-          <Dialog
+          {/* <Dialog
             id='modalPopup'
             open={isOpen}
             onClose={handleClose}
             className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'
           >
-            <div className='inline-block align-middle bg-[#0e274f] lg:rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[350px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm'>
-              <div className='flex justify-between pl-3 mt-2'>
-                <span
-                  className='lg:text-xl max-md:text-lg max-sm:text:sm font-medium text-white'
-                  id='modal-headline'
-                >
-                  {mapData && mapData.title}
-                </span>
-                <span
-                  onClick={handleClose}
-                  className='text-white cursor-pointer'
-                >
-                  <XMarkIcon className='w-5 mr-2' />
-                </span>
-              </div>
+            <div className='inline-block align-middle bg-[#0e274f] rounded-tl-lg lg:rounded-bl-lg lg:rounded-br-lg max-sm:rounded-none  overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm'>
               {mapData && mapData.cover ? (
                 <div className='lg:relative group'>
-                  <div className='p-2 '>
-                    <img
-                      src={
-                        mapData.cover.includes('https://')
-                          ? mapData.cover
-                          : `https://www.modd.io/${mapData.cover}`
-                      }
-                      alt=''
-                      className='w-full justify-center items-center aspect-[5/3] rounded-sm'
-                      style={{ border: '2px solid #4f8635' }}
-                    />
-                  </div>
+                  <span
+                    onClick={handleClose}
+                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 bg-[#0e274f] '
+                  >
+                    <XMarkIcon className='w-6' />
+                  </span>
+                  <img
+                    src={
+                      mapData.cover.includes('https://')
+                        ? mapData.cover
+                        : `https://www.modd.io/${mapData.cover}`
+                    }
+                    alt=''
+                    className='w-full justify-center items-center aspect-[5/3]'
+                  />
                   <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
                     <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
                       <div className='text-white'></div>
@@ -261,73 +253,212 @@ const MapComponent = () => {
               ) : (
                 <></>
               )}
-              <div className='px-4 sm:p-2 overflow-auto'>
+              <div className='p-2 overflow-auto text-white '>
                 <div className='sm:flex justify-center sm:items-start'>
                   <div className=' w-full'>
-                    <div className=' '>
-                      <div className='flex justify-between mb-3 text-gray-300'>
-                        <div className='text-md '>
-                          owned by:{' '}
-                          <a
-                            href={`${siteUrl}/user/${mapData.owner.username}`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            className='text-blue-500 font-bold focus:outline-none'
-                          >
-                            <u>
-                              {mapData &&
-                                mapData.owner &&
-                                mapData.owner.username}
-                            </u>
-                          </a>
-                        </div>
-                        <div className='text-md '>
-                          position:
-                          {mapData && mapData.mapPosition ? (
-                            <span className='font-bold ml-1'>
-                              ({mapData.mapPosition.x}, {mapData.mapPosition.y})
-                            </span>
-                          ) : (
-                            ''
-                          )}
-                        </div>
-                      </div>
-                      <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
-                        <b className='text-white text-lg'>Description</b> <br />
-                        <div
-                          className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
-                          style={{
-                            paddingRight: '10px',
-                            borderLeft: '2px solid white',
-                          }}
-                        >
-                          <div className='text-sm'>
-                            {mapData && mapData.description}
+                    <div className='grid grid-cols-4 grid-rows-1 gap-4'>
+                      <div>
+                        <div className='mt-2 text-gray-300 text-sm'>
+                          <div className='text-md '>
+                            <div className='flex'>
+                              <UserCircleIcon className='h-5 ' />
+                              <a
+                                href={`${siteUrl}/user/${mapData.owner.username}`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='ml-1 text-blue-500 font-bold focus:outline-none  hover:no-underline'
+                              >
+                                @
+                                {mapData &&
+                                  mapData.owner &&
+                                  mapData.owner.username}
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div className='flex justify-center lg:mt-5 max-md:mb-3 max-sm:mb-2'>
-                        <button
-                          type='button'
-                          onClick={() =>
-                            window.open(
-                              `${siteUrl}/play/${
-                                mapData && mapData.gameSlug
-                              }?autojoin=true`
-                            )
-                          }
-                          className=' rounded-md shadow-sm px-4 py-2 bg-[#459539] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
-                          style={{
-                            border: '2px solid #4f8635',
-                            userSelect: 'none',
-                          }}
-                        >
-                          Enter World
-                        </button>
+                      <div className='col-span-2'>
+                        <div className='font-bold h4 text-center'>
+                          {mapData && mapData.title}
+                        </div>
+                      </div>
+                      <div className='col-start-4'>
+                        <div className='flex'>
+                          <div className='text-sm mt-2'>
+                            {mapData && mapData.mapPosition ? (
+                              <div className='flex'>
+                                <MapPinIcon className='h-5 ' />
+                                <span className='font-bold ml-1'>
+                                  {mapData.mapPosition.x},{' '}
+                                  {mapData.mapPosition.y}
+                                </span>
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr className='border-slate-700 my-1 p-1' />
+                    <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
+                      <b className='text-white text-lg'>Description</b> <br />
+                      <div
+                        className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'
+                        style={{
+                          paddingRight: '10px',
+                          borderLeft: '2px solid white',
+                        }}
+                      >
+                        <div className='text-sm'>
+                          {mapData && mapData.description}
+                        </div>
+                      </div>
+                    </div>
+                    <hr className='border-slate-700' />
+                    <div className='flex justify-center lg:mt-3 lg:mb-2 max-md:mb-3 max-sm:mb-2'>
+                      <a
+                        href={`${siteUrl}/play/${
+                          mapData && mapData.gameSlug
+                        }?autojoin=true`}
+                        rel='noreferrer'
+                        target='_blank'
+                        className='text-center hover:no-underline rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
+                        style={{
+                          border: '1px solid #fff',
+                          userSelect: 'none',
+                          transition: '0.2s',
+                        }}
+                      >
+                        Enter World
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Dialog> */}
+          <Dialog
+            id='modalPopup'
+            open={isOpen}
+            onClose={handleClose}
+            className='backdrop-blur fixed p-2 h-full right-0 max-md:bottom-none max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex justify-end lg:top-0 max-md:top-0 md:top-0 max-sm:top-auto max-sm:h-[450px]'
+            style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
+          >
+            <div className='inline-block bg-transparent max-sm:rounded-none  overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full max-md:text-sm'>
+              {mapData && mapData.cover ? (
+                <div className='lg:relative group'>
+                  <span
+                    onClick={handleClose}
+                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 bg-[#000] '
+                  >
+                    <XMarkIcon className='w-6' />
+                  </span>
+                  <img
+                    src={
+                      mapData.cover.includes('https://')
+                        ? mapData.cover
+                        : `https://www.modd.io/${mapData.cover}`
+                    }
+                    alt=''
+                    className='w-full justify-center items-center aspect-[5/3]'
+                  />
+                  <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
+                    <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
+                      <div className='text-white'></div>
+                      <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
+                        <div className='text-sm'>
+                          {mapData && mapData.description}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              ) : (
+                <></>
+              )}
+              <div className='p-2 overflow-auto text-white '>
+                <div className='sm:flex justify-center sm:items-start'>
+                  <div className=' w-full'>
+                    <div className='grid grid-cols-4 grid-rows-1 gap-4'>
+                      <div>
+                        <div className='lg:mt-2 text-sm'>
+                          <div className='text-md '>
+                            <div className='flex'>
+                              <UserCircleIcon className='h-5 text-yellow-400' />
+                              <a
+                                href={`${siteUrl}/user/${mapData.owner.username}`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='w-6 ml-1 text-blue-500 font-bold focus:outline-none  hover:no-underline'
+                              >
+                                @
+                                {mapData &&
+                                  mapData.owner &&
+                                  mapData.owner.username}
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='col-start-4'>
+                        <div className='flex'>
+                          <div className='text-sm lg:mt-2'>
+                            {mapData && mapData.mapPosition ? (
+                              <div className='flex'>
+                                <MapPinIcon className='h-5 text-red-600' />
+                                <span className='font-bold ml-1'>
+                                  {mapData.mapPosition.x},{' '}
+                                  {mapData.mapPosition.y}
+                                </span>
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='col-span-2'>
+                      <hr className='border-slate-700 my-1 p-1' />
+                      <div className='font-bold text-lg text-center'>
+                        {mapData && mapData.title}
+                      </div>
+                    </div>
+
+                    <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
+                      <b className='text-white text-lg'>Description</b> <br />
+                      <div
+                        className='text-left mb-1 max-h-96 h-auto overflow-y-auto text-gray-300 pl-2'
+                        style={{
+                          paddingRight: '10px',
+                          borderLeft: '2px solid white',
+                        }}
+                      >
+                        <div className='text-sm'>
+                          {mapData && mapData.description}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='flex justify-center w-full absolute bottom-0 lg:mt-3 lg:mb-2 max-md:mb-3 max-sm:mb-2'>
+                <a
+                  href={`${siteUrl}/play/${
+                    mapData && mapData.gameSlug
+                  }?autojoin=true`}
+                  rel='noreferrer'
+                  target='_blank'
+                  className='bg-[#459539] text-center hover:no-underline rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
+                  style={{
+                    userSelect: 'none',
+                    transition: '0.2s',
+                  }}
+                >
+                  Enter World
+                </a>
               </div>
             </div>
           </Dialog>
