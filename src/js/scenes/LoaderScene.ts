@@ -14,6 +14,8 @@ export default class LoaderScene extends Phaser.Scene {
     this.load.image('cloud4', cloud4);
     this.load.image('cloud5', cloud5);
     this.load.image('cloud6', cloud6);
+
+    this.load.plugin('rexpinchplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexpinchplugin.min.js', true);
   }
 
   public create() {

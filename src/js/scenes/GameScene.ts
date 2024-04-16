@@ -64,6 +64,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public create() {
+    const pinchPlugin = this.plugins.get('rexpinchplugin') as any;
+    const dragScale = pinchPlugin.add(this);
+
     const tilemap = (this.tilemap = this.make.tilemap({ key: 'tilemap' }));
     const tileset = tilemap.addTilesetImage('tiles');
     const buildings = (this.buildings = []);
@@ -117,23 +120,17 @@ export default class GameScene extends Phaser.Scene {
       clouds.push(cloudContainer);
     }
 
-    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+    dragScale.on('pinch', function (dragScale) {
       const maxZoom = (10 * 16) / tilemap.tileWidth;
-      const minZoom = (1 * 16) / tilemap.tileWidth;
-      let targetZoom;
+      const minZoom = (0.75 * 16) / tilemap.tileWidth;
+      var scaleFactor = dragScale.scaleFactor;
+      camera.zoom *= scaleFactor;
+      if (camera.zoom < minZoom) camera.zoom = minZoom;
+      else if (camera.zoom > maxZoom) camera.zoom = maxZoom;
+    }, this)
 
-      if (deltaY < 0) {
-        targetZoom = camera.zoom * 1.2;
-        if (targetZoom < maxZoom) {
-          let xDist = pointer.worldX - camera.midPoint.x;
-          let yDist = pointer.worldY - camera.midPoint.y;
-          camera.scrollX += xDist / 6;
-          camera.scrollY += yDist / 6;
-        }
-      } else targetZoom = camera.zoom / 1.2;
-      if (targetZoom < minZoom) targetZoom = minZoom;
-      else if (targetZoom > maxZoom) targetZoom = maxZoom;
-      camera.setZoom(targetZoom);
+    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+      this.zoom(deltaY, pointer);
     });
 
     this.input.on('pointermove', (p) => {
@@ -150,6 +147,27 @@ export default class GameScene extends Phaser.Scene {
         }
       }
     });
+  }
+
+  private zoom(deltaY: number, pointer: Phaser.Input.Pointer) {
+    const tilemap = this.tilemap;
+    const camera = this.cameras.main;
+
+    const maxZoom = (10 * 16) / tilemap.tileWidth;
+    const minZoom = (1 * 16) / tilemap.tileWidth;
+    let targetZoom;
+    if (deltaY < 0) {
+      targetZoom = camera.zoom * 1.2;
+      if (targetZoom < maxZoom) {
+        let xDist = pointer.worldX - camera.midPoint.x;
+        let yDist = pointer.worldY - camera.midPoint.y;
+        camera.scrollX += xDist / 6;
+        camera.scrollY += yDist / 6;
+      }
+    } else targetZoom = camera.zoom / 1.2;
+    if (targetZoom < minZoom) targetZoom = minZoom;
+    else if (targetZoom > maxZoom) targetZoom = maxZoom;
+    camera.setZoom(targetZoom);
   }
 
   public update() {
