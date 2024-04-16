@@ -89,16 +89,22 @@ export default class GameScene extends Phaser.Scene {
     });
 
     const { widthInPixels, heightInPixels } = tilemap;
+    
+    const Xmin = -widthInPixels;
+    const Xmax = 2 * widthInPixels;
+    const Ymin = -0.5 * heightInPixels;
+    const Ymax = 1.5 * heightInPixels;
+
     const camera = this.cameras.main;
     camera.setBackgroundColor('#1883fd');
-
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
+    camera.setBounds(Xmin, Ymin, Xmax-Xmin, Ymax-Ymin);
 
     //create clouds at random positions
     for (let i = 0; i < 15; i++) {
-      const x = Phaser.Math.Between(-widthInPixels, 2 * widthInPixels);
-      const y = Phaser.Math.Between(- 0.5 * heightInPixels, 1.5 * heightInPixels);
+      const x = Phaser.Math.Between(Xmin, Xmax);
+      const y = Phaser.Math.Between(Ymin, Ymax);
       const random = Phaser.Math.Between(1, 6);
       //container for cloud and its shadow
       const cloudContainer = this.add.container(x, y) as Phaser.GameObjects.Container & { speed: number };
