@@ -96,27 +96,28 @@ export default class GameScene extends Phaser.Scene {
     camera.setZoom(1.5);
 
     //create clouds at random positions
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 15; i++) {
       const x = Phaser.Math.Between(-widthInPixels, 2 * widthInPixels);
-      const y = Phaser.Math.Between(- 0.5 * heightInPixels, heightInPixels);
-      const random = Math.floor(Phaser.Math.Between(1, 6));
+      const y = Phaser.Math.Between(- 0.5 * heightInPixels, 1.5 * heightInPixels);
+      const random = Phaser.Math.Between(1, 6);
       //container for cloud and its shadow
       const cloudContainer = this.add.container(x, y) as Phaser.GameObjects.Container & { speed: number };
-      cloudContainer.speed = Phaser.Math.Between(1, 3);
-      //cloud image
-      const cloud = this.add.image(0, 0, 'cloud' + random.toString());
-      cloud.setScale(2);
-      cloud.setOrigin(0, 0);
-      cloud.setAlpha(0.8);
-      cloudContainer.add(cloud);
+      cloudContainer.speed = Phaser.Math.Between(10, 30)/10;
+
       //shadow image
-      const shadow = this.add.image(100, 100, 'cloud' + random.toString());
-      shadow.setScale(2);
+      const shadow = this.add.image(20, 20, 'cloud' + random.toString());
+      shadow.setScale(0.75);
       shadow.setOrigin(0, 0);
       shadow.setAlpha(0.1);
       shadow.tint = 0x000000;
-
       cloudContainer.add(shadow);
+
+      //cloud image
+      const cloud = this.add.image(0, 0, 'cloud' + random.toString());
+      cloud.setScale(0.75);
+      cloud.setOrigin(0, 0);
+      cloudContainer.add(cloud);
+     
       clouds.push(cloudContainer);
     }
 
@@ -154,7 +155,7 @@ export default class GameScene extends Phaser.Scene {
     const camera = this.cameras.main;
 
     const maxZoom = (10 * 16) / tilemap.tileWidth;
-    const minZoom = (1 * 16) / tilemap.tileWidth;
+    const minZoom = (1.25 * 16) / tilemap.tileWidth;
     let targetZoom;
     if (deltaY < 0) {
       targetZoom = camera.zoom * 1.2;
