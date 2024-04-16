@@ -102,9 +102,9 @@ const MapComponent = () => {
           // mapDetails.hoveredTile.tint = 0x209944;
           setIsOpen(true);
           setMapData(res.data.data);
-          if (document.getElementById('tooltip')) {
-            document.getElementById('tooltip').style.display = 'none';
-          }
+          // if (document.getElementById('tooltip')) {
+          //   document.getElementById('tooltip').style.display = 'none';
+          // }
         }
       }
     },
@@ -133,18 +133,18 @@ const MapComponent = () => {
       if (event && event.detail && event.detail.default) {
         setMapData({
           owner: {
-            _id: "59219d1852bf2a167508cc4c",
-            username: "m0dE",
+            _id: '59219d1852bf2a167508cc4c',
+            username: 'm0dE',
           },
-          description: "Currently in Alpha.",
+          description: 'Currently in Alpha.',
           mapPosition: {
-            x: "16",
-            y: "14",
+            x: '16',
+            y: '14',
           },
-          cover: "/assets/images/modd_standard2.png",
-          createdAt: "2024-01-22T16:58:03.913Z",
+          cover: '/assets/images/modd_standard2.png',
+          createdAt: '2024-01-22T16:58:03.913Z',
           title: "m0dE's Base",
-          gameSlug: "C0wgR98Wg",
+          gameSlug: 'C0wgR98Wg',
         });
         setIsOpen(true);
         return;
@@ -226,7 +226,10 @@ const MapComponent = () => {
                 >
                   {mapData && mapData.title}
                 </span>
-                <span onClick={handleClose} className='text-white cursor-pointer'>
+                <span
+                  onClick={handleClose}
+                  className='text-white cursor-pointer'
+                >
                   <XMarkIcon className='w-5 mr-2' />
                 </span>
               </div>
@@ -308,13 +311,15 @@ const MapComponent = () => {
                           type='button'
                           onClick={() =>
                             window.open(
-                              `${siteUrl}/play/${mapData && mapData.gameSlug}?autojoin=true`
+                              `${siteUrl}/play/${
+                                mapData && mapData.gameSlug
+                              }?autojoin=true`
                             )
                           }
                           className=' rounded-md shadow-sm px-4 py-2 bg-[#459539] text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
                           style={{
                             border: '2px solid #4f8635',
-                            userSelect: 'none'
+                            userSelect: 'none',
                           }}
                         >
                           Enter World

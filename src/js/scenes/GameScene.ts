@@ -37,19 +37,6 @@ export default class GameScene extends Phaser.Scene {
 
   async loadMapInfo() {
     try {
-      const defaultTilePosition = { x: '16', y: '14' };
-      
-      const defaultTileInfo = this.tileInfoArray.find(
-        (tileInfo: any) =>
-          tileInfo.position.x === defaultTilePosition.x &&
-          tileInfo.position.y === defaultTilePosition.y
-      );
-      
-      // const defaultTileEvent = new CustomEvent('tileClick', {
-      //   detail: { clickedTileInfo: {}, default:true },
-      // });
-      // window.dispatchEvent(defaultTileEvent);
-
       const response = await axios.get(
         `${siteUrl}/api/game/${worldMapId}/all-world-maps/?isMapPositionAvailable=true`
       );
@@ -67,14 +54,6 @@ export default class GameScene extends Phaser.Scene {
               id: item._id.toString(),
             }))
           : [];
-
-  
-      // if (defaultTileInfo) {
-      //   const defaultTileEvent = new CustomEvent('tileClick', {
-      //     detail: { clickedTileInfo: defaultTileInfo, default:true },
-      //   });
-      //   window.dispatchEvent(defaultTileEvent);
-      // }
     } catch (error) {
       console.error('Error loading data from API:', error);
     }
@@ -85,19 +64,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public create() {
-    const tilemap = (this.tilemap = this.make.tilemap({ key: "tilemap" }));
-    const tileset = tilemap.addTilesetImage("tiles");
+    const tilemap = (this.tilemap = this.make.tilemap({ key: 'tilemap' }));
+    const tileset = tilemap.addTilesetImage('tiles');
     const buildings = (this.buildings = []);
-	const clouds = (this.clouds = []);
+    const clouds = (this.clouds = []);
 
     const tile = this.tilemap.getTileAt(16, 14);
-    const defaultTileEvent = new CustomEvent("tileClick", {
+    const defaultTileEvent = new CustomEvent('tileClick', {
       detail: { clickedTileInfo: {}, default: true, hoveredTile: tile },
     });
     window.dispatchEvent(defaultTileEvent);
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
-      if (layer.name === "buildings") {
+      if (layer.name === 'buildings') {
         tileLayer.forEachTile((tile, index) => {
           if (index >= 0) {
             buildings.push(tile);
@@ -108,21 +87,24 @@ export default class GameScene extends Phaser.Scene {
 
     const { widthInPixels, heightInPixels } = tilemap;
     const camera = this.cameras.main;
-    camera.setBackgroundColor("#1883fd");
+    camera.setBackgroundColor('#1883fd');
 
     camera.centerOn(widthInPixels / 2, heightInPixels / 2);
     camera.setZoom(1.5);
 
-	//create clouds at random positions
-	for (let i = 0; i < 10; i++) {
-	  const x = Phaser.Math.Between(-widthInPixels, 2 * widthInPixels);
-	  const y = Phaser.Math.Between(0, heightInPixels);
-	  const cloud = this.add.image(x, y, 'cloud');
-	  cloud.setScale(0.5);
-	  cloud.setOrigin(0, 0);
-	  cloud.setAlpha(0.5);
-	  clouds.push(cloud);
-	}
+    //create clouds at random positions
+    for (let i = 0; i < 10; i++) {
+      const x = Phaser.Math.Between(2 * -widthInPixels, 2 * widthInPixels);
+      const y = Phaser.Math.Between(
+        0.5 * -heightInPixels,
+        0.5 * heightInPixels
+      );
+      const cloud = this.add.image(x, y, 'cloud');
+      cloud.setScale(0.8);
+      cloud.setOrigin(0, 0);
+      cloud.setAlpha(0.6);
+      clouds.push(cloud);
+    }
 
     this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const maxZoom = (20 * 16) / tilemap.tileWidth;
@@ -143,30 +125,17 @@ export default class GameScene extends Phaser.Scene {
       camera.setZoom(targetZoom);
     });
 
-    let isDragging = false;
-    let startX, startY;
-
-    this.input.on("pointerdown", (pointer) => {
-      isDragging = true;
-      startX = pointer.x;
-      startY = pointer.y;
-    });
-
-    this.input.on("pointerup", () => {
-      isDragging = false;
-    });
-
-    this.input.on("pointermove", (p) => {
+    this.input.on('pointermove', (p) => {
       if (p.isDown) {
         const scrollX = (p.x - p.prevPosition.x) / camera.zoom;
         const scrollY = (p.y - p.prevPosition.y) / camera.zoom;
         camera.scrollX -= scrollX;
         camera.scrollY -= scrollY;
 
-        const modalPopup = document.getElementById("modalPopup");
+        const modalPopup = document.getElementById('modalPopup');
         if (modalPopup) {
-          const closeModal = new CustomEvent('closePopup')
-          window.dispatchEvent(closeModal)
+          const closeModal = new CustomEvent('closePopup');
+          window.dispatchEvent(closeModal);
         }
       }
     });
@@ -178,10 +147,6 @@ export default class GameScene extends Phaser.Scene {
       //@ts-ignore
       building.id = index;
       building.setAlpha(1);
-      // if (window.innerWidth < 1080) {
-      //   building.tintFill = true;
-      //   building.tint = 0x209944;
-      // }
     });
 
     const worldPoint = this.cameras.main.getWorldPoint(
@@ -213,9 +178,7 @@ export default class GameScene extends Phaser.Scene {
           const event = new CustomEvent('tileClick', {
             detail: { clickedTileInfo, hoveredTile },
           });
-          const hoverEvent = new CustomEvent('tileHover', { detail: null });
           window.dispatchEvent(event);
-          window.dispatchEvent(hoverEvent);
           clickedTileInfo.clicked = true;
         }
       } else {
@@ -236,16 +199,10 @@ export default class GameScene extends Phaser.Scene {
             y: this.input.activePointer.y,
           };
           document.body.style.cursor = 'pointer';
-          // if (isModalClosed) {
           const event = new CustomEvent('tileHover', {
             detail: hoveredTileInfo,
           });
           window.dispatchEvent(event);
-          // }
-          // if (document.getElementById("modalPopup").style.display == "none") {
-          // const shiftKey = this.input.keyboard.addKey(
-          //   Phaser.Input.Keyboard.KeyCodes.SHIFT
-          // );
         } else {
           const event = new CustomEvent('tileHover', { detail: null });
           window.dispatchEvent(event);
@@ -256,12 +213,12 @@ export default class GameScene extends Phaser.Scene {
       const event = new CustomEvent('tileHover', { detail: null });
       window.dispatchEvent(event);
     }
-	//move clouds
-	this.clouds.forEach((cloud) => {
-		cloud.x += 0.1;
-		if (cloud.x > 2 * this.tilemap.widthInPixels) {
-		  cloud.x = -cloud.width -this.tilemap.widthInPixels;
-		}
-	});
+    //move clouds
+    this.clouds.forEach((cloud) => {
+      cloud.x += 0.3;
+      if (cloud.x > 2 * this.tilemap.widthInPixels) {
+        cloud.x = -cloud.width - this.tilemap.widthInPixels;
+      }
+    });
   }
 }

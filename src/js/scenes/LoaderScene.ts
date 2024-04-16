@@ -1,11 +1,15 @@
-const tiles = require('../../assets/images/tiles.png')
+const tiles = require('../../assets/images/tiles.png');
+const shadowClouds = require('../../assets/images/new_clouds_na.png');
 export default class LoaderScene extends Phaser.Scene {
   public preload() {
-    this.load.image("tiles", tiles);
-	this.load.image('cloud', 'https://cache.modd.io/asset/spriteImage/1713188798417_new_cloud_01.png'/*'../../assets/images/new_cloud_01.png'*/);
+    this.load.image('tiles', tiles);
+    this.load.image(
+      'cloud',
+      shadowClouds /*'../../assets/images/new_cloud_01.png'*/
+    );
   }
 
   public create() {
-    this.scene.start("game");
+    this.scene.start('game');
   }
 }
