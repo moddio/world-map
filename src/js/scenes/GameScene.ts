@@ -20,6 +20,9 @@ export default class GameScene extends Phaser.Scene {
     image: string;
   }[];
   tooltip: Phaser.GameObjects.Text;
+  indicator: Phaser.GameObjects.Graphics;
+  angle: number = 0;
+  selectedTile: Phaser.Tilemaps.Tile;
 
   constructor() {
     super({ key: "game", active: false, visible: false });
@@ -194,7 +197,25 @@ export default class GameScene extends Phaser.Scene {
         }
       }
     });
+
+     // Graphics object for drawing the indicator
+     this.indicator = this.add.graphics({ lineStyle: { width: 3, color: 0xffffff } });
+
+     // Draw the initial indicator
+     this.drawIndicator();
   }
+
+  drawIndicator() {
+    const indicator = this.indicator;
+
+    // Drawing the circle with gaps
+    for (let i = 0; i < 4; i++) {
+      indicator.beginPath();
+      indicator.arc(0, 0, 15, Phaser.Math.DegToRad(5 + i * 90), Phaser.Math.DegToRad(80 + i * 90), false);
+      indicator.strokePath();
+    }
+    indicator.rotation = this.angle;
+}
 
   private zoom(deltaY: number, pointer: Phaser.Input.Pointer) {
     const tilemap = this.tilemap;
@@ -256,6 +277,7 @@ export default class GameScene extends Phaser.Scene {
           });
           window.dispatchEvent(event);
           clickedTileInfo.clicked = true;
+          this.selectedTile = hoveredTile;
         }
       } else {
         // const isModalClosed = document.getElementById('modalPopup') === null;
@@ -296,5 +318,17 @@ export default class GameScene extends Phaser.Scene {
         cloud.x = -cloud.width - this.tilemap.widthInPixels;
       }
     });
+
+    // Clear the previous frame
+    this.indicator.clear();
+    if (this.selectedTile) {
+      // Update the rotation angle
+      this.angle -= 0.01;  // This will rotate the indicator counterclockwise
+      // Draw the updated indicator
+      this.drawIndicator();
+      this.indicator.x = this.selectedTile.getCenterX();
+      this.indicator.y = this.selectedTile.getCenterY();
+    }
+    
   }
 }
