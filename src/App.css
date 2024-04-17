@@ -78,6 +78,7 @@
 #modalDefaultPopup .title {
   font-size: 64px;  
   text-shadow: 3px 3px #000;
+  line-height: 56px;
 }
 
 #modalDefaultPopup .lnk-option {
