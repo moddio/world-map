@@ -343,7 +343,7 @@ const MapComponent = () => {
             id='modalPopup'
             open={isOpen}
             onClose={handleClose}
-            className='backdrop-blur fixed p-2 h-full right-0 max-md:bottom-none max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 sm:w-full max-md:w-32 w-auto flex justify-end lg:top-0 max-md:top-0 md:top-0 max-sm:top-auto max-sm:h-[450px]'
+            className='backdrop-blur fixed p-2 h-full right-0 max-md:bottom-none max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full  max-md:w-32 lg:w-auto flex justify-end lg:top-0 max-md:top-0 md:top-0 max-sm:top-auto max-sm:h-[450px]'
             style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
           >
             <div className='inline-block bg-transparent max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full max-md:text-sm'>
