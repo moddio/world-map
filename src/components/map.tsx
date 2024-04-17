@@ -240,9 +240,9 @@ const MapComponent = () => {
         id='modalDefaultPopup'
         open={isDefaultOpen}
         onClose={handleDefaultClose}
-        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'>
+        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'>
         <div
-          className='backdrop-blur inline-block align-middle rounded-tl-lg lg:rounded-bl-lg lg:rounded-br-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2'
+          className='backdrop-blur inline-block align-middle rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2'
           style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
           <div className='lg:relative group'>
             <img
@@ -254,7 +254,7 @@ const MapComponent = () => {
               <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
                 <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
                   <div className='text-md'>
-                    <ul className='list-disc'>
+                    <ul className='list-disc list-inside  leading-5'>
                       <li>
                         <strong>scavenge</strong> the wastelands for loot
                       </li>
@@ -281,7 +281,7 @@ const MapComponent = () => {
                 <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
                   <div className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'>
                     <div className='text-md'>
-                      <ul className='list-disc list-inside '>
+                      <ul className='list-disc list-inside leading-5'>
                         <li>
                           <strong>scavenge</strong> the wastelands for loot
                         </li>
@@ -301,7 +301,7 @@ const MapComponent = () => {
                     href='https://www.modd.io/play/LAD?autojoin=true'
                     rel='noreferrer'
                     target='_blank'
-                    className='btn-quick w-full text-center focus:outline-none hover:no-underline rounded-md shadow-sm py-3 px-0 text-base text-white bg-[#2c871f] w-full hover:bg-[#459539]'>
+                    className='btn-quick w-full text-center focus:outline-none hover:no-underline rounded-md shadow-sm py-3 px-0 text-base text-white hover:bg-[#2c871f] w-full bg-[#459539]'>
                     QUICK START
                   </a>{" "}
                   <br />
