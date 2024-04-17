@@ -54,3 +54,40 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the scrollbar handle on hover */
 }
+
+
+@font-face {
+  font-family: 'population_zero_bbregular';
+  src: url('./populationzerobb-webfont.woff2') format('woff2'),
+       url('./populationzerobb-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+#modalDefaultPopup .title, #modalDefaultPopup .subtitle, #modalDefaultPopup .btn-quick, #modalDefaultPopup .lnk-option  {
+  font-family: 'population_zero_bbregular'; 
+  letter-spacing: 1px; 
+}
+#modalDefaultPopup .btn-quick, #modalDefaultPopup .subtitle {
+  font-size: 48px;  text-shadow: 3px 3px #000;
+}
+#modalDefaultPopup .btn-quick {
+  font-size: 32px;  
+}
+#modalDefaultPopup .title {
+  font-size: 64px;  
+  text-shadow: 3px 3px #000;
+}
+
+#modalDefaultPopup .lnk-option {
+  font-size: 18px;  
+}
+
+#modalDefaultPopup {
+  font-family: "Radio Canada", sans-serif;
+  font-optical-sizing: auto;
+  font-weight:normal;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}

@@ -49,7 +49,6 @@ export default class GameScene extends Phaser.Scene {
       );
       const playCountData = playCountResponse.data.data;
   
-  
       this.tileInfoArray =
         data && data.length
           ? data.map((item) => {
@@ -76,18 +75,18 @@ export default class GameScene extends Phaser.Scene {
             })
           : [];
       
-      const defaultTilePosition = { x: "16", y: "14" };
-      const defaultTileInfo = this.tileInfoArray.find(
-        (tileInfo:any) =>
-          tileInfo.position.x === defaultTilePosition.x &&
-          tileInfo.position.y === defaultTilePosition.y
-      );
-      if (defaultTileInfo) {
-        const defaultTileEvent = new CustomEvent("tileClick", {
-          detail: { clickedTileInfo: defaultTileInfo },
-        });
-        window.dispatchEvent(defaultTileEvent);
-      }
+      // const defaultTilePosition = { x: "16", y: "14" };
+      // const defaultTileInfo = this.tileInfoArray.find(
+      //   (tileInfo:any) =>
+      //     tileInfo.position.x === defaultTilePosition.x &&
+      //     tileInfo.position.y === defaultTilePosition.y
+      // );
+      // if (defaultTileInfo) {
+      //   const defaultTileEvent = new CustomEvent("tileClick", {
+      //     detail: { clickedTileInfo: defaultTileInfo },
+      //   });
+      //   window.dispatchEvent(defaultTileEvent);
+      // }
     } catch (error) {
       console.error("Error loading data from API:", error);
     }
@@ -107,11 +106,11 @@ export default class GameScene extends Phaser.Scene {
     const buildings = (this.buildings = []);
     const clouds = (this.clouds = []);
 
-    const tile = this.tilemap.getTileAt(16, 14);
-    const defaultTileEvent = new CustomEvent("tileClick", {
-      detail: { clickedTileInfo: {}, default: true, hoveredTile: tile },
-    });
-    window.dispatchEvent(defaultTileEvent);
+    // const tile = this.tilemap.getTileAt(16, 14);
+    // const defaultTileEvent = new CustomEvent("tileClick", {
+    //   detail: { clickedTileInfo: {}, default: true, hoveredTile: tile },
+    // });
+    // window.dispatchEvent(defaultTileEvent);
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
       if (layer.name === "buildings") {

@@ -37,6 +37,7 @@ const MapComponent = () => {
   // const [popperInstance, setPopperInstance] = useState(null); // State for managing Popper.js instances (unused in this snippet)
   const [mapData, setMapData] = useState<GameDetails | null>(); // State to store fetched map data
   const [isOpen, setIsOpen] = useState(false); // State to control the visibility of the modal
+  const [isDefaultOpen, setIsDefaultOpen] = useState(true); // State to control the visibility of the modal
   const [tooltipContent, setTooltipContent] = useState({}); // State to store content for the tooltip
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 }); // State to store the position of the tooltip
   const [tooltipVisible, setTooltipVisible] = useState(false); // State to control the visibility of the tooltip
@@ -152,7 +153,6 @@ const MapComponent = () => {
     [setIsOpen, setMapData, setActivePlayCount]
   );
 
-
   // Effect to clear text selection when mapData changes or component unmounts
   useEffect(() => {
     if (mapData) {
@@ -192,7 +192,10 @@ const MapComponent = () => {
         setIsOpen(true);
         return;
       }
-      if (!event.detail.default) await fetchMaps(event.detail);
+      if (!event.detail.default) {
+        await fetchMaps(event.detail);
+        setIsDefaultOpen(false);
+      }
       setClickedTileInfo(event.detail.clickedTileInfo);
     },
     [fetchMaps, setClickedTileInfo]
@@ -203,7 +206,7 @@ const MapComponent = () => {
     const hoveredTile = event.detail;
     if (hoveredTile) {
       // Update Tooltip content and position
-      
+
       setTooltipContent(hoveredTile);
       setTooltipPosition(hoveredTile.mousePointer);
       setTooltipVisible(true);
@@ -230,8 +233,89 @@ const MapComponent = () => {
     setClickedTileInfo(null);
     setMapData(null);
   };
+  const handleDefaultClose = (e) => setIsDefaultOpen(false);
   return (
     <div>
+      <Dialog
+        id='modalDefaultPopup'
+        open={isDefaultOpen}
+        onClose={handleDefaultClose}
+        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-32 max-md:w-32 w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'>
+        <div
+          className='backdrop-blur inline-block align-middle rounded-tl-lg lg:rounded-bl-lg lg:rounded-br-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2'
+          style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
+          <div className='lg:relative group'>
+            <img
+              src='https://cache.modd.io/asset/spriteImage/1713296865932_cover.png'
+              alt=''
+              className='w-full justify-center items-center aspect-[5/3]'
+            />
+            <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
+              <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
+                <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
+                  <div className='text-md'>
+                    <ul className='list-disc'>
+                      <li>
+                        <strong>scavenge</strong> the wastelands for loot
+                      </li>
+                      <li>
+                        <strong>survive</strong> against undead hordes
+                      </li>
+                      <li>
+                        <strong>visit</strong> fortresses made by other players
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='p-2 overflow-auto text-white '>
+            <div className='sm:flex justify-center sm:items-start'>
+              <div className=' w-full'>
+                <div className='font-bold h5 text-center'>
+                  Welcome to <br />
+                  <span className='title'>DOOMR.</span>
+                  <span className='subtitle'>IO</span>
+                </div>
+                <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
+                  <div className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'>
+                    <div className='text-md'>
+                      <ul className='list-disc list-inside '>
+                        <li>
+                          <strong>scavenge</strong> the wastelands for loot
+                        </li>
+                        <li>
+                          <strong>survive</strong> against undead hordes
+                        </li>
+                        <li>
+                          <strong>visit</strong> fortresses made by other
+                          players
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className='flex w-full justify-center lg:mt-3 lg:mb-2 max-md:mb-3 max-sm:mb-2'>
+                  <a
+                    href='https://www.modd.io/play/LAD?autojoin=true'
+                    rel='noreferrer'
+                    target='_blank'
+                    className='btn-quick w-full text-center focus:outline-none hover:no-underline rounded-md shadow-sm py-3 px-0 text-base text-white bg-[#2c871f] w-full hover:bg-[#459539]'>
+                    QUICK START
+                  </a>{" "}
+                  <br />
+                </div>
+                <div
+                  className='lnk-option text-center cursor-pointer'
+                  onClick={handleDefaultClose}>
+                  or: SELECT A FORTRESS ON THE MAP
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Dialog>
       {mapData && (
         <>
           {/* <Dialog
