@@ -27,8 +27,8 @@ const Tooltip = ({ x, y, content }) => {
           {content.totalActivePlayers > -1 ? (
             <div className='flex justify-center text-sm mb-2'>
               <PlayIcon className='h-5 w-5 text-center mr-1' />
-              {/* <div>{' '} {content.totalActivePlayers}</div> */}
-              <div >10</div>
+              <div>{' '} {content.totalActivePlayers}</div>
+              {/* <div >10</div> */}
             </div>
           ) : (
             <></>
