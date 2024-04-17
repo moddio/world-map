@@ -41,23 +41,41 @@ export default class GameScene extends Phaser.Scene {
         `${siteUrl}/api/game/${worldMapId}/all-world-maps/?isMapPositionAvailable=true`
       );
       const data = response.data.data;
-
+      const playCountResponse = await axios.get(
+        `${siteUrl}/api/v1/games/active-player-count-by-game-id/?gameId=${worldMapId}`
+      );
+      const playCountData = playCountResponse.data.data;
+  
+  
       this.tileInfoArray =
         data && data.length
-          ? data.map((item) => ({
-              mapName: item.title,
-              ownerName: item.owner.local.username,
-              position: {
-                x: item.mapPosition?.x || 0,
-                y: item.mapPosition?.y || 0,
-              },
-              id: item._id.toString(),
-              cover: item.cover,
-            }))
+          ? data.map((item) => {
+              const correspondingPlayCount = playCountData &&  playCountData.length && playCountData.find(
+                (playCountItem) =>playCountItem &&
+                  playCountItem.mapPosition &&
+                  item.mapPosition && 
+                  playCountItem.mapPosition.x === item.mapPosition.x &&
+                  playCountItem.mapPosition.y === item.mapPosition.y
+              );
+              return {
+                mapName: item.title,
+                ownerName: item.owner.local.username,
+                position: {
+                  x: item.mapPosition?.x || 0,
+                  y: item.mapPosition?.y || 0,
+                },
+                id: item._id.toString(),
+                cover: item.cover,
+                totalActivePlayers: correspondingPlayCount
+                  ? correspondingPlayCount.totalActivePlayers
+                  : 0,
+              };
+            })
           : [];
+      
       const defaultTilePosition = { x: "16", y: "14" };
       const defaultTileInfo = this.tileInfoArray.find(
-        (tileInfo: any) =>
+        (tileInfo:any) =>
           tileInfo.position.x === defaultTilePosition.x &&
           tileInfo.position.y === defaultTilePosition.y
       );
@@ -71,6 +89,7 @@ export default class GameScene extends Phaser.Scene {
       console.error("Error loading data from API:", error);
     }
   }
+  
 
   public preload() {
     this.load.tilemapTiledJSON("tilemap", tilemapjson);
