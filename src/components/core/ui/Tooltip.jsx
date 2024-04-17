@@ -17,7 +17,7 @@ const Tooltip = ({ x, y, content }) => {
           <div className='text-center text-white rounded-lg'>
             <div className=' items-center'>
               <div className='text-lg font-semibold'>{content.mapName}</div>
-              <div className='text-sm mb-2'>Owner:{'  '}{content.owner}</div>
+              <div className='text-sm mb-2'>Owner:{'  '}{content.ownerName}</div>
             </div>
             
         </div>
