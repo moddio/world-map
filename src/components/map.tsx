@@ -162,7 +162,7 @@ const MapComponent = () => {
             x: '16',
             y: '14',
           },
-          cover: '/assets/images/modd_standard2.png',
+          cover: 'https://cache.modd.io/asset/spriteImage/1713296865932_cover.png',
           createdAt: '2024-01-22T16:58:03.913Z',
           title: "m0dE's Base",
           gameSlug: 'C0wgR98Wg',

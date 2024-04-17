@@ -26,7 +26,7 @@ const Tooltip = ({ x, y, content }) => {
   return (
     <div
       id='tooltip'
-      className={`max-md:hidden md:hidden absolute left-[${x}px] top-[${y}px] top-0 bg-gray-800 text-left bg-opacity-85 text-white text-md px-2 py-1 rounded-md shadow-lg z-10 pointer-events-none`}
+      className={`max-md:hidden max-lg:hidden block absolute left-[${x}px] top-[${y}px] top-0 bg-gray-800 text-left bg-opacity-85 text-white text-md px-2 py-1 rounded-md shadow-lg z-10 pointer-events-none`}
     >
       {renderedText}
     </div>
