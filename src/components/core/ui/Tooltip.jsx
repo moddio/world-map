@@ -5,7 +5,7 @@ import React from "react";
 const Tooltip = ({ x, y, content }) => {
   return (
     <div
-      className={`max-md:hidden max-lg:hidden block absolute left-[${x}px] top-[${y}px] top-0 bg-gray-800 text-left bg-opacity-85 text-white text-md rounded-md shadow-lg z-10 pointer-events-none`}>
+      className={`max-md:hidden max-lg:hidden block absolute left-[${x}px] top-[${y}px] w-48 top-0 bg-gray-800 text-left bg-opacity-85 text-white text-md rounded-md shadow-lg z-10 pointer-events-none`}>
       <div className=''>
         <img
           src={
@@ -14,7 +14,7 @@ const Tooltip = ({ x, y, content }) => {
               : `https://www.modd.io/${content.cover}`
           }
           alt={""}
-          className='w-32 aspect-[5/3] m-2'
+          className='w-44 aspect-[5/3] m-2'
         />
       </div>
       <div className='text-center text-white rounded-lg'>
