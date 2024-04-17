@@ -137,8 +137,7 @@ const MapComponent = () => {
               );
               if (
                 activePlayersCount &&
-                activePlayersCount.data &&
-                activePlayersCount.data.totalActivePlayers > 0
+                activePlayersCount.data
               ) {
                 // If totalActivePlayers is greater than 0, set activePlayersCount state
                 setActivePlayCount(activePlayersCount.data.totalActivePlayers);
@@ -204,12 +203,8 @@ const MapComponent = () => {
     const hoveredTile = event.detail;
     if (hoveredTile) {
       // Update Tooltip content and position
-      const tooltipText = {
-        mapName: hoveredTile.mapName,
-        owner: hoveredTile.ownerName,
-        cover: hoveredTile.cover,
-      };
-      setTooltipContent(tooltipText);
+      
+      setTooltipContent(hoveredTile);
       setTooltipPosition(hoveredTile.mousePointer);
       setTooltipVisible(true);
     } else {
