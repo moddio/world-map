@@ -52,6 +52,7 @@ export default class GameScene extends Phaser.Scene {
                 y: item.mapPosition?.y || 0,
               },
               id: item._id.toString(),
+              cover: item.cover
             }))
           : [];
     } catch (error) {

@@ -184,6 +184,7 @@ const MapComponent = () => {
       const tooltipText = {
         mapName: hoveredTile.mapName,
         owner: hoveredTile.ownerName,
+        cover: hoveredTile.cover
       };
       setTooltipContent(tooltipText);
       setTooltipPosition(hoveredTile.mousePointer);
