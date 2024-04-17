@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import Phaser from 'phaser';
-import LoaderScene from '../js/scenes/LoaderScene';
-import GameScene from '../js/scenes/GameScene';
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import Phaser from "phaser";
+import LoaderScene from "../js/scenes/LoaderScene";
+import GameScene from "../js/scenes/GameScene";
 
-import axios from 'axios';
-import { siteUrl } from '../config';
-import { Dialog } from '@headlessui/react';
-import Tooltip from './core/ui/Tooltip';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { MapPinIcon, UserCircleIcon } from '@heroicons/react/24/solid';
+import axios from "axios";
+import { siteUrl } from "../config";
+import { Dialog } from "@headlessui/react";
+import Tooltip from "./core/ui/Tooltip";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  MapPinIcon,
+  PlayIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/solid";
 
 interface GameDetails {
   owner: {
@@ -36,6 +40,7 @@ const MapComponent = () => {
   const [tooltipContent, setTooltipContent] = useState({}); // State to store content for the tooltip
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 }); // State to store the position of the tooltip
   const [tooltipVisible, setTooltipVisible] = useState(false); // State to control the visibility of the tooltip
+  const [activePlayCount, setActivePlayCount] = useState(0);
 
   useEffect(() => {
     const config = {
@@ -59,7 +64,7 @@ const MapComponent = () => {
         autoResize: true,
       },
       physics: {
-        default: 'arcade',
+        default: "arcade",
         arcade: {
           debug: false,
           gravity: {
@@ -68,49 +73,50 @@ const MapComponent = () => {
         },
       },
       scene: [LoaderScene, GameScene],
-      backgroundColor: '#59f773',
+      backgroundColor: "#59f773",
     };
 
     // Create new Phaser game instance if it doesn't already exist
-    if (!document.getElementById('phaserGame')) {
+    if (!document.getElementById("phaserGame")) {
       //@ts-ignore
       gameRef.current = new Phaser.Game(config);
-      gameRef.current.canvas.id = 'phaserGame';
+      gameRef.current.canvas.id = "phaserGame";
     }
 
     // Function to disable context menu to prevent right-click options on the game
     const disableContextMenu = (event) => {
       event.preventDefault();
     };
-    window.addEventListener('contextmenu', disableContextMenu);
+    window.addEventListener("contextmenu", disableContextMenu);
 
     // Cleanup function to remove event listener
     return () => {
-      window.removeEventListener('contextmenu', disableContextMenu);
+      window.removeEventListener("contextmenu", disableContextMenu);
     };
   }, []);
 
   useEffect(() => {
-    const anchorTag = document.createElement('a');
+    const anchorTag = document.createElement("a");
     anchorTag.href =
-      'https://docs.google.com/document/d/e/2PACX-1vSAPegZPVVZaW5raU8gIQ46CnAU-hseidLMn7SRSI7glTQXfHQ0Ng6rN33uUyWO5_FuLqn_GTn0vBsi/pub';
+      "https://docs.google.com/document/d/e/2PACX-1vSAPegZPVVZaW5raU8gIQ46CnAU-hseidLMn7SRSI7glTQXfHQ0Ng6rN33uUyWO5_FuLqn_GTn0vBsi/pub";
     anchorTag.classList.add(
-      'fixed',
-      'bottom-0',
-      'left-0',
-      'bg-black',
-      'text-white',
-      'no-underline',
-      'hover:no-underline',
-      'p-1'
+      "fixed",
+      "bottom-0",
+      "left-0",
+      "bg-black",
+      "text-white",
+      "no-underline",
+      "hover:no-underline",
+      "p-1"
     );
-    anchorTag.target = '_blank';
-    anchorTag.rel = 'noreferrer';
-    anchorTag.textContent = 'Credits';
+    anchorTag.target = "_blank";
+    anchorTag.rel = "noreferrer";
+    anchorTag.textContent = "Credits";
     document.body.appendChild(anchorTag);
   }, []);
 
   // Fetches map details from the server
+
   const fetchMaps = useCallback(
     async (mapDetails) => {
       if (mapDetails && mapDetails.clickedTileInfo) {
@@ -118,19 +124,35 @@ const MapComponent = () => {
           `${siteUrl}/api/game/${mapDetails.clickedTileInfo.id}/game-details/`
         );
         if (res && res.data && res.data.data) {
-          // TODO: set highlight on click. Temp disabled as giving issue on prod
-          // mapDetails.hoveredTile.tintFill = true;
-          // mapDetails.hoveredTile.tint = 0x209944;
+          // Set mapData state with received data
           setIsOpen(true);
           setMapData(res.data.data);
-          // if (document.getElementById('tooltip')) {
-          //   document.getElementById('tooltip').style.display = 'none';
-          // }
+
+          // If gameId is available in clickedTileInfo
+          if (mapDetails.clickedTileInfo.id) {
+            try {
+              // Fetch totalActivePlayers for the gameId
+              const activePlayersCount = await axios.get(
+                `${siteUrl}/api/v1/games/active-player-count-by-game-id/?mapId=${mapDetails.clickedTileInfo.id}`
+              );
+              if (
+                activePlayersCount &&
+                activePlayersCount.data &&
+                activePlayersCount.data.totalActivePlayers > 0
+              ) {
+                // If totalActivePlayers is greater than 0, set activePlayersCount state
+                setActivePlayCount(activePlayersCount.data.totalActivePlayers);
+              }
+            } catch (error) {
+              console.error("Error fetching totalActivePlayers:", error);
+            }
+          }
         }
       }
     },
-    [setIsOpen, setMapData]
+    [setIsOpen, setMapData, setActivePlayCount]
   );
+
 
   // Effect to clear text selection when mapData changes or component unmounts
   useEffect(() => {
@@ -154,18 +176,19 @@ const MapComponent = () => {
       if (event && event.detail && event.detail.default) {
         setMapData({
           owner: {
-            _id: '59219d1852bf2a167508cc4c',
-            username: 'm0dE',
+            _id: "59219d1852bf2a167508cc4c",
+            username: "m0dE",
           },
-          description: 'Currently in Alpha.',
+          description: "Currently in Alpha.",
           mapPosition: {
-            x: '16',
-            y: '14',
+            x: "16",
+            y: "14",
           },
-          cover: 'https://cache.modd.io/asset/spriteImage/1713296865932_cover.png',
-          createdAt: '2024-01-22T16:58:03.913Z',
+          cover:
+            "https://cache.modd.io/asset/spriteImage/1713296865932_cover.png",
+          createdAt: "2024-01-22T16:58:03.913Z",
           title: "m0dE's Base",
-          gameSlug: 'C0wgR98Wg',
+          gameSlug: "C0wgR98Wg",
         });
         setIsOpen(true);
         return;
@@ -184,7 +207,7 @@ const MapComponent = () => {
       const tooltipText = {
         mapName: hoveredTile.mapName,
         owner: hoveredTile.ownerName,
-        cover: hoveredTile.cover
+        cover: hoveredTile.cover,
       };
       setTooltipContent(tooltipText);
       setTooltipPosition(hoveredTile.mousePointer);
@@ -195,12 +218,12 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('tileClick', handleTileClick);
-    window.addEventListener('tileHover', handleTileHover);
+    window.addEventListener("tileClick", handleTileClick);
+    window.addEventListener("tileHover", handleTileHover);
 
     return () => {
-      window.removeEventListener('tileClick', handleTileClick);
-      window.removeEventListener('tileHover', handleTileHover);
+      window.removeEventListener("tileClick", handleTileClick);
+      window.removeEventListener("tileHover", handleTileHover);
     };
   }, [handleTileClick, handleTileHover]);
 
@@ -345,20 +368,18 @@ const MapComponent = () => {
             open={isOpen}
             onClose={handleClose}
             className='backdrop-blur fixed p-2 h-full right-0 max-md:bottom-none max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full  max-md:w-32 lg:w-auto flex justify-end lg:top-0 max-md:top-0 md:top-0 max-sm:top-auto max-sm:h-[450px]'
-            style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
-          >
+            style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
             <div className='inline-block bg-transparent max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full max-md:text-sm'>
               {mapData && mapData.cover ? (
                 <div className='lg:relative group'>
                   <span
                     onClick={handleClose}
-                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 bg-[#000] '
-                  >
+                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 bg-[#000] '>
                     <XMarkIcon className='w-6' />
                   </span>
                   <img
                     src={
-                      mapData.cover.includes('https://')
+                      mapData.cover.includes("https://")
                         ? mapData.cover
                         : `https://www.modd.io/${mapData.cover}`
                     }
@@ -382,7 +403,7 @@ const MapComponent = () => {
               <div className='p-2 overflow-auto text-white '>
                 <div className='sm:flex justify-center sm:items-start'>
                   <div className=' w-full'>
-                    <div className='grid grid-cols-4 grid-rows-1 gap-4'>
+                    <div className='grid grid-cols-5 grid-rows-1 gap-4'>
                       <div>
                         <div className='lg:mt-2 text-sm'>
                           <div className='text-md '>
@@ -392,8 +413,7 @@ const MapComponent = () => {
                                 href={`${siteUrl}/user/${mapData.owner.username}`}
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='w-6 ml-1 text-blue-500 font-bold focus:outline-none  hover:no-underline'
-                              >
+                                className='w-6 ml-1 text-blue-500 font-bold focus:outline-none  hover:no-underline'>
                                 @
                                 {mapData &&
                                   mapData.owner &&
@@ -403,19 +423,37 @@ const MapComponent = () => {
                           </div>
                         </div>
                       </div>
-                      <div className='col-start-4'>
+                      <div className='col-start-3'>
+                        <div className='lg:mt-2 ml-3 text-sm'>
+                          <div className='text-md '>
+                            <div className='flex'>
+                              {activePlayCount ? (
+                                <>
+                                  <PlayIcon className='h-5 text-green-400' />
+                                  <span className='w-6 ml-1 font-bold focus:outline-none'>
+                                    {activePlayCount}
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='col-start-5'>
                         <div className='flex'>
                           <div className='text-sm lg:mt-2'>
                             {mapData && mapData.mapPosition ? (
                               <div className='flex'>
                                 <MapPinIcon className='h-5 text-red-600' />
                                 <span className='font-bold ml-1'>
-                                  {mapData.mapPosition.x},{' '}
+                                  {mapData.mapPosition.x},{" "}
                                   {mapData.mapPosition.y}
                                 </span>
                               </div>
                             ) : (
-                              ''
+                              ""
                             )}
                           </div>
                         </div>
@@ -433,10 +471,9 @@ const MapComponent = () => {
                       <div
                         className='text-left mb-1 max-h-96 h-auto overflow-y-auto text-gray-300 pl-2'
                         style={{
-                          paddingRight: '10px',
-                          borderLeft: '2px solid white',
-                        }}
-                      >
+                          paddingRight: "10px",
+                          borderLeft: "2px solid white",
+                        }}>
                         <div className='text-sm'>
                           {mapData && mapData.description}
                         </div>
@@ -454,10 +491,9 @@ const MapComponent = () => {
                   target='_blank'
                   className='bg-[#459539] text-center hover:no-underline rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
                   style={{
-                    userSelect: 'none',
-                    transition: '0.2s',
-                  }}
-                >
+                    userSelect: "none",
+                    transition: "0.2s",
+                  }}>
                   Enter World
                 </a>
               </div>
