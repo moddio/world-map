@@ -24,7 +24,7 @@ const Tooltip = ({ x, y, content }) => {
             Owner:{"  "}
             {content.ownerName}
           </div>
-          {content.totalActivePlayers > -1 ? (
+          {content.totalActivePlayers > 0 ? (
             <div className='flex justify-center text-sm mb-2'>
               <PlayIcon className='h-5 w-5 text-center mr-1' />
               <div>{' '} {content.totalActivePlayers}</div>
