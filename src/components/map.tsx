@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import Phaser from "phaser";
-import LoaderScene from "../js/scenes/LoaderScene";
-import GameScene from "../js/scenes/GameScene";
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Phaser from 'phaser';
+import LoaderScene from '../js/scenes/LoaderScene';
+import GameScene from '../js/scenes/GameScene';
 
-import axios from "axios";
-import { siteUrl } from "../config";
-import { Dialog } from "@headlessui/react";
-import Tooltip from "./core/ui/Tooltip";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import axios from 'axios';
+import { siteUrl } from '../config';
+import { Dialog } from '@headlessui/react';
+import Tooltip from './core/ui/Tooltip';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import {
   MapPinIcon,
   PlayIcon,
   UserCircleIcon,
-} from "@heroicons/react/24/solid";
+} from '@heroicons/react/24/solid';
 
 interface GameDetails {
   owner: {
@@ -65,7 +65,7 @@ const MapComponent = () => {
         autoResize: true,
       },
       physics: {
-        default: "arcade",
+        default: 'arcade',
         arcade: {
           debug: false,
           gravity: {
@@ -74,45 +74,45 @@ const MapComponent = () => {
         },
       },
       scene: [LoaderScene, GameScene],
-      backgroundColor: "#59f773",
+      backgroundColor: '#59f773',
     };
 
     // Create new Phaser game instance if it doesn't already exist
-    if (!document.getElementById("phaserGame")) {
+    if (!document.getElementById('phaserGame')) {
       //@ts-ignore
       gameRef.current = new Phaser.Game(config);
-      gameRef.current.canvas.id = "phaserGame";
+      gameRef.current.canvas.id = 'phaserGame';
     }
 
     // Function to disable context menu to prevent right-click options on the game
     const disableContextMenu = (event) => {
       event.preventDefault();
     };
-    window.addEventListener("contextmenu", disableContextMenu);
+    window.addEventListener('contextmenu', disableContextMenu);
 
     // Cleanup function to remove event listener
     return () => {
-      window.removeEventListener("contextmenu", disableContextMenu);
+      window.removeEventListener('contextmenu', disableContextMenu);
     };
   }, []);
 
   useEffect(() => {
-    const anchorTag = document.createElement("a");
+    const anchorTag = document.createElement('a');
     anchorTag.href =
-      "https://docs.google.com/document/d/e/2PACX-1vSAPegZPVVZaW5raU8gIQ46CnAU-hseidLMn7SRSI7glTQXfHQ0Ng6rN33uUyWO5_FuLqn_GTn0vBsi/pub";
+      'https://docs.google.com/document/d/e/2PACX-1vSAPegZPVVZaW5raU8gIQ46CnAU-hseidLMn7SRSI7glTQXfHQ0Ng6rN33uUyWO5_FuLqn_GTn0vBsi/pub';
     anchorTag.classList.add(
-      "fixed",
-      "bottom-0",
-      "left-0",
-      "bg-black",
-      "text-white",
-      "no-underline",
-      "hover:no-underline",
-      "p-1"
+      'fixed',
+      'bottom-0',
+      'left-0',
+      'bg-black',
+      'text-white',
+      'no-underline',
+      'hover:no-underline',
+      'p-1'
     );
-    anchorTag.target = "_blank";
-    anchorTag.rel = "noreferrer";
-    anchorTag.textContent = "Credits";
+    anchorTag.target = '_blank';
+    anchorTag.rel = 'noreferrer';
+    anchorTag.textContent = 'Credits';
     document.body.appendChild(anchorTag);
   }, []);
 
@@ -136,15 +136,12 @@ const MapComponent = () => {
               const activePlayersCount = await axios.get(
                 `${siteUrl}/api/v1/games/active-player-count-by-game-id/?mapId=${mapDetails.clickedTileInfo.id}`
               );
-              if (
-                activePlayersCount &&
-                activePlayersCount.data
-              ) {
+              if (activePlayersCount && activePlayersCount.data) {
                 // If totalActivePlayers is greater than 0, set activePlayersCount state
                 setActivePlayCount(activePlayersCount.data.totalActivePlayers);
               }
             } catch (error) {
-              console.error("Error fetching totalActivePlayers:", error);
+              console.error('Error fetching totalActivePlayers:', error);
             }
           }
         }
@@ -175,19 +172,19 @@ const MapComponent = () => {
       if (event && event.detail && event.detail.default) {
         setMapData({
           owner: {
-            _id: "59219d1852bf2a167508cc4c",
-            username: "m0dE",
+            _id: '59219d1852bf2a167508cc4c',
+            username: 'm0dE',
           },
-          description: "Currently in Alpha.",
+          description: 'Currently in Alpha.',
           mapPosition: {
-            x: "16",
-            y: "14",
+            x: '16',
+            y: '14',
           },
           cover:
-            "https://cache.modd.io/asset/spriteImage/1713296865932_cover.png",
-          createdAt: "2024-01-22T16:58:03.913Z",
+            'https://cache.modd.io/asset/spriteImage/1713296865932_cover.png',
+          createdAt: '2024-01-22T16:58:03.913Z',
           title: "m0dE's Base",
-          gameSlug: "C0wgR98Wg",
+          gameSlug: 'C0wgR98Wg',
         });
         setIsOpen(true);
         return;
@@ -216,12 +213,12 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener("tileClick", handleTileClick);
-    window.addEventListener("tileHover", handleTileHover);
+    window.addEventListener('tileClick', handleTileClick);
+    window.addEventListener('tileHover', handleTileHover);
 
     return () => {
-      window.removeEventListener("tileClick", handleTileClick);
-      window.removeEventListener("tileHover", handleTileHover);
+      window.removeEventListener('tileClick', handleTileClick);
+      window.removeEventListener('tileHover', handleTileHover);
     };
   }, [handleTileClick, handleTileHover]);
 
@@ -240,10 +237,12 @@ const MapComponent = () => {
         id='modalDefaultPopup'
         open={isDefaultOpen}
         onClose={handleDefaultClose}
-        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'>
+        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full lg:w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'
+      >
         <div
           className='backdrop-blur inline-block align-middle rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2'
-          style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
+          style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
+        >
           <div className='lg:relative group'>
             <img
               src='https://cache.modd.io/asset/spriteImage/1713296865932_cover.png'
@@ -301,15 +300,20 @@ const MapComponent = () => {
                     href='https://www.modd.io/play/LAD?autojoin=true'
                     rel='noreferrer'
                     target='_blank'
-                    className='btn-quick w-full text-center focus:outline-none hover:no-underline rounded-md shadow-sm py-3 px-0 text-base text-white hover:bg-[#2c871f] w-full bg-[#459539]'>
+                    className='btn-quick w-full text-center focus:outline-none hover:no-underline rounded-md shadow-sm py-3 px-0 text-base text-white hover:bg-[#2c871f] w-full bg-[#459539]'
+                  >
                     QUICK START
-                  </a>{" "}
+                  </a>{' '}
                   <br />
                 </div>
                 <div
-                  className='lnk-option text-center cursor-pointer'
-                  onClick={handleDefaultClose}>
-                  or: SELECT A FORTRESS ON THE MAP
+                  className='text-center cursor-pointer'
+                  onClick={handleDefaultClose}
+                >
+                  or:
+                  <span className='lnk-option ml-1'>
+                    SELECT A FORTRESS ON THE MAP
+                  </span>
                 </div>
               </div>
             </div>
@@ -447,18 +451,20 @@ const MapComponent = () => {
             open={isOpen}
             onClose={handleClose}
             className='backdrop-blur fixed p-2 h-full right-0 max-md:bottom-none max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full  max-md:w-32 lg:w-auto flex justify-end lg:top-0 max-md:top-0 md:top-0 max-sm:top-auto max-sm:h-[450px]'
-            style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
+            style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
+          >
             <div className='inline-block bg-transparent max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full max-md:text-sm'>
               {mapData && mapData.cover ? (
                 <div className='lg:relative group'>
                   <span
                     onClick={handleClose}
-                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 bg-[#000] '>
+                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 bg-[#000] '
+                  >
                     <XMarkIcon className='w-6' />
                   </span>
                   <img
                     src={
-                      mapData.cover.includes("https://")
+                      mapData.cover.includes('https://')
                         ? mapData.cover
                         : `https://www.modd.io/${mapData.cover}`
                     }
@@ -492,7 +498,8 @@ const MapComponent = () => {
                                 href={`${siteUrl}/user/${mapData.owner.username}`}
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='w-6 ml-1 text-blue-500 font-bold focus:outline-none  hover:no-underline'>
+                                className='w-6 ml-1 text-blue-500 font-bold focus:outline-none  hover:no-underline'
+                              >
                                 @
                                 {mapData &&
                                   mapData.owner &&
@@ -527,12 +534,12 @@ const MapComponent = () => {
                               <div className='flex'>
                                 <MapPinIcon className='h-5 text-red-600' />
                                 <span className='font-bold ml-1'>
-                                  {mapData.mapPosition.x},{" "}
+                                  {mapData.mapPosition.x},{' '}
                                   {mapData.mapPosition.y}
                                 </span>
                               </div>
                             ) : (
-                              ""
+                              ''
                             )}
                           </div>
                         </div>
@@ -550,9 +557,10 @@ const MapComponent = () => {
                       <div
                         className='text-left mb-1 max-h-96 h-auto overflow-y-auto text-gray-300 pl-2'
                         style={{
-                          paddingRight: "10px",
-                          borderLeft: "2px solid white",
-                        }}>
+                          paddingRight: '10px',
+                          borderLeft: '2px solid white',
+                        }}
+                      >
                         <div className='text-sm'>
                           {mapData && mapData.description}
                         </div>
@@ -570,9 +578,10 @@ const MapComponent = () => {
                   target='_blank'
                   className='bg-[#459539] text-center hover:no-underline rounded-md shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-[#4f8635] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full'
                   style={{
-                    userSelect: "none",
-                    transition: "0.2s",
-                  }}>
+                    userSelect: 'none',
+                    transition: '0.2s',
+                  }}
+                >
                   Enter World
                 </a>
               </div>
