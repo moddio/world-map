@@ -2,7 +2,7 @@ import axios from "axios";
 import { tilemapjson } from "../../assets/tilemaps/tilemap";
 import { siteUrl, worldMapId } from "../../config";
 
-export default class GameScene extends Phaser.Scene {
+export default class GameSceneWithMarker extends Phaser.Scene {
   tilemap: Phaser.Tilemaps.Tilemap;
   tileSize: number = 64;
   buildings: Phaser.Tilemaps.Tile[];
@@ -48,17 +48,21 @@ export default class GameScene extends Phaser.Scene {
         `${siteUrl}/api/v1/games/active-player-count-by-game-id/?gameId=${worldMapId}`
       );
       const playCountData = playCountResponse.data.data;
-  
+
       this.tileInfoArray =
         data && data.length
           ? data.map((item) => {
-              const correspondingPlayCount = playCountData &&  playCountData.length && playCountData.find(
-                (playCountItem) =>playCountItem &&
-                  playCountItem.mapPosition &&
-                  item.mapPosition && 
-                  playCountItem.mapPosition.x === item.mapPosition.x &&
-                  playCountItem.mapPosition.y === item.mapPosition.y
-              );
+              const correspondingPlayCount =
+                playCountData &&
+                playCountData.length &&
+                playCountData.find(
+                  (playCountItem) =>
+                    playCountItem &&
+                    playCountItem.mapPosition &&
+                    item.mapPosition &&
+                    playCountItem.mapPosition.x === item.mapPosition.x &&
+                    playCountItem.mapPosition.y === item.mapPosition.y
+                );
               return {
                 mapName: item.title,
                 ownerName: item.owner.local.username,
@@ -74,7 +78,7 @@ export default class GameScene extends Phaser.Scene {
               };
             })
           : [];
-      
+
       // const defaultTilePosition = { x: "16", y: "14" };
       // const defaultTileInfo = this.tileInfoArray.find(
       //   (tileInfo:any) =>
@@ -91,7 +95,103 @@ export default class GameScene extends Phaser.Scene {
       console.error("Error loading data from API:", error);
     }
   }
-  
+
+  updateMarkerPositions() {
+    const tilemap = this.tilemap;
+    const markerPositions = this.tileInfoArray.map((tileInfo: any) => {
+      return {
+        x: parseInt(tileInfo.position.x),
+        y: parseInt(tileInfo.position.y),
+      };
+    });
+
+    tilemap.forEachTile((tile) => {
+      const { x, y } = tile;
+      const isMarkerPosition = markerPositions.some(
+        (pos) => pos.x === x && pos.y === y
+      );
+
+      const data: any = this.tileInfoArray.find(
+        (tileInfo: any) =>
+          tileInfo &&
+          tileInfo.position &&
+          tileInfo.position.x === x.toString() &&
+          tileInfo.position.y === y.toString()
+      );
+
+      if (isMarkerPosition) {
+        // Remove marker icon and text if camera zoom is less than 2
+        if (this.cameras.main.zoom < 2) {
+          this.removeMarker(tile);
+        } else {
+          // Check if a marker icon already exists for this tile
+          const existingMarker = this.children.list.find(
+            (child) =>
+              child instanceof Phaser.GameObjects.Image &&
+              child.texture.key === "user" && // Assuming the texture key for the marker icon is "user"
+              child.x === tile.getCenterX() - 15 &&
+              child.y === tile.getCenterY() - 15
+          );
+
+          // Check if text already exists for this tile
+          const existingText = this.children.list.find(
+            (child) =>
+              child instanceof Phaser.GameObjects.Text &&
+              child.x === tile.getCenterX() - 10 &&
+              child.y === tile.getCenterY() - 22
+          );
+
+          if (!existingMarker && data && data.totalActivePlayers > 0) {
+            const markerIcon = this.add.image(
+              tile.getCenterX(),
+              tile.getCenterY() - 10,
+              "user"
+            );
+            markerIcon.setScale(0.08);
+            markerIcon.setTint(0x000000);
+            markerIcon.tintFill = true;
+            
+          }
+
+          if (!existingText && data && data.totalActivePlayers > 0) {
+            const text = this.add.text(
+              tile.getCenterX() + 8,
+              tile.getCenterY() - 10,
+              `${data.totalActivePlayers}`,
+              { fontSize: "8px" }
+              );
+            text.setFont('population_zero_bbregular')
+            text.setTint(0x000000);            
+            text.setScale(0.8);
+            text.setOrigin(); // Center the text
+          }
+        }
+      }
+    });
+  }
+
+  removeMarker(tile: Phaser.Tilemaps.Tile) {
+    // Find and remove the marker icon and text associated with the given tile
+    const markerIcon = this.children.list.find(
+      (child) =>
+        child instanceof Phaser.GameObjects.Image &&
+        child.x === tile.getCenterX() - 15 &&
+        child.y === tile.getCenterY() - 15
+    );
+    if (markerIcon) {
+      markerIcon.destroy();
+    }
+
+    const markerText = this.children.list.find(
+      (child) =>
+        child instanceof Phaser.GameObjects.Text &&
+        child.x === tile.getCenterX() - 10 &&
+        child.y === tile.getCenterY() - 22
+    );
+    if (markerText) {
+      markerText.destroy();
+    }
+  }
 
   public preload() {
     this.load.tilemapTiledJSON("tilemap", tilemapjson);
@@ -106,11 +206,16 @@ export default class GameScene extends Phaser.Scene {
     const buildings = (this.buildings = []);
     const clouds = (this.clouds = []);
 
-    // const tile = this.tilemap.getTileAt(16, 14);
-    // const defaultTileEvent = new CustomEvent("tileClick", {
-    //   detail: { clickedTileInfo: {}, default: true, hoveredTile: tile },
-    // });
-    // window.dispatchEvent(defaultTileEvent);
+    this.input.on("wheel", () => {
+      this.updateMarkerPositions();
+    });
+
+    // Add event listener for the pinch event to call updateMarkerPositions
+    dragScale.on("pinch", () => {
+      this.updateMarkerPositions();
+    });
+
+   
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
       if (layer.name === "buildings") {
@@ -172,6 +277,9 @@ export default class GameScene extends Phaser.Scene {
         const minZoom = (0.75 * 16) / tilemap.tileWidth;
         var scaleFactor = dragScale.scaleFactor;
         camera.zoom *= scaleFactor;
+        if (camera.zoom > 2) {
+          this.updateMarkerPositions();
+        }
         if (camera.zoom < minZoom) camera.zoom = minZoom;
         else if (camera.zoom > maxZoom) camera.zoom = maxZoom;
       },
@@ -197,11 +305,13 @@ export default class GameScene extends Phaser.Scene {
       }
     });
 
-     // Graphics object for drawing the indicator
-     this.indicator = this.add.graphics({ lineStyle: { width: 3, color: 0x254102 } });
+    // Graphics object for drawing the indicator
+    this.indicator = this.add.graphics({
+      lineStyle: { width: 3, color: 0x254102 },
+    });
 
-     // Draw the initial indicator
-     this.drawIndicator();
+    // Draw the initial indicator
+    this.drawIndicator();
   }
 
   drawIndicator() {
@@ -210,11 +320,18 @@ export default class GameScene extends Phaser.Scene {
     // Drawing the circle with gaps
     for (let i = 0; i < 4; i++) {
       indicator.beginPath();
-      indicator.arc(0, 0, 15, Phaser.Math.DegToRad(5 + i * 90), Phaser.Math.DegToRad(80 + i * 90), false);
+      indicator.arc(
+        0,
+        0,
+        15,
+        Phaser.Math.DegToRad(5 + i * 90),
+        Phaser.Math.DegToRad(80 + i * 90),
+        false
+      );
       indicator.strokePath();
     }
     indicator.rotation = this.angle;
-}
+  }
 
   private zoom(deltaY: number, pointer: Phaser.Input.Pointer) {
     const tilemap = this.tilemap;
@@ -322,12 +439,11 @@ export default class GameScene extends Phaser.Scene {
     this.indicator.clear();
     if (this.selectedTile) {
       // Update the rotation angle
-      this.angle -= 0.01;  // This will rotate the indicator counterclockwise
+      this.angle -= 0.01; // This will rotate the indicator counterclockwise
       // Draw the updated indicator
       this.drawIndicator();
       this.indicator.x = this.selectedTile.getCenterX();
       this.indicator.y = this.selectedTile.getCenterY();
     }
-    
   }
 }

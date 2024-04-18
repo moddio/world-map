@@ -9,7 +9,6 @@ import {
 import RegisterModal from './RegisterModal';
 import MapComponent from './map';
 import Auth from './Auth';
-import MapComponentPopOver from './mapPopover';
 const Logo = require('../assets/images/doomr.png');
 
 const Layout = () => {
@@ -26,13 +25,11 @@ const Layout = () => {
         <h1 className='fixed max-md:text-xl lg:text-5xl font-bold text-white text-left p-2 my-0'>
           <img alt='Doomr.io' className='w-32' src={Logo} />
         </h1>
-        {/* <MapComponent /> */}
         <Routes>
-          {<Route path='/' element={<MapComponent />} />}
-          {/* <Route path='/' element={<Home />} />*/}
+          {<Route path='/' element={<MapComponent showMarker={false} />} />}
           <Route path='/login' element={<Auth />} />
           <Route path='/signup' element={<RegisterModal />} />
-          <Route path='/map' element={<MapComponentPopOver />} />
+          <Route path='/rough' element={<MapComponent showMarker={true} />} />
         </Routes>
       </div>
     </Router>

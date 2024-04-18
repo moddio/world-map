@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Phaser from 'phaser';
 import LoaderScene from '../js/scenes/LoaderScene';
 import GameScene from '../js/scenes/GameScene';
+import GameSceneWithMarker from './../js/scenes/GameScene-experimental';
 
 import axios from 'axios';
 import { siteUrl } from '../config';
 import { Dialog } from '@headlessui/react';
 import Tooltip from './core/ui/Tooltip';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   MapPinIcon,
-  PlayIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/solid';
+} from '@heroicons/react/24/outline';
+import { UsersIcon } from '@heroicons/react/24/outline';
 
 interface GameDetails {
   owner: {
@@ -30,7 +30,7 @@ interface GameDetails {
   gameSlug: string;
 }
 
-const MapComponent = () => {
+const MapComponent = ({showMarker}) => {
   const gameRef = useRef(null); // Reference to the Phaser game instance
 
   const [clickedTileInfo, setClickedTileInfo] = useState(null); // State to store information about the clicked tile
@@ -73,7 +73,7 @@ const MapComponent = () => {
           },
         },
       },
-      scene: [LoaderScene, GameScene],
+      scene: [LoaderScene, showMarker ? GameSceneWithMarker : GameScene],
       backgroundColor: '#59f773',
     };
 
@@ -94,7 +94,7 @@ const MapComponent = () => {
     return () => {
       window.removeEventListener('contextmenu', disableContextMenu);
     };
-  }, []);
+  }, [showMarker]);
 
   useEffect(() => {
     const anchorTag = document.createElement('a');
@@ -469,7 +469,7 @@ const MapComponent = () => {
                         : `https://www.modd.io/${mapData.cover}`
                     }
                     alt=''
-                    className='w-full justify-center items-center aspect-[5/3]'
+                    className='rounded-lg w-full justify-center items-center aspect-[5/3]'
                   />
                   <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
                     <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
@@ -493,7 +493,7 @@ const MapComponent = () => {
                         <div className='lg:mt-2 text-sm'>
                           <div className='text-md '>
                             <div className='flex'>
-                              <UserCircleIcon className='h-5 text-yellow-400' />
+                              { <UserIcon className='h-5 text-[#6b8bd4]' /> }
                               <a
                                 href={`${siteUrl}/user/${mapData.owner.username}`}
                                 target='_blank'
@@ -512,11 +512,11 @@ const MapComponent = () => {
                       <div className='col-start-3'>
                         <div className='lg:mt-2 ml-3 text-sm'>
                           <div className='text-md '>
-                            <div className='flex'>
+                            <div className='flex '>
                               {activePlayCount ? (
                                 <>
-                                  <PlayIcon className='h-5 text-green-400' />
-                                  <span className='w-6 ml-1 font-bold focus:outline-none'>
+                                  <UsersIcon className='h-5 text-[#6b8bd4]' />
+                                  <span className='w-3 ml-1  font-bold focus:outline-none'>
                                     {activePlayCount}
                                   </span>
                                 </>
@@ -532,7 +532,7 @@ const MapComponent = () => {
                           <div className='text-sm lg:mt-2'>
                             {mapData && mapData.mapPosition ? (
                               <div className='flex'>
-                                <MapPinIcon className='h-5 text-red-600' />
+                                <MapPinIcon className='h-5 text-[#6b8bd4]' />
                                 <span className='font-bold ml-1'>
                                   {mapData.mapPosition.x},{' '}
                                   {mapData.mapPosition.y}
