@@ -553,7 +553,13 @@ const MapComponent = ({showMarker}) => {
                     </div>
 
                     <div className='lg:block max-md:hidden md:hidden max-sm:hidden max-xs:hidden'>
-                      <b className='text-white text-lg'>Description</b> <br />
+                      {mapData.description && (
+                        <div>
+                          <b className='text-white text-lg'>Description</b>
+                          <br />
+                          <div dangerouslySetInnerHTML={{ __html: mapData.description }} />
+                        </div>
+                      )}
                       <div
                         className='text-left mb-1 max-h-96 h-auto overflow-y-auto text-gray-300 pl-2'
                         style={{
