@@ -129,16 +129,16 @@ export default class GameSceneWithMarker extends Phaser.Scene {
             (child) =>
               child instanceof Phaser.GameObjects.Image &&
               child.texture.key === "user" && // Assuming the texture key for the marker icon is "user"
-              child.x === tile.getCenterX() - 15 &&
-              child.y === tile.getCenterY() - 15
+              child.x === tile.getCenterX() &&
+              child.y === tile.getCenterY() - 10
           );
 
           // Check if text already exists for this tile
           const existingText = this.children.list.find(
             (child) =>
               child instanceof Phaser.GameObjects.Text &&
-              child.x === tile.getCenterX() - 10 &&
-              child.y === tile.getCenterY() - 22
+              child.x === tile.getCenterX() +8 &&
+              child.y === tile.getCenterY() - 10
           );
 
           if (!existingMarker && data && data.totalActivePlayers > 0) {
@@ -175,8 +175,8 @@ export default class GameSceneWithMarker extends Phaser.Scene {
     const markerIcon = this.children.list.find(
       (child) =>
         child instanceof Phaser.GameObjects.Image &&
-        child.x === tile.getCenterX() - 15 &&
-        child.y === tile.getCenterY() - 15
+        child.x === tile.getCenterX() &&
+        child.y === tile.getCenterY() - 10
     );
     if (markerIcon) {
       markerIcon.destroy();
@@ -185,8 +185,8 @@ export default class GameSceneWithMarker extends Phaser.Scene {
     const markerText = this.children.list.find(
       (child) =>
         child instanceof Phaser.GameObjects.Text &&
-        child.x === tile.getCenterX() - 10 &&
-        child.y === tile.getCenterY() - 22
+        child.x === tile.getCenterX() + 8 &&
+        child.y === tile.getCenterY() - 10
     );
     if (markerText) {
       markerText.destroy();
