@@ -557,7 +557,6 @@ const MapComponent = ({showMarker}) => {
                         <div>
                           <b className='text-white text-lg'>Description</b>
                           <br />
-                          <div dangerouslySetInnerHTML={{ __html: mapData.description }} />
                         </div>
                       )}
                       <div
