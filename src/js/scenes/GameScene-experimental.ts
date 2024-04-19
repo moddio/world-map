@@ -99,8 +99,6 @@ export default class GameSceneWithMarker extends Phaser.Scene {
       tileInfo.position.x * this.tileSize,
       tileInfo.position.y * this.tileSize - this.tileSize/2
     );
-
-    console.log ('marker position', marker.x, marker.y);
     
     const graphics = this.add.graphics();
     graphics.fillStyle(0x5D3F6A, 0.9);
