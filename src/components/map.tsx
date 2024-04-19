@@ -237,7 +237,7 @@ const MapComponent = ({showMarker}) => {
         id='modalDefaultPopup'
         open={isDefaultOpen}
         onClose={handleDefaultClose}
-        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full lg:w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'
+        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full lg:w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto z-50'
       >
         <div
           className='backdrop-blur inline-block align-middle rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2 z-50'
