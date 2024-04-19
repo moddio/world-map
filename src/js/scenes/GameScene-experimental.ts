@@ -4,7 +4,7 @@ import { siteUrl, worldMapId } from "../../config";
 
 export default class GameSceneWithMarker extends Phaser.Scene {
   tilemap: Phaser.Tilemaps.Tilemap;
-  tileSize: number = 64;
+  tileSize: number = 16;
   buildings: Phaser.Tilemaps.Tile[];
   clouds: (Phaser.GameObjects.Container & { speed: number })[];
   tileInfoArray: {
@@ -18,6 +18,7 @@ export default class GameSceneWithMarker extends Phaser.Scene {
     index: number;
     redirectUrl: string;
     image: string;
+    marker: Phaser.GameObjects.Container;
   }[];
   tooltip: Phaser.GameObjects.Text;
   indicator: Phaser.GameObjects.Graphics;
@@ -30,6 +31,8 @@ export default class GameSceneWithMarker extends Phaser.Scene {
     // Sample data for tile information
     this.tileInfoArray = [];
     this.loadMapInfo();
+
+    
 
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -79,118 +82,60 @@ export default class GameSceneWithMarker extends Phaser.Scene {
             })
           : [];
 
-      // const defaultTilePosition = { x: "16", y: "14" };
-      // const defaultTileInfo = this.tileInfoArray.find(
-      //   (tileInfo:any) =>
-      //     tileInfo.position.x === defaultTilePosition.x &&
-      //     tileInfo.position.y === defaultTilePosition.y
-      // );
-      // if (defaultTileInfo) {
-      //   const defaultTileEvent = new CustomEvent("tileClick", {
-      //     detail: { clickedTileInfo: defaultTileInfo },
-      //   });
-      //   window.dispatchEvent(defaultTileEvent);
-      // }
+          this.tileInfoArray.forEach((tileInfo) => {
+            this.createMarker(tileInfo);
+          });
+     
     } catch (error) {
       console.error("Error loading data from API:", error);
     }
   }
 
-  updateMarkerPositions() {
-    const tilemap = this.tilemap;
-    const markerPositions = this.tileInfoArray.map((tileInfo: any) => {
-      return {
-        x: parseInt(tileInfo.position.x),
-        y: parseInt(tileInfo.position.y),
-      };
+  createMarker(tileInfo: any) {
+    if (tileInfo.position.x === 0 && tileInfo.position.y === 0) {
+      return;
+    }
+    const marker = this.add.container(
+      tileInfo.position.x * this.tileSize,
+      tileInfo.position.y * this.tileSize - this.tileSize/2
+    );
+
+    console.log ('marker position', marker.x, marker.y);
+    
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0x5D3F6A, 0.9);
+    graphics.fillRoundedRect(
+      0,
+      0,
+      20,
+      8,
+      4
+    );
+    marker.add(graphics);
+
+    const markerIcon = this.add.image(5, 4, "user");
+    markerIcon.setScale(0.04);
+    markerIcon.setTint(0xffffff);
+    markerIcon.tintFill = true;
+    marker.add(markerIcon);
+
+    const markerText = this.add.text(14, 3.5, `${tileInfo.totalActivePlayers}`, {
+      fontSize: "8px",
     });
+    markerText.setResolution(16);
+    markerText.setFont("population_zero_bbregular");
+    markerText.setTint(0xffffff);
+    markerText.setScale(0.6);
+    markerText.setOrigin(0, 0.5); 
+    marker.add(markerText);
 
-    tilemap.forEachTile((tile) => {
-      const { x, y } = tile;
-      const isMarkerPosition = markerPositions.some(
-        (pos) => pos.x === x && pos.y === y
-      );
-
-      const data: any = this.tileInfoArray.find(
-        (tileInfo: any) =>
-          tileInfo &&
-          tileInfo.position &&
-          tileInfo.position.x === x.toString() &&
-          tileInfo.position.y === y.toString()
-      );
-
-      if (isMarkerPosition) {
-        // Remove marker icon and text if camera zoom is less than 2
-        if (this.cameras.main.zoom < 2) {
-          this.removeMarker(tile);
-        } else {
-          // Check if a marker icon already exists for this tile
-          const existingMarker = this.children.list.find(
-            (child) =>
-              child instanceof Phaser.GameObjects.Image &&
-              child.texture.key === "user" && // Assuming the texture key for the marker icon is "user"
-              child.x === tile.getCenterX() &&
-              child.y === tile.getCenterY() - 10
-          );
-
-          // Check if text already exists for this tile
-          const existingText = this.children.list.find(
-            (child) =>
-              child instanceof Phaser.GameObjects.Text &&
-              child.x === tile.getCenterX() +8 &&
-              child.y === tile.getCenterY() - 10
-          );
-
-          if (!existingMarker && data && data.totalActivePlayers > 0) {
-            const markerIcon = this.add.image(
-              tile.getCenterX(),
-              tile.getCenterY() - 10,
-              "user"
-            );
-            markerIcon.setScale(0.08);
-            markerIcon.setTint(0x000000);
-            markerIcon.tintFill = true;
-            
-          }
-
-          if (!existingText && data && data.totalActivePlayers > 0) {
-            const text = this.add.text(
-              tile.getCenterX() + 8,
-              tile.getCenterY() - 10,
-              `${data.totalActivePlayers}`,
-              { fontSize: "8px" }
-              );
-            text.setFont('population_zero_bbregular')
-            text.setTint(0x000000);            
-            text.setScale(0.8);
-            text.setOrigin(); // Center the text
-          }
-        }
-      }
-    });
+    tileInfo.marker = marker;
   }
 
-  removeMarker(tile: Phaser.Tilemaps.Tile) {
-    // Find and remove the marker icon and text associated with the given tile
-    const markerIcon = this.children.list.find(
-      (child) =>
-        child instanceof Phaser.GameObjects.Image &&
-        child.x === tile.getCenterX() &&
-        child.y === tile.getCenterY() - 10
-    );
-    if (markerIcon) {
-      markerIcon.destroy();
-    }
-
-    const markerText = this.children.list.find(
-      (child) =>
-        child instanceof Phaser.GameObjects.Text &&
-        child.x === tile.getCenterX() + 8 &&
-        child.y === tile.getCenterY() - 10
-    );
-    if (markerText) {
-      markerText.destroy();
-    }
+  updateMarkerVisibility(bool: boolean) {
+    this.tileInfoArray.forEach((tileInfo) => {
+      if (tileInfo.marker) tileInfo.marker.setVisible(bool);
+    });
   }
 
   public preload() {
@@ -206,16 +151,6 @@ export default class GameSceneWithMarker extends Phaser.Scene {
     const buildings = (this.buildings = []);
     const clouds = (this.clouds = []);
 
-    this.input.on("wheel", () => {
-      this.updateMarkerPositions();
-    });
-
-    // Add event listener for the pinch event to call updateMarkerPositions
-    dragScale.on("pinch", () => {
-      this.updateMarkerPositions();
-    });
-
-   
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
       if (layer.name === "buildings") {
@@ -277,11 +212,13 @@ export default class GameSceneWithMarker extends Phaser.Scene {
         const minZoom = (0.75 * 16) / tilemap.tileWidth;
         var scaleFactor = dragScale.scaleFactor;
         camera.zoom *= scaleFactor;
-        if (camera.zoom > 2) {
-          this.updateMarkerPositions();
-        }
         if (camera.zoom < minZoom) camera.zoom = minZoom;
         else if (camera.zoom > maxZoom) camera.zoom = maxZoom;
+        if (camera.zoom > 2) {
+          this.updateMarkerVisibility(true);
+        } else {
+          this.updateMarkerVisibility(false);
+        }
       },
       this
     );
@@ -352,6 +289,11 @@ export default class GameSceneWithMarker extends Phaser.Scene {
     if (targetZoom < minZoom) targetZoom = minZoom;
     else if (targetZoom > maxZoom) targetZoom = maxZoom;
     camera.setZoom(targetZoom);
+    if (camera.zoom > 2) {
+      this.updateMarkerVisibility(true);
+    } else {
+      this.updateMarkerVisibility(false);
+    }
   }
 
   public update() {
