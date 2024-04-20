@@ -283,23 +283,23 @@ export default class GameScene extends Phaser.Scene {
 
     const maxZoom = (10 * 16) / tilemap.tileWidth;
     const minZoom = (1.25 * 16) / tilemap.tileWidth;
-    
+
     if (this.targetZoom === undefined) {
       this.targetZoom = camera.zoom;
     }
 
     if (deltaY < 0) {
-      targetZoom = camera.zoom * 1.15;
-      if (targetZoom < maxZoom) {
+      this.targetZoom = camera.zoom * 1.15;
+      if (this.targetZoom < maxZoom) {
         let xDist = pointer.worldX - camera.midPoint.x;
         let yDist = pointer.worldY - camera.midPoint.y;
         camera.scrollX += xDist / 6;
         camera.scrollY += yDist / 6;
       }
-    } else targetZoom = camera.zoom / 1.7;
-    if (targetZoom < minZoom) targetZoom = minZoom;
-    else if (targetZoom > maxZoom) targetZoom = maxZoom;
-    camera.setZoom(targetZoom);
+    } else this.targetZoom = camera.zoom / 1.7;
+    if (this.targetZoom < minZoom) this.targetZoom = minZoom;
+    else if (this.targetZoom > maxZoom) this.targetZoom = maxZoom;
+    camera.setZoom(this.targetZoom);
     if (camera.zoom > 2) {
       this.updateMarkerVisibility(true);
     } else {
@@ -311,7 +311,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.targetZoom) {
       const camera = this.cameras.main;
       const newZoom = camera.zoom + (this.targetZoom - camera.zoom) / 12;
-      camera.setZoom(newZoom)
+      camera.setZoom(newZoom);
     }
     const tilemap = this.tilemap;
     this.buildings.forEach((building, index) => {
