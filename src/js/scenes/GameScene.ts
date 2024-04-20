@@ -129,12 +129,14 @@ export default class GameScene extends Phaser.Scene {
 
     tileInfo.marker = marker;
 
-    const camera = this.cameras.main;
+    /*
+const camera = this.cameras.main;
     if (camera.zoom > 2) {
       this.updateMarkerVisibility(true);
     } else {
       this.updateMarkerVisibility(false);
     }
+*/
   }
 
   updateMarkerVisibility(bool: boolean) {
