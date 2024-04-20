@@ -26,10 +26,9 @@ const Layout = () => {
           <img alt='Doomr.io' className='w-32' src={Logo} />
         </h1>
         <Routes>
-          {<Route path='/' element={<MapComponent showMarker={false} />} />}
+          {<Route path='/' element={<MapComponent />} />}
           <Route path='/login' element={<Auth />} />
           <Route path='/signup' element={<RegisterModal />} />
-          <Route path='/rough' element={<MapComponent showMarker={true} />} />
         </Routes>
       </div>
     </Router>

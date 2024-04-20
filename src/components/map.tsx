@@ -2,16 +2,13 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Phaser from 'phaser';
 import LoaderScene from '../js/scenes/LoaderScene';
 import GameScene from '../js/scenes/GameScene';
-import GameSceneWithMarker from './../js/scenes/GameScene-experimental';
 
 import axios from 'axios';
 import { siteUrl } from '../config';
 import { Dialog } from '@headlessui/react';
 import Tooltip from './core/ui/Tooltip';
 import { UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import {
-  MapPinIcon,
-} from '@heroicons/react/24/outline';
+import { MapPinIcon } from '@heroicons/react/24/outline';
 import { UsersIcon } from '@heroicons/react/24/outline';
 
 interface GameDetails {
@@ -30,7 +27,7 @@ interface GameDetails {
   gameSlug: string;
 }
 
-const MapComponent = ({showMarker}) => {
+const MapComponent = () => {
   const gameRef = useRef(null); // Reference to the Phaser game instance
 
   const [clickedTileInfo, setClickedTileInfo] = useState(null); // State to store information about the clicked tile
@@ -73,7 +70,7 @@ const MapComponent = ({showMarker}) => {
           },
         },
       },
-      scene: [LoaderScene, showMarker ? GameSceneWithMarker : GameScene],
+      scene: [LoaderScene, GameScene],
       backgroundColor: '#59f773',
     };
 
@@ -94,7 +91,7 @@ const MapComponent = ({showMarker}) => {
     return () => {
       window.removeEventListener('contextmenu', disableContextMenu);
     };
-  }, [showMarker]);
+  }, []);
 
   useEffect(() => {
     const anchorTag = document.createElement('a');
@@ -237,10 +234,10 @@ const MapComponent = ({showMarker}) => {
         id='modalDefaultPopup'
         open={isDefaultOpen}
         onClose={handleDefaultClose}
-        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full lg:w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto'
+        className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-full lg:w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto z-50'
       >
         <div
-          className='backdrop-blur inline-block align-middle rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2'
+          className='backdrop-blur inline-block align-middle rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2 z-50'
           style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
         >
           <div className='lg:relative group'>
@@ -493,7 +490,7 @@ const MapComponent = ({showMarker}) => {
                         <div className='lg:mt-2 text-sm'>
                           <div className='text-md '>
                             <div className='flex'>
-                              { <UserIcon className='h-5 text-[#6b8bd4]' /> }
+                              {<UserIcon className='h-5 text-[#6b8bd4]' />}
                               <a
                                 href={`${siteUrl}/user/${mapData.owner.username}`}
                                 target='_blank'
