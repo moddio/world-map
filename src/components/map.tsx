@@ -551,13 +551,11 @@ const MapComponent = () => {
                     </div>
 
                     <div className=''>
-                      {mapData.description && (
-                        <div className='lg:block max-sm:hidden max-md:hidden sm:hidden '>
-                          <b className='text-white text-lg'>Description</b>
-                          <br />
-                        </div>
-                      )}
-                      
+                      <div className='lg:block max-sm:hidden max-md:hidden sm:hidden '>
+                        <b className='text-white text-lg'>Description</b>
+                        <br />
+                      </div>
+
                       <div className='flex '>
                         <img
                           src={
@@ -584,7 +582,6 @@ const MapComponent = () => {
                           </div>
                         </div>
                       </div>
-                      
                     </div>
                   </div>
                 </div>
