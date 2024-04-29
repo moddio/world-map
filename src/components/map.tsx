@@ -236,7 +236,7 @@ const MapComponent = () => {
         onClose={handleDefaultClose}
         className='fixed inset-y-0 lg:right-3 right-0 max-md:bottom-0 max-sm:bottom-0 lg:overflow-y-auto max-md:w-32 max-sm:w-full max-md:w-32 sm:w-72 lg:w-auto flex lg:items-center justify-end lg:top-0 max-md:top-auto md:top-auto max-sm:top-auto z-50'>
         <div
-          className='backdrop-blur inline-block align-middle rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2 z-50'
+          className='backdrop-blur inline-block align-middle lg:rounded-lg max-sm:rounded-none overflow-hidden shadow-xl transform transition-all max-w-md w-full lg:w-[400px] max-md:w-72 md:w-80 max-sm:w-full lg:h-auto max-md:text-sm p-2 z-50'
           style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
           <div className='lg:relative group'>
             <img
@@ -245,7 +245,7 @@ const MapComponent = () => {
               className='max-sm:hidden lg:block rounded-lg w-full justify-center items-center aspect-[5/3]'
             />
             <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
-              <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
+              {/* <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
                 <div className='text-left mb-2 h-32 overflow-auto text-gray-300 pl-2'>
                   <div className='text-md'>
                     <ul className='list-disc list-inside  leading-5'>
@@ -261,10 +261,10 @@ const MapComponent = () => {
                     </ul>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
-          <div className='p-2 overflow-auto text-white '>
+          <div className='lg:p-2 md:p-1 overflow-auto text-white '>
             <div className='sm:flex justify-center sm:items-start'>
               <div className='w-full'>
                 <div className='max-sm:hidden md:hidden max-md:hidden lg:block font-bold h5 text-center'>
@@ -274,8 +274,13 @@ const MapComponent = () => {
                 </div>
                 <div className=''>
                   <div className='text-left mb-1 h-auto max-h-72 overflow-auto text-gray-300 pl-2'>
-                    <div className='text-md'>
-                      <ul className='list-disc list-inside leading-5'>
+                    <div className='text-md max-sm:flex'>
+                      <img
+                        src='https://cache.modd.io/asset/spriteImage/1713296865932_cover.png'
+                        alt=''
+                        className='max-sm:mb-2 lg:hidden max-sm:mr-6 max-md:hidden md:hidden sm:hidden max-sm:block justify-end max-sm:h-16  rounded-lg justify-center items-center aspect-[5/3]'
+                      />
+                      <ul className='list-disc max-sm:list-outside lg:list-inside  max-md:list-outside md:ml-4 sm:ml-4 lg:ml-0 leading-5'>
                         <li>
                           <strong>scavenge</strong> the wastelands for loot
                         </li>
@@ -450,7 +455,7 @@ const MapComponent = () => {
                 <div className='lg:relative group'>
                   <span
                     onClick={handleClose}
-                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 lg:bg-[#000] '>
+                    className='fixed z-9 top-0 right-0 text-white cursor-pointer p-1 lg:bg-[#000]'>
                     <XMarkIcon className='w-6' />
                   </span>
                   <div className='font-bold lg:hidden text-white text-lg text-center'>
@@ -547,30 +552,43 @@ const MapComponent = () => {
 
                     <div className=''>
                       {mapData.description && (
-                        <div className="lg:block max-sm:hidden max-md:hidden sm:hidden ">
-                          <b className='text-white text-lg'>
-                            Description
-                          </b>
+                        <div className='lg:block max-sm:hidden max-md:hidden sm:hidden '>
+                          <b className='text-white text-lg'>Description</b>
                           <br />
                         </div>
                       )}
                       {mapData && mapData.description ? (
-                        <div
-                          className='text-left mb-1 lg:max-h-96 max-sm:max-h-16 max-md:max-h-56 md:max-h-56 sm:max-h-56 h-auto overflow-y-auto text-gray-300 pl-2'
-                          style={{
-                            paddingRight: "10px",
-                            borderLeft: "2px solid white",
-                            
-                            // height: 'fit-content'
-                          }}>
-                          <div className='text-sm'>
-                            {mapData && mapData.description}
-                           
-                           
+                        <div className='flex '>
+                          <img
+                            src={
+                              mapData.cover.includes("https://")
+                                ? mapData.cover
+                                : `https://www.modd.io/${mapData.cover}`
+                            }
+                            alt=''
+                            className='lg:hidden max-sm:mr-2 max-md:hidden md:hidden sm:hidden max-sm:block max-sm:h-16 rounded-lg justify-center items-center aspect-[5/3]'
+                          />
+                          <div
+                            className='lg:text-left max-sm:text-justify mb-1 lg:max-h-96 max-sm:max-h-16 max-sm:w-full max-md:max-h-56 md:max-h-56 sm:max-h-56 h-auto overflow-y-auto text-gray-300 pl-2 border-l-2 border-white'
+                            style={{
+                              paddingRight: "10px",
+                            }}>
+                            <div className='text-sm'>
+                              {mapData && mapData.description}
+                              
+                            </div>
                           </div>
                         </div>
                       ) : (
-                        <></>
+                        <div className="flex justify-center"><img
+                        src={
+                          mapData.cover.includes("https://")
+                            ? mapData.cover
+                            : `https://www.modd.io/${mapData.cover}`
+                        }
+                        alt=''
+                        className=' lg:hidden max-sm:mr-2 max-md:hidden md:hidden sm:hidden max-sm:block max-sm:h-16 rounded-lg  aspect-[5/3]'
+                      /></div>
                       )}
                     </div>
                   </div>
