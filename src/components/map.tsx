@@ -557,39 +557,34 @@ const MapComponent = () => {
                           <br />
                         </div>
                       )}
-                      {mapData && mapData.description ? (
-                        <div className='flex '>
-                          <img
-                            src={
-                              mapData.cover.includes("https://")
-                                ? mapData.cover
-                                : `https://www.modd.io/${mapData.cover}`
-                            }
-                            alt=''
-                            className='lg:hidden max-sm:mr-2 max-md:hidden md:hidden sm:hidden max-sm:block max-sm:h-16 rounded-lg justify-center items-center aspect-[5/3]'
-                          />
-                          <div
-                            className='lg:text-left max-sm:text-justify mb-1 lg:max-h-96 max-sm:max-h-16 max-sm:w-full max-md:max-h-56 md:max-h-56 sm:max-h-56 h-auto overflow-y-auto text-gray-300 pl-2 border-l-2 border-white'
-                            style={{
-                              paddingRight: "10px",
-                            }}>
-                            <div className='text-sm'>
-                              {mapData && mapData.description}
-                              
-                            </div>
+                      
+                      <div className='flex '>
+                        <img
+                          src={
+                            mapData.cover.includes("https://")
+                              ? mapData.cover
+                              : `https://www.modd.io/${mapData.cover}`
+                          }
+                          alt=''
+                          className='lg:hidden max-sm:mr-2 max-md:hidden md:hidden sm:hidden max-sm:block max-sm:h-16 rounded-lg justify-center items-center aspect-[5/3]'
+                        />
+                        <div
+                          className='lg:text-left max-sm:text-justify mb-1 lg:max-h-96 max-sm:max-h-16 max-sm:w-full max-md:max-h-56 md:max-h-56 sm:max-h-56 h-auto overflow-y-auto text-gray-300 pl-2 border-l-2 border-white'
+                          style={{
+                            paddingRight: "10px",
+                          }}>
+                          <div className='text-sm'>
+                            {mapData && mapData.description ? (
+                              mapData.description
+                            ) : (
+                              <span>
+                                Welcome to <strong>{mapData.title}!</strong>
+                              </span>
+                            )}
                           </div>
                         </div>
-                      ) : (
-                        <div className="flex justify-center"><img
-                        src={
-                          mapData.cover.includes("https://")
-                            ? mapData.cover
-                            : `https://www.modd.io/${mapData.cover}`
-                        }
-                        alt=''
-                        className=' lg:hidden max-sm:mr-2 max-md:hidden md:hidden sm:hidden max-sm:block max-sm:h-16 rounded-lg  aspect-[5/3]'
-                      /></div>
-                      )}
+                      </div>
+                      
                     </div>
                   </div>
                 </div>
