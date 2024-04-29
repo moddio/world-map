@@ -242,7 +242,7 @@ const MapComponent = () => {
             <img
               src='https://cache.modd.io/asset/spriteImage/1713296865932_cover.png'
               alt=''
-              className='max-sm:hidden md:hidden max-md:hidden lg:block rounded-lg w-full justify-center items-center aspect-[5/3]'
+              className='max-sm:hidden lg:block rounded-lg w-full justify-center items-center aspect-[5/3]'
             />
             <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
               <div className='lg:hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>
@@ -463,7 +463,7 @@ const MapComponent = () => {
                         : `https://www.modd.io/${mapData.cover}`
                     }
                     alt=''
-                    className='max-sm:hidden max-md:hidden md:hidden lg:block rounded-lg w-full justify-center items-center aspect-[5/3]'
+                    className='max-sm:hidden lg:block rounded-lg w-full justify-center items-center aspect-[5/3]'
                   />
                   <div className='absolute max-md:top-10 md:top-10 max-sm:mt-8 max-sm:top-5 left-0 w-full lg:h-full h-auto flex lg:justify-center items-center opacity-0 transition-opacity group-hover:opacity-90'>
                     <div className='hidden w-full bg-black bg-opacity-80 px-2 lg:py-4 rounded-md'>

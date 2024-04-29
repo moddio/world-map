@@ -178,7 +178,7 @@ const camera = this.cameras.main;
 
     const camera = this.cameras.main;
     camera.setBackgroundColor('#1883fd');
-    camera.centerOn(widthInPixels / 3, heightInPixels / 2);
+    camera.centerOn(widthInPixels / (window.innerWidth > 576 ? 2 : 3), heightInPixels / 2);
     camera.setZoom(1.66);
     camera.scrollX += widthInPixels / 4;
     camera.setBounds(Xmin, Ymin, Xmax - Xmin, Ymax - Ymin);
