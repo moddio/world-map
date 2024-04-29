@@ -25,6 +25,7 @@ export default class GameScene extends Phaser.Scene {
   angle: number = 0;
   selectedTile: Phaser.Tilemaps.Tile;
 
+  initialZoom: number = 1.66;
   constructor() {
     super({ key: 'game', active: false, visible: false });
 
@@ -102,7 +103,7 @@ export default class GameScene extends Phaser.Scene {
 
     const graphics = this.add.graphics();
     graphics.fillStyle(0x5d509b, 0.9);
-    graphics.fillRoundedRect(0, 0, 24, 14, 8);
+    graphics.fillRoundedRect(0, 0, 24, 14, 6);
     marker.add(graphics);
 
     const markerIcon = this.add.image(7, 7, 'user');
@@ -178,8 +179,11 @@ const camera = this.cameras.main;
 
     const camera = this.cameras.main;
     camera.setBackgroundColor('#1883fd');
-    camera.centerOn(widthInPixels / (window.innerWidth > 576 ? 2 : 3), heightInPixels / 2);
-    camera.setZoom(1.66);
+    camera.centerOn(
+      widthInPixels / (window.innerWidth > 576 ? 2 : 3),
+      heightInPixels / 2
+    );
+    camera.setZoom(this.initialZoom);
     camera.scrollX += widthInPixels / 4;
     camera.setBounds(Xmin, Ymin, Xmax - Xmin, Ymax - Ymin);
 
@@ -304,6 +308,51 @@ const camera = this.cameras.main;
   }
 
   public update() {
+    // const pos = [
+    //   { tileX: 16, tileY: 14 },
+    //   { tileX: 20, tileY: 16 },
+    //   { tileX: 14, tileY: 17 },
+    //   { tileX: 16, tileY: 19 },
+    //   { tileX: 19, tileY: 19 },
+    // ];
+
+    // // Update HTML div positioning for each position in `pos`
+    // pos.forEach((p) => {
+    //   // Convert tile position to world coordinates
+    //   var worldX = p.tileX * this.tileSize;
+    //   var worldY = p.tileY * this.tileSize;
+    //   // Create or update existing HTML div dynamically
+    //   var htmlDiv = document.getElementById(`html-div-${p.tileX}-${p.tileY}`);
+    //   if (!htmlDiv) {
+    //     htmlDiv = document.createElement('div');
+    //     htmlDiv.id = `html-div-${p.tileX}-${p.tileY}`;
+    //     htmlDiv.innerHTML = `${p.tileX}, ${p.tileY}`;
+    //     htmlDiv.style.position = 'absolute';
+    //     htmlDiv.style.backgroundColor = '#5d509b';
+    //     htmlDiv.style.color = '#fff';
+    //     htmlDiv.style.pointerEvents = 'cursor'; // Prevent div from interfering with game input
+    //     document
+    //       .getElementsByClassName('game-container')[0]
+    //       .appendChild(htmlDiv);
+    //   }
+
+    //   // Calculate the screen coordinates of the center of the tile
+    //   const camera = this.cameras.main;
+    //   console.log(341, camera.zoom);
+    //   const viewportCenterX = window.innerWidth / 2;
+    //   const viewportCenterY = window.innerHeight / 2;
+    //   const tileCenterX =
+    //     (worldX + this.tileSize / 2 - camera.scrollX) / camera.zoom;
+    //   const tileCenterY =
+    //     (worldY + this.tileSize / 2 - camera.scrollY) * camera.zoom;
+    //   // Calculate the dynamic offset based on the viewport center and the difference in zoom levels
+    //   const dynamicOffsetX = viewportCenterX * (1 - 1 / camera.zoom);
+    //   const dynamicOffsetY = viewportCenterY * (1 - 1 / camera.zoom);
+
+    //   // Position HTML div at the calculated screen coordinates with the dynamic offset
+    //   htmlDiv.style.left = tileCenterX - dynamicOffsetX + 'px';
+    //   htmlDiv.style.top = tileCenterY - dynamicOffsetY + 'px';
+    // });
     const tilemap = this.tilemap;
     this.buildings.forEach((building, index) => {
       //@ts-ignore
