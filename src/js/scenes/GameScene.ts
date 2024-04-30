@@ -177,8 +177,9 @@ export default class GameScene extends Phaser.Scene {
     // Append the inner div to the outer div
     outerDiv.appendChild(innerDiv);
 
+
     this.add.dom(
-      (tileInfo.position.x * this.tileSize) + 15,
+      (tileInfo.position.x * this.tileSize) + 10,
       (tileInfo.position.y * this.tileSize - this.tileSize / 2) + 5,
       outerDiv
     );
