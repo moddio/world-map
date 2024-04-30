@@ -50,6 +50,7 @@ const MapComponent = () => {
         keyboard: true,
         gamepad: true,
       },
+      parent:'phaser',
       scale: {
         mode: Phaser.Scale.RESIZE,
         autoRound: true,
@@ -60,6 +61,9 @@ const MapComponent = () => {
         antialias: false,
         antialiasGL: false,
         autoResize: true,
+      },
+      dom: {
+        createContainer: true,
       },
       physics: {
         default: "arcade",

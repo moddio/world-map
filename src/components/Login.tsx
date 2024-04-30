@@ -31,7 +31,7 @@ import { siteUrl } from '../config';
 
 export default function Login({ handleClose, referer }) {
   // const history = useNavigate();
-  const { mutate } = useSWRConfig();
+  // const { mutate } = useSWRConfig();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   // const [formLogin, setFormLogin] = useState(true);

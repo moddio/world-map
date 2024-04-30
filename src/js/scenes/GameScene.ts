@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { tilemapjson } from '../../assets/tilemaps/tilemap';
-import { siteUrl, worldMapId } from '../../config';
+import axios from "axios";
+import { tilemapjson } from "../../assets/tilemaps/tilemap";
+import { siteUrl, worldMapId } from "../../config";
 
 export default class GameScene extends Phaser.Scene {
   tilemap: Phaser.Tilemaps.Tilemap;
@@ -27,17 +27,28 @@ export default class GameScene extends Phaser.Scene {
 
   initialZoom: number = 1.66;
   constructor() {
-    super({ key: 'game', active: false, visible: false });
+    super({ key: "game", active: false, visible: false });
 
     // Sample data for tile information
     this.tileInfoArray = [];
     this.loadMapInfo();
 
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
     link.href =
-      'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css';
+      "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
     document.head.appendChild(link);
+
+    const heroicon = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css";
+    document.head.appendChild(heroicon);
+    const fontawesome = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css";
+    document.head.appendChild(fontawesome);
   }
 
   async loadMapInfo() {
@@ -91,77 +102,118 @@ export default class GameScene extends Phaser.Scene {
         this.createMarker(tileInfo);
       });
     } catch (error) {
-      console.error('Error loading data from API:', error);
+      console.error("Error loading data from API:", error);
     }
   }
 
+  //   createMarker(tileInfo: any) {
+  //     const marker = this.add.container(
+  //       tileInfo.position.x * this.tileSize,
+  //       tileInfo.position.y * this.tileSize - this.tileSize / 2
+  //     );
+
+  //     const graphics = this.add.graphics();
+  //     graphics.fillStyle(0x5d509b, 0.9);
+  //     graphics.fillRoundedRect(0, 0, 24, 14, 6);
+  //     marker.add(graphics);
+
+  //     const markerIcon = this.add.image(7, 7, "user");
+  //     markerIcon.setScale(0.06);
+  //     markerIcon.setTint(0xffffff);
+  //     markerIcon.tintFill = true;
+  //     marker.add(markerIcon);
+
+  //     const markerText = this.add.text(
+  //       14,
+  //       6.5,
+  //       `${tileInfo.totalActivePlayers}`,
+  //       {
+  //         fontSize: "12px",
+  //       }
+  //     );
+  //     markerText.setResolution(16);
+  //     markerText.setFont("population_zero_bbregular");
+  //     markerText.setTint(0xffffff);
+  //     markerText.setScale(0.8);
+  //     markerText.setOrigin(0, 0.5);
+  //     markerText.setStyle({ fontWeight: "bold" });
+  //     marker.add(markerText);
+
+  //     tileInfo.marker = marker;
+
+  //     /*
+  // const camera = this.cameras.main;
+  //     if (camera.zoom > 2) {
+  //       this.updateMarkerVisibility(true);
+  //     } else {
+  //       this.updateMarkerVisibility(false);
+  //     }
+  // */
+  //   }
   createMarker(tileInfo: any) {
-    const marker = this.add.container(
-      tileInfo.position.x * this.tileSize,
-      tileInfo.position.y * this.tileSize - this.tileSize / 2
+    const existingMarker = document.getElementById(
+      `marker-${tileInfo.id}`
     );
-
-    const graphics = this.add.graphics();
-    graphics.fillStyle(0x5d509b, 0.9);
-    graphics.fillRoundedRect(0, 0, 24, 14, 6);
-    marker.add(graphics);
-
-    const markerIcon = this.add.image(7, 7, 'user');
-    markerIcon.setScale(0.06);
-    markerIcon.setTint(0xffffff);
-    markerIcon.tintFill = true;
-    marker.add(markerIcon);
-
-    const markerText = this.add.text(
-      14,
-      6.5,
-      `${tileInfo.totalActivePlayers}`,
-      {
-        fontSize: '12px',
-      }
-    );
-    markerText.setResolution(16);
-    markerText.setFont('population_zero_bbregular');
-    markerText.setTint(0xffffff);
-    markerText.setScale(0.8);
-    markerText.setOrigin(0, 0.5);
-    markerText.setStyle({ fontWeight: 'bold' });
-    marker.add(markerText);
-
-    tileInfo.marker = marker;
-
-    /*
-const camera = this.cameras.main;
-    if (camera.zoom > 2) {
-      this.updateMarkerVisibility(true);
-    } else {
-      this.updateMarkerVisibility(false);
+    if (existingMarker) {
+      return;
     }
-*/
+
+    // Create the outer div element
+    const outerDiv = document.createElement("div");
+    outerDiv.className="bg-[#5d509b] p-1 rounded-lg z-0 opacity-100"
+    outerDiv.setAttribute("id", `marker-${tileInfo.id}`);
+
+    // Create the inner div element
+    const innerDiv = document.createElement("div");
+    innerDiv.setAttribute(
+      "style",
+      "color: white; font: 11px Arial; display:flex;"
+    );
+    innerDiv.innerHTML = ` <div style="margin-right: 2px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
+    <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"></path>
+    </svg></div>
+    <span>${tileInfo.totalActivePlayers}</span>`;
+
+    // Append the inner div to the outer div
+    outerDiv.appendChild(innerDiv);
+
+    this.add.dom(
+      (tileInfo.position.x * this.tileSize) + 15,
+      (tileInfo.position.y * this.tileSize - this.tileSize / 2) + 5,
+      outerDiv
+    );
   }
 
   updateMarkerVisibility(bool: boolean) {
     this.tileInfoArray.forEach((tileInfo) => {
       if (tileInfo.marker) tileInfo.marker.setVisible(bool);
     });
+
+    this.tileInfoArray.forEach((tileInfo: any) => {
+      
+        document.getElementById(`marker-${tileInfo.id}`) &&
+        !bool &&
+        document.getElementById(`marker-${tileInfo.id}`).remove();
+      // if (el) el.style.display = bool ? "block" : "none";
+    });
   }
 
   public preload() {
-    this.load.tilemapTiledJSON('tilemap', tilemapjson);
+    this.load.tilemapTiledJSON("tilemap", tilemapjson);
   }
 
   public create() {
-    const pinchPlugin = this.plugins.get('rexpinchplugin') as any;
+    const pinchPlugin = this.plugins.get("rexpinchplugin") as any;
     const dragScale = pinchPlugin.add(this);
 
-    const tilemap = (this.tilemap = this.make.tilemap({ key: 'tilemap' }));
-    const tileset = tilemap.addTilesetImage('tiles');
+    const tilemap = (this.tilemap = this.make.tilemap({ key: "tilemap" }));
+    const tileset = tilemap.addTilesetImage("tiles");
     const buildings = (this.buildings = []);
     const clouds = (this.clouds = []);
 
     tilemap.layers.forEach((layer) => {
       const tileLayer = tilemap.createLayer(layer.name, tileset, 0, 0);
-      if (layer.name === 'buildings') {
+      if (layer.name === "buildings") {
         tileLayer.forEachTile((tile, index) => {
           if (index >= 0) {
             buildings.push(tile);
@@ -178,7 +230,7 @@ const camera = this.cameras.main;
     const Ymax = 1.5 * heightInPixels;
 
     const camera = this.cameras.main;
-    camera.setBackgroundColor('#1883fd');
+    camera.setBackgroundColor("#1883fd");
     camera.centerOn(
       widthInPixels / (window.innerWidth > 576 ? 2 : 3),
       heightInPixels / 2
@@ -200,7 +252,7 @@ const camera = this.cameras.main;
       cloudContainer.speed = Phaser.Math.Between(10, 30) / 10;
 
       //shadow image
-      const shadow = this.add.image(20, 20, 'cloud' + random.toString());
+      const shadow = this.add.image(20, 20, "cloud" + random.toString());
       shadow.setScale(0.75);
       shadow.setOrigin(0, 0);
       shadow.setAlpha(0.1);
@@ -208,7 +260,7 @@ const camera = this.cameras.main;
       cloudContainer.add(shadow);
 
       //cloud image
-      const cloud = this.add.image(0, 0, 'cloud' + random.toString());
+      const cloud = this.add.image(0, 0, "cloud" + random.toString());
       cloud.setScale(0.75);
       cloud.setOrigin(0, 0);
       cloudContainer.add(cloud);
@@ -217,7 +269,7 @@ const camera = this.cameras.main;
     }
 
     dragScale.on(
-      'pinch',
+      "pinch",
       function (dragScale) {
         const maxZoom = (10 * 16) / tilemap.tileWidth;
         const minZoom = (0.75 * 16) / tilemap.tileWidth;
@@ -225,8 +277,17 @@ const camera = this.cameras.main;
         camera.zoom *= scaleFactor;
         if (camera.zoom < minZoom) camera.zoom = minZoom;
         else if (camera.zoom > maxZoom) camera.zoom = maxZoom;
-        if (camera.zoom > 2) {
+        if (camera.zoom > 1.66) {
           this.updateMarkerVisibility(true);
+          this.tileInfoArray.forEach((tileInfo: any) => {
+            if (
+              (!tileInfo.position.x && !tileInfo.position.y) ||
+              !tileInfo.totalActivePlayers
+            ) {
+              return;
+            }
+            this.createMarker(tileInfo);
+          });
         } else {
           this.updateMarkerVisibility(false);
         }
@@ -234,20 +295,20 @@ const camera = this.cameras.main;
       this
     );
 
-    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+    this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       this.zoom(deltaY, pointer);
     });
 
-    this.input.on('pointermove', (p) => {
+    this.input.on("pointermove", (p) => {
       if (p.isDown) {
         const scrollX = (p.x - p.prevPosition.x) / camera.zoom;
         const scrollY = (p.y - p.prevPosition.y) / camera.zoom;
         camera.scrollX -= scrollX;
         camera.scrollY -= scrollY;
 
-        const modalPopup = document.getElementById('modalPopup');
+        const modalPopup = document.getElementById("modalPopup");
         if (modalPopup) {
-          const closeModal = new CustomEvent('closePopup');
+          const closeModal = new CustomEvent("closePopup");
           window.dispatchEvent(closeModal);
         }
       }
@@ -300,7 +361,16 @@ const camera = this.cameras.main;
     if (targetZoom < minZoom) targetZoom = minZoom;
     else if (targetZoom > maxZoom) targetZoom = maxZoom;
     camera.setZoom(targetZoom);
-    if (camera.zoom > 2) {
+    if (camera.zoom > 1.66) {
+      this.tileInfoArray.forEach((tileInfo: any) => {
+        if (
+          (!tileInfo.position.x && !tileInfo.position.y) ||
+          !tileInfo.totalActivePlayers
+        ) {
+          return;
+        }
+        this.createMarker(tileInfo);
+      });
       this.updateMarkerVisibility(true);
     } else {
       this.updateMarkerVisibility(false);
@@ -308,51 +378,6 @@ const camera = this.cameras.main;
   }
 
   public update() {
-    // const pos = [
-    //   { tileX: 16, tileY: 14 },
-    //   { tileX: 20, tileY: 16 },
-    //   { tileX: 14, tileY: 17 },
-    //   { tileX: 16, tileY: 19 },
-    //   { tileX: 19, tileY: 19 },
-    // ];
-
-    // // Update HTML div positioning for each position in `pos`
-    // pos.forEach((p) => {
-    //   // Convert tile position to world coordinates
-    //   var worldX = p.tileX * this.tileSize;
-    //   var worldY = p.tileY * this.tileSize;
-    //   // Create or update existing HTML div dynamically
-    //   var htmlDiv = document.getElementById(`html-div-${p.tileX}-${p.tileY}`);
-    //   if (!htmlDiv) {
-    //     htmlDiv = document.createElement('div');
-    //     htmlDiv.id = `html-div-${p.tileX}-${p.tileY}`;
-    //     htmlDiv.innerHTML = `${p.tileX}, ${p.tileY}`;
-    //     htmlDiv.style.position = 'absolute';
-    //     htmlDiv.style.backgroundColor = '#5d509b';
-    //     htmlDiv.style.color = '#fff';
-    //     htmlDiv.style.pointerEvents = 'cursor'; // Prevent div from interfering with game input
-    //     document
-    //       .getElementsByClassName('game-container')[0]
-    //       .appendChild(htmlDiv);
-    //   }
-
-    //   // Calculate the screen coordinates of the center of the tile
-    //   const camera = this.cameras.main;
-    //   console.log(341, camera.zoom);
-    //   const viewportCenterX = window.innerWidth / 2;
-    //   const viewportCenterY = window.innerHeight / 2;
-    //   const tileCenterX =
-    //     (worldX + this.tileSize / 2 - camera.scrollX) / camera.zoom;
-    //   const tileCenterY =
-    //     (worldY + this.tileSize / 2 - camera.scrollY) * camera.zoom;
-    //   // Calculate the dynamic offset based on the viewport center and the difference in zoom levels
-    //   const dynamicOffsetX = viewportCenterX * (1 - 1 / camera.zoom);
-    //   const dynamicOffsetY = viewportCenterY * (1 - 1 / camera.zoom);
-
-    //   // Position HTML div at the calculated screen coordinates with the dynamic offset
-    //   htmlDiv.style.left = tileCenterX - dynamicOffsetX + 'px';
-    //   htmlDiv.style.top = tileCenterY - dynamicOffsetY + 'px';
-    // });
     const tilemap = this.tilemap;
     this.buildings.forEach((building, index) => {
       //@ts-ignore
@@ -386,7 +411,7 @@ const camera = this.cameras.main;
         });
         if (clickedTileInfo && !clickedTileInfo.clicked) {
           clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
-          const event = new CustomEvent('tileClick', {
+          const event = new CustomEvent("tileClick", {
             detail: { clickedTileInfo, hoveredTile },
           });
           window.dispatchEvent(event);
@@ -410,19 +435,19 @@ const camera = this.cameras.main;
             x: this.input.activePointer.x,
             y: this.input.activePointer.y,
           };
-          document.body.style.cursor = 'pointer';
-          const event = new CustomEvent('tileHover', {
+          document.body.style.cursor = "pointer";
+          const event = new CustomEvent("tileHover", {
             detail: hoveredTileInfo,
           });
           window.dispatchEvent(event);
         } else {
-          const event = new CustomEvent('tileHover', { detail: null });
+          const event = new CustomEvent("tileHover", { detail: null });
           window.dispatchEvent(event);
         }
       }
     } else {
-      document.body.style.cursor = 'default';
-      const event = new CustomEvent('tileHover', { detail: null });
+      document.body.style.cursor = "default";
+      const event = new CustomEvent("tileHover", { detail: null });
       window.dispatchEvent(event);
     }
     //move clouds
