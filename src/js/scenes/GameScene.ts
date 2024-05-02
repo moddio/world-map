@@ -99,7 +99,7 @@ export default class GameScene extends Phaser.Scene {
         ) {
           return;
         }
-        // this.createMarker(tileInfo);
+        this.createMarker(tileInfo);
       });
     } catch (error) {
       console.error("Error loading data from API:", error);
@@ -125,12 +125,7 @@ export default class GameScene extends Phaser.Scene {
     </svg>
     <span>${tileInfo.totalActivePlayers}</span>`;
 
-    // Append the inner div to the outer div
-    outerDiv.appendChild(innerDiv);
-    // console.log(
-    //   tileInfo.position.x * this.tileSize + 10,
-    //   tileInfo.position.y * this.tileSize - this.tileSize / 2 + 12
-    // );
+    outerDiv.appendChild(innerDiv);    
 
     this.add.dom(
       tileInfo.position.x * this.tileSize + 10,
@@ -145,9 +140,18 @@ export default class GameScene extends Phaser.Scene {
     // });
 
     this.tileInfoArray.forEach((tileInfo: any) => {
-      document.getElementById(`marker-${tileInfo.id}`) &&
-        !bool &&
-        document.getElementById(`marker-${tileInfo.id}`).remove();
+      // document.getElementById(`marker-${tileInfo.id}`) &&
+      //   !bool &&
+      //   document.getElementById(`marker-${tileInfo.id}`).remove();
+      const markerElement = document.getElementById(`marker-${tileInfo.id}`);
+      if (markerElement) {
+        if (!bool) {
+          markerElement.style.visibility = "hidden";
+        } else {
+          markerElement.style.visibility = "visible";
+        }
+      }
+
       // if (el) el.style.display = bool ? "block" : "none";
     });
   }
@@ -157,8 +161,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public create() {
-
-    
     const pinchPlugin = this.plugins.get("rexpinchplugin") as any;
     const dragScale = pinchPlugin.add(this);
 
@@ -242,7 +244,9 @@ export default class GameScene extends Phaser.Scene {
             ) {
               return;
             }
-            this.createMarker(tileInfo);
+            // this.createMarker(tileInfo);
+            this.updateMarkerVisibility(true);
+
           });
         } else {
           this.updateMarkerVisibility(false);
@@ -318,20 +322,11 @@ export default class GameScene extends Phaser.Scene {
     if (targetZoom < minZoom) targetZoom = minZoom;
     else if (targetZoom > maxZoom) targetZoom = maxZoom;
     camera.setZoom(targetZoom);
-    // if (camera.zoom > 1.66) {
-    //   this.tileInfoArray.forEach((tileInfo: any) => {
-    //     if (
-    //       (!tileInfo.position.x && !tileInfo.position.y) ||
-    //       !tileInfo.totalActivePlayers
-    //     ) {
-    //       return;
-    //     }
-    //     this.createMarker(tileInfo);
-    //   });
-    //   // this.updateMarkerVisibility(true);
-    // } else {
-    //   this.updateMarkerVisibility(false);
-    // }
+    if (camera.zoom > 1.66) {
+      this.updateMarkerVisibility(true);
+    } else {
+      this.updateMarkerVisibility(false);
+    }
   }
 
   public update() {
@@ -343,21 +338,6 @@ export default class GameScene extends Phaser.Scene {
       building.id = index;
       building.setAlpha(1);
     });
-
-    if (camera.zoom >= this.initialZoom) {
-      this.tileInfoArray.forEach((tileInfo: any) => {
-        if (
-          (!tileInfo.position.x && !tileInfo.position.y) ||
-          !tileInfo.totalActivePlayers
-        ) {
-          return;
-        }
-        this.createMarker(tileInfo);
-      });
-      // this.updateMarkerVisibility(true);
-    } else {
-      this.updateMarkerVisibility(false);
-    }
 
     const worldPoint = this.cameras.main.getWorldPoint(
       this.input.activePointer.x,
