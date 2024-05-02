@@ -235,7 +235,7 @@ export default class GameScene extends Phaser.Scene {
         camera.zoom *= scaleFactor;
         if (camera.zoom < minZoom) camera.zoom = minZoom;
         else if (camera.zoom > maxZoom) camera.zoom = maxZoom;
-        if (camera.zoom > 1.66) {
+        if (camera.zoom >= this.initialZoom) {
           this.updateMarkerVisibility(true);
           this.tileInfoArray.forEach((tileInfo: any) => {
             if (
@@ -308,7 +308,7 @@ export default class GameScene extends Phaser.Scene {
 
     const maxZoom = (10 * 16) / tilemap.tileWidth;
     const minZoom =
-      ((window.innerWidth > 576 ? 1.25 : 1) * 16) / tilemap.tileWidth;
+      ((window.innerWidth > 920 ? 1.25 : 1) * 16) / tilemap.tileWidth;
     let targetZoom;
     if (deltaY < 0) {
       targetZoom = camera.zoom * 1.2;
@@ -322,7 +322,7 @@ export default class GameScene extends Phaser.Scene {
     if (targetZoom < minZoom) targetZoom = minZoom;
     else if (targetZoom > maxZoom) targetZoom = maxZoom;
     camera.setZoom(targetZoom);
-    if (camera.zoom > 1.66) {
+    if (camera.zoom >= this.initialZoom) {
       this.updateMarkerVisibility(true);
     } else {
       this.updateMarkerVisibility(false);
