@@ -117,8 +117,8 @@ export default class GameScene extends Phaser.Scene {
     outerDiv.appendChild(innerDiv);
 
     const data: any = this.add.dom(
-      tileInfo.position.x * this.tileSize + 5,
-      tileInfo.position.y * this.tileSize - this.tileSize / 2 ,
+      tileInfo.position.x * this.tileSize - 3.5,
+      tileInfo.position.y * this.tileSize - this.tileSize / 2 - 5 ,
       outerDiv
     );
       data.setOrigin(0,0)
