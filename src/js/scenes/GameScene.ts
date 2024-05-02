@@ -25,7 +25,7 @@ export default class GameScene extends Phaser.Scene {
   angle: number = 0;
   selectedTile: Phaser.Tilemaps.Tile;
 
-  initialZoom: number = 1.66;
+  initialZoom: number = window.innerWidth > 920 ? 1.66 : 1;
   constructor() {
     super({ key: "game", active: false, visible: false });
 
@@ -99,97 +99,53 @@ export default class GameScene extends Phaser.Scene {
         ) {
           return;
         }
-        this.createMarker(tileInfo);
+        // this.createMarker(tileInfo);
       });
     } catch (error) {
       console.error("Error loading data from API:", error);
     }
   }
 
-  //   createMarker(tileInfo: any) {
-  //     const marker = this.add.container(
-  //       tileInfo.position.x * this.tileSize,
-  //       tileInfo.position.y * this.tileSize - this.tileSize / 2
-  //     );
-
-  //     const graphics = this.add.graphics();
-  //     graphics.fillStyle(0x5d509b, 0.9);
-  //     graphics.fillRoundedRect(0, 0, 24, 14, 6);
-  //     marker.add(graphics);
-
-  //     const markerIcon = this.add.image(7, 7, "user");
-  //     markerIcon.setScale(0.06);
-  //     markerIcon.setTint(0xffffff);
-  //     markerIcon.tintFill = true;
-  //     marker.add(markerIcon);
-
-  //     const markerText = this.add.text(
-  //       14,
-  //       6.5,
-  //       `${tileInfo.totalActivePlayers}`,
-  //       {
-  //         fontSize: "12px",
-  //       }
-  //     );
-  //     markerText.setResolution(16);
-  //     markerText.setFont("population_zero_bbregular");
-  //     markerText.setTint(0xffffff);
-  //     markerText.setScale(0.8);
-  //     markerText.setOrigin(0, 0.5);
-  //     markerText.setStyle({ fontWeight: "bold" });
-  //     marker.add(markerText);
-
-  //     tileInfo.marker = marker;
-
-  //     /*
-  // const camera = this.cameras.main;
-  //     if (camera.zoom > 2) {
-  //       this.updateMarkerVisibility(true);
-  //     } else {
-  //       this.updateMarkerVisibility(false);
-  //     }
-  // */
-  //   }
   createMarker(tileInfo: any) {
-    const existingMarker = document.getElementById(
-      `marker-${tileInfo.id}`
-    );
+    const existingMarker = document.getElementById(`marker-${tileInfo.id}`);
     if (existingMarker) {
       return;
     }
 
     // Create the outer div element
     const outerDiv = document.createElement("div");
-    outerDiv.className="bg-[#5d509b] px-1 py-0 rounded-lg bg-opacity-85"
+    outerDiv.className = "bg-[#5d509b] px-1 py-0 rounded-lg bg-opacity-85";
     outerDiv.setAttribute("id", `marker-${tileInfo.id}`);
 
     // Create the inner div element
     const innerDiv = document.createElement("div");
-    innerDiv.className = `flex text-white font-arial text-[8px]`
+    innerDiv.className = `flex text-white font-arial text-[8px]`;
     innerDiv.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-[2px] mr-[2px] h-2">
     <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"></path>
-    </svg></div>
+    </svg>
     <span>${tileInfo.totalActivePlayers}</span>`;
 
     // Append the inner div to the outer div
     outerDiv.appendChild(innerDiv);
-
+    console.log(
+      tileInfo.position.x * this.tileSize + 10,
+      tileInfo.position.y * this.tileSize - this.tileSize / 2 + 12
+    );
 
     this.add.dom(
-      (tileInfo.position.x * this.tileSize) + 10,
-      (tileInfo.position.y * this.tileSize - this.tileSize / 2) + 12,
+      tileInfo.position.x * this.tileSize + 10,
+      tileInfo.position.y * this.tileSize - this.tileSize / 2 + 12,
       outerDiv
     );
   }
 
   updateMarkerVisibility(bool: boolean) {
-    this.tileInfoArray.forEach((tileInfo) => {
-      if (tileInfo.marker) tileInfo.marker.setVisible(bool);
-    });
+    // this.tileInfoArray.forEach((tileInfo) => {
+    //   if (tileInfo.marker) tileInfo.marker.setVisible(bool);
+    // });
 
     this.tileInfoArray.forEach((tileInfo: any) => {
-      
-        document.getElementById(`marker-${tileInfo.id}`) &&
+      document.getElementById(`marker-${tileInfo.id}`) &&
         !bool &&
         document.getElementById(`marker-${tileInfo.id}`).remove();
       // if (el) el.style.display = bool ? "block" : "none";
@@ -201,6 +157,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public create() {
+
+    
     const pinchPlugin = this.plugins.get("rexpinchplugin") as any;
     const dragScale = pinchPlugin.add(this);
 
@@ -230,8 +188,8 @@ export default class GameScene extends Phaser.Scene {
     const camera = this.cameras.main;
     camera.setBackgroundColor("#1883fd");
     camera.centerOn(
-      widthInPixels / (window.innerWidth > 576 ? 2 : 3),
-      heightInPixels / 2
+      widthInPixels / (window.innerWidth > 576 ? 2 : 3.5),
+      heightInPixels / (window.innerWidth > 576 ? 2 : 1.75)
     );
     camera.setZoom(this.initialZoom);
     camera.scrollX += widthInPixels / 4;
@@ -345,7 +303,8 @@ export default class GameScene extends Phaser.Scene {
     const camera = this.cameras.main;
 
     const maxZoom = (10 * 16) / tilemap.tileWidth;
-    const minZoom = (1.25 * 16) / tilemap.tileWidth;
+    const minZoom =
+      ((window.innerWidth > 576 ? 1.25 : 1) * 16) / tilemap.tileWidth;
     let targetZoom;
     if (deltaY < 0) {
       targetZoom = camera.zoom * 1.2;
@@ -359,7 +318,33 @@ export default class GameScene extends Phaser.Scene {
     if (targetZoom < minZoom) targetZoom = minZoom;
     else if (targetZoom > maxZoom) targetZoom = maxZoom;
     camera.setZoom(targetZoom);
-    if (camera.zoom > 1.66) {
+    // if (camera.zoom > 1.66) {
+    //   this.tileInfoArray.forEach((tileInfo: any) => {
+    //     if (
+    //       (!tileInfo.position.x && !tileInfo.position.y) ||
+    //       !tileInfo.totalActivePlayers
+    //     ) {
+    //       return;
+    //     }
+    //     this.createMarker(tileInfo);
+    //   });
+    //   // this.updateMarkerVisibility(true);
+    // } else {
+    //   this.updateMarkerVisibility(false);
+    // }
+  }
+
+  public update() {
+    const camera = this.cameras.main;
+
+    const tilemap = this.tilemap;
+    this.buildings.forEach((building, index) => {
+      //@ts-ignore
+      building.id = index;
+      building.setAlpha(1);
+    });
+
+    if (camera.zoom >= this.initialZoom) {
       this.tileInfoArray.forEach((tileInfo: any) => {
         if (
           (!tileInfo.position.x && !tileInfo.position.y) ||
@@ -369,19 +354,10 @@ export default class GameScene extends Phaser.Scene {
         }
         this.createMarker(tileInfo);
       });
-      this.updateMarkerVisibility(true);
+      // this.updateMarkerVisibility(true);
     } else {
       this.updateMarkerVisibility(false);
     }
-  }
-
-  public update() {
-    const tilemap = this.tilemap;
-    this.buildings.forEach((building, index) => {
-      //@ts-ignore
-      building.id = index;
-      building.setAlpha(1);
-    });
 
     const worldPoint = this.cameras.main.getWorldPoint(
       this.input.activePointer.x,
