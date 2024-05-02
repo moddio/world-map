@@ -24,7 +24,6 @@ export default class GameScene extends Phaser.Scene {
   indicator: Phaser.GameObjects.Graphics;
   angle: number = 0;
   selectedTile: Phaser.Tilemaps.Tile;
-
   initialZoom: number = window.innerWidth > 920 ? 1.66 : 1;
   constructor() {
     super({ key: "game", active: false, visible: false });
@@ -38,17 +37,6 @@ export default class GameScene extends Phaser.Scene {
     link.href =
       "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
     document.head.appendChild(link);
-
-    const heroicon = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href =
-      "https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css";
-    document.head.appendChild(heroicon);
-    const fontawesome = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href =
-      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css";
-    document.head.appendChild(fontawesome);
   }
 
   async loadMapInfo() {
@@ -114,7 +102,8 @@ export default class GameScene extends Phaser.Scene {
 
     // Create the outer div element
     const outerDiv = document.createElement("div");
-    outerDiv.className = "bg-[#5d509b] px-1 py-0 rounded-lg bg-opacity-85";
+    outerDiv.className =
+      "bg-[#5d509b] px-1 py-0 rounded-lg bg-opacity-85 relative";
     outerDiv.setAttribute("id", `marker-${tileInfo.id}`);
 
     // Create the inner div element
@@ -125,34 +114,28 @@ export default class GameScene extends Phaser.Scene {
     </svg>
     <span>${tileInfo.totalActivePlayers}</span>`;
 
-    outerDiv.appendChild(innerDiv);    
+    outerDiv.appendChild(innerDiv);
 
-    this.add.dom(
-      tileInfo.position.x * this.tileSize + 10,
-      tileInfo.position.y * this.tileSize - this.tileSize / 2 + 12,
+    const data: any = this.add.dom(
+      tileInfo.position.x * this.tileSize + 5,
+      tileInfo.position.y * this.tileSize - this.tileSize / 2 ,
       outerDiv
     );
+      data.setOrigin(0,0)
+    
   }
 
   updateMarkerVisibility(bool: boolean) {
-    // this.tileInfoArray.forEach((tileInfo) => {
-    //   if (tileInfo.marker) tileInfo.marker.setVisible(bool);
-    // });
-
     this.tileInfoArray.forEach((tileInfo: any) => {
-      // document.getElementById(`marker-${tileInfo.id}`) &&
-      //   !bool &&
-      //   document.getElementById(`marker-${tileInfo.id}`).remove();
       const markerElement = document.getElementById(`marker-${tileInfo.id}`);
       if (markerElement) {
         if (!bool) {
           markerElement.style.visibility = "hidden";
-        } else {
+        } else {          
           markerElement.style.visibility = "visible";
+       
         }
       }
-
-      // if (el) el.style.display = bool ? "block" : "none";
     });
   }
 
@@ -246,7 +229,6 @@ export default class GameScene extends Phaser.Scene {
             }
             // this.createMarker(tileInfo);
             this.updateMarkerVisibility(true);
-
           });
         } else {
           this.updateMarkerVisibility(false);
@@ -330,8 +312,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public update() {
-    const camera = this.cameras.main;
-
     const tilemap = this.tilemap;
     this.buildings.forEach((building, index) => {
       //@ts-ignore
