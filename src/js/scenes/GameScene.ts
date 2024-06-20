@@ -44,7 +44,11 @@ export default class GameScene extends Phaser.Scene {
       const response = await axios.get(
         `${siteUrl}/api/game/${worldMapId}/all-world-maps/?isMapPositionAvailable=true`
       );
-      const data = response.data.data;
+      let data = response.data.data;
+      if(data) {
+        data = data.filter((m) => m?.owner?.local?.username === 'm0dE' || m?.owner?.local?.username === 'PolyMars');
+      }
+      console.log(data);
       const playCountResponse = await axios.get(
         `${siteUrl}/api/v1/games/active-player-count-by-game-id/?gameId=${worldMapId}`
       );

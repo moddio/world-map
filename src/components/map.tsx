@@ -185,7 +185,7 @@ const MapComponent = () => {
             "https://cache.modd.io/asset/spriteImage/1713296865932_cover.png",
           createdAt: "2024-01-22T16:58:03.913Z",
           title: "m0dE's Base",
-          gameSlug: "C0wgR98Wg",
+          gameSlug: "WO8osQ6dD",
         });
         setIsOpen(true);
         return;
@@ -301,7 +301,7 @@ const MapComponent = () => {
                 </div>
                 <div className='flex w-full justify-center lg:mt-3 lg:mb-2 max-md:mb-3 max-sm:mb-2'>
                   <a
-                    href='https://www.modd.io/play/LAD?autojoin=true'
+                    href='https://www.modd.io/play/WO8osQ6dD/?autojoin=true'
                     rel='noreferrer'
                     target='_blank'
                     className='btn-quick w-full text-center focus:outline-none hover:no-underline rounded-md shadow-sm py-3 px-0 text-base text-white hover:bg-[#2c871f] w-full bg-[#459539]'>
