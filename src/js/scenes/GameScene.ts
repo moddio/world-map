@@ -46,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
       );
       let data = response.data.data;
       if(data) {
-        data = data.filter((m) => m?.owner?.local?.username === 'm0dE' || m?.owner?.local?.username === 'PolyMars');
+        data = data.filter((m) => m?.owner?.local?.username === 'm0dE' || m?.owner?.local?.username === 'PolyMars' || m?.owner?.local?.username === 'Godenot');
       }
       console.log(data);
       const playCountResponse = await axios.get(
@@ -329,7 +329,6 @@ export default class GameScene extends Phaser.Scene {
     );
     const pointerTileX = tilemap.worldToTileX(worldPoint.x, true);
     const pointerTileY = tilemap.worldToTileY(worldPoint.y, true);
-
     const hoveredTile = tilemap.getTileAt(pointerTileX, pointerTileY);
     if (hoveredTile) {
       if (this.input.manager.activePointer.leftButtonDown()) {
@@ -347,6 +346,7 @@ export default class GameScene extends Phaser.Scene {
           }
           return tileInfo;
         });
+        // console.log(pointerTileX, pointerTileY);
         if (clickedTileInfo && !clickedTileInfo.clicked) {
           clickedTileInfo.mousePointer = { x: worldPoint.x, y: worldPoint.y };
           const event = new CustomEvent("tileClick", {
